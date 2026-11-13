@@ -130,10 +130,12 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .rank small a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .rank .res{white-space:normal;min-width:120px}
 .rank.withT .tsm{display:none}
+.rankby{margin:-2px 0 10px;font-size:13.5px;color:var(--ink-2)}
+.rankby b{color:var(--ink)}
 .star{color:var(--accent);font-weight:700;cursor:help}
 .rank .c-end .m{display:none}
 .more{margin:10px 0 0}
-input[type=number]{width:84px;font:14px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+#jump{width:84px;font:16px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
 button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
 @media (max-width:1100px){.layout{grid-template-columns:1fr}}
@@ -178,10 +180,11 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .qq[open] summary{margin-bottom:6px}
 .sheetclose{display:none}
 @media (max-width:1100px){
-  .layout .detail{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;max-height:78vh;overflow:auto;border-radius:16px 16px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);transform:translateY(105%);transition:transform .25s ease;padding-top:28px}
+  .layout .detail{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;max-height:78vh;overflow-y:auto;overflow-x:hidden;max-width:100vw;box-sizing:border-box;overscroll-behavior:contain;border-radius:16px 16px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);transform:translateY(105%);transition:transform .25s ease;padding-top:28px}
   .layout .detail.open{transform:none}
-  .detail::before{content:"";position:absolute;top:10px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--line)}
-  .sheetclose{display:block;position:absolute;top:12px;right:14px;border:0;background:var(--bg);color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+  .layout .detail.dragging{transition:none}
+  .detail::before{content:"";position:absolute;top:10px;left:50%;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:var(--muted);opacity:.5}
+  .sheetclose{display:block;position:sticky;top:0;float:right;margin:-18px -6px 0 8px;z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.15);border:0;background:var(--bg);color:var(--ink);width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer}
   .detail .list{max-height:none}
 }
 @media (max-width:700px){
@@ -199,7 +202,7 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
   .rank .c-rank{grid-area:rank}.rank .c-who{grid-area:who}.rank .c-tot{grid-area:tot;font-size:15px}
   .rank .c-end{grid-area:end;font-size:12.5px;color:var(--ink-2)}
   .rank .c-inn,.rank .c-toss,.rank .c-tgt{display:none}
-  .rank.withT .tsm{display:inline}
+  .rank.withT .tsm{display:inline;font-weight:700;color:var(--ink)}
   .rank .c-res{grid-area:res;font-size:12.5px;color:var(--ink-2);min-width:0}
   .rank .c-end .m{display:inline}
   .rank .c-res small{display:inline;font-size:12.5px}
@@ -298,7 +301,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="countBtn" aria-pressed="false" title="Shade each total by how often it has come up">Frequency heat map</button>
     <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
-  <div class="group"><label for="jump">Go to</label><input id="jump" type="number" min="0" max="999" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
+  <div class="group"><label for="jump">Go to</label><input id="jump" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
 <button class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Filters &amp; quick questions <b id="fcount"></b> ▾</button>
 <div class="filters" id="filtersBox" aria-label="Filters">
@@ -398,7 +401,7 @@ const ix = r => r[3]===1?0: r[3]===2?1: r[3]===3?(r[10]===0?3:2): 4;   // inning
 const fo = r => r[10]===2?1:0;   // 0 = match had a follow-on, 1 = it didn't
 const RES = ['Won','Lost','Drawn','Tied'];
 const FO = ['Match with follow on','No follow on'];
-const TOSS = ['Won, batted','Won, bowled','Lost, fielded','Lost, sent in','Not recorded'];
+const TOSS = ['Won, chose to bat','Won, chose to bowl','Lost, opposition batted','Lost, sent in','Not recorded'];
 const T = DATA.teams, M = DATA.matches;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
@@ -434,8 +437,8 @@ const FILTERS = [
     {l:'1970–1999',kids:['1970s','1980s','1990s'].map(v=>({v,l:v}))},
     {l:'2000–today',kids:['2000s','2010s','2020s'].map(v=>({v,l:v}))}]},
   {id:'toss', label:'Toss', key:r=>String(r[11]), opts:[
-    {l:'Won toss',kids:[{v:'0',l:'Batted'},{v:'1',l:'Bowled'}]},
-    {l:'Lost toss',kids:[{v:'3',l:'Sent in'},{v:'2',l:'Fielded'}]},{v:'4',l:'Not recorded'}]},
+    {l:'Won toss',kids:[{v:'0',l:'Chose to bat'},{v:'1',l:'Chose to bowl'}]},
+    {l:'Lost toss',kids:[{v:'3',l:'Sent in'},{v:'2',l:'Opposition batted'}]},{v:'4',l:'Not recorded'}]},
   {id:'res', label:'Team’s result', key:r=>String(r[9]), opts:RES.map((l,i)=>({v:String(i),l}))},
   {id:'fo', label:'Follow-on', key:r=>String(fo(r)), opts:[{v:'0',l:'Match with follow-on'},{v:'1',l:'No follow-on'}]},
 ];
@@ -485,7 +488,7 @@ function ord(n){return n+(['th','st','nd','rd'][n]||'th')}
 /* ---------- KPIs ---------- */
 function renderKPIs(){
   const K=document.getElementById('kpis');
-  if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','scorigamis below the highest','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
+  if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','totals have yet to happen','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
   let reached=0, top=0, topS=0, hi=0; const gaps=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; hi=s; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
   // latest scorigami = the total whose first matching innings came most recently
@@ -494,7 +497,7 @@ function renderKPIs(){
   K.classList.toggle('filt', filtered()); document.getElementById('kpinote').hidden=!filtered();
   K.innerHTML = [
     [reached.toLocaleString(), 'totals have happened', `of the ${(hi+1).toLocaleString()} from 0 to the highest ever, ${hi}`, 'var(--out)'],
-    [(hi+1-reached).toLocaleString(), 'scorigamis below the highest ever', `gaps between 0 and ${hi}`, 'var(--never)'],
+    [(hi+1-reached).toLocaleString(), 'totals have yet to happen', `between 0 and ${hi} (the highest score to date)`, 'var(--never)'],
     [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
     [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
     [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${lm[1]}` : '', 'var(--accent)']
@@ -674,11 +677,12 @@ function renderList(){
   const showT = byTarget || (state.fsel.inn.size===1 && state.fsel.inn.has('4'));
   const rows=all.slice(0,state.rankN); let rank=0, prev=null;
   const desc=filtered()?FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).map(f=>f.label.toLowerCase()+': '+summary(f)).join('; '):'no filters';
-  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc})${byTarget?'. Ranked by the target the side was set':''}.</span></div>`;
-  h+=`<div class="tablewrap"><table class="rank${showT?' withT':''}"><thead><tr><th>#</th>${showT?'<th style="text-align:right">Target</th>':''}<th style="text-align:right">Total</th><th>Innings</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Result</th></tr></thead><tbody>`+
+  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest ${byTarget?'target ':''}first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest ${byTarget?'target ':''}first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc}).</span></div>`+
+    (byTarget?`<p class="rankby"><b>Ranked by the target the side batting last was set</b>, not by what they made. The Target column is the ranking; Total is how far they got.</p>`:'');
+  h+=`<div class="tablewrap"><table class="rank${showT?' withT':''}"><thead><tr><th>#</th>${showT?`<th style="text-align:right">${byTarget?'Target (ranked)':'Target'}</th>`:''}<th style="text-align:right">Total</th><th>Innings</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Result</th></tr></thead><tbody>`+
     rows.map((r,i)=>{ if(prev===null||val(r)!==prev){rank=i+1; prev=val(r);} const m=M[r[0]];
       const nt=note(r), endTxt=(r[6]===1?'All out, '+WHY[why(r)].toLowerCase():HOW[r[6]].label)+(nt?`<span class="star" title="${nt}">*</span>`:'');
-      return `<tr data-s="${r[4]}"><td class="num c-rank">${rank}</td>${showT?`<td class="num c-tgt">${tgt(r)??'–'}</td>`:''}<td class="num c-tot"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td>`+
+      return `<tr data-s="${r[4]}"><td class="num c-rank">${rank}</td>${showT?`<td class="num c-tgt">${byTarget?'<b>'+(tgt(r)??'–')+'</b>':(tgt(r)??'–')}</td>`:''}<td class="num c-tot"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td>`+
         `<td class="c-who"><b>${T[r[1]]}</b> v ${T[r[2]]}<small>${m[1]} · ${m[2]||''}${tgt(r)?`<span class="tsm"> · target ${tgt(r)}</span>`:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</small></td>`+
         `<td class="c-inn">${INN[ix(r)]}</td><td class="c-end"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${endTxt}<span class="m"> · ${INN[ix(r)]} innings · ${['won toss, batted','won toss, bowled','lost toss, opp. batted','lost toss, sent in',''][r[11]]}</span></td>`+
         `<td class="c-toss">${['Won, batted','Won, bowled','Lost, opp. batted','Lost, sent in','–'][r[11]]}</td><td class="c-res">${RES[r[9]]}<small>${m[3]}</small></td></tr>`; }).join('')+
@@ -732,6 +736,14 @@ document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') ret
 document.addEventListener('click',e=>{const c=e.target.closest('.cell,.rcell'); if(c) select(+c.dataset.s);});
 function select(s, quiet){ state.sel=s; paintAll(false); renderDetail(); if(!quiet && innerWidth<1100) document.getElementById('detail').classList.add('open'); }
 document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('#sheetClose')) document.getElementById('detail').classList.remove('open'); });
+(function(){ // swipe the sheet down to dismiss it
+  const d=document.getElementById('detail'); let y0=null, dy=0;
+  d.addEventListener('touchstart',e=>{ if(innerWidth>1100 || d.scrollTop>0){ y0=null; return; } y0=e.touches[0].clientY; dy=0; },{passive:true});
+  d.addEventListener('touchmove',e=>{ if(y0===null) return; dy=e.touches[0].clientY-y0;
+    if(dy>0){ d.classList.add('dragging'); d.style.transform=`translateY(${dy}px)`; if(e.cancelable) e.preventDefault(); } },{passive:false});
+  d.addEventListener('touchend',()=>{ if(y0===null) return; d.classList.remove('dragging'); d.style.transform='';
+    if(dy>80) d.classList.remove('open'); y0=null; dy=0; });
+})();
 function goTo(s){
   select(s);
   if(state.view!=='grid') return;
@@ -739,7 +751,11 @@ function goTo(s){
   c.scrollIntoView({block: innerWidth<1100?'start':'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
 }
-document.getElementById('jump').addEventListener('change',e=>{const v=Math.round(+e.target.value); if(v>=0&&v<1000) goTo(v);});
+const jump=document.getElementById('jump');
+function jumpGo(){ const v=jump.value; if(v==='') return; if(innerWidth<=1100) jump.blur(); goTo(+v); }
+jump.addEventListener('input',()=>{ const v=jump.value.replace(/\D/g,'').slice(0,3); if(v!==jump.value) jump.value=v; if(v.length===3) jumpGo(); });   // three digits: go straight there
+jump.addEventListener('keydown',e=>{ if(e.key==='Enter') jumpGo(); });
+jump.addEventListener('change',jumpGo);
 
 /* ---------- controls ---------- */
 /* ---------- filter dropdowns ---------- */
