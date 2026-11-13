@@ -18,8 +18,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
@@ -36,5 +36,6 @@ jobs:
             echo "No new Tests since the last run."
           else
             git commit -m "Scorigami update $(date -u +%F)"
+            git pull --rebase -X theirs origin main   # take in anything uploaded while this ran
             git push
           fi
