@@ -14,7 +14,7 @@ Later sources overwrite earlier ones for the same innings. Every change to runs,
 
 ## Outputs
 
-- `docs/index.html`: the interactive page (summary ring, then Board, Ranked innings, Table, 3D, Rings)
+- `docs/index.html`: the interactive page (Grids, Ranked innings, Table, Wagon wheel, 3D)
 - `docs/og.png`, `docs/icon.png`: the link-preview picture and home-screen icon, redrawn on every build (needs Pillow). Set the `SITE_URL` environment variable if the site moves to a new address.
 - `out/scorigami_counts.csv`: one row per total 0–999 with counts per ending and a status column. Paste or link this into your Excel sheet to colour it.
 - `out/innings.csv`: every innings with its ending and source
