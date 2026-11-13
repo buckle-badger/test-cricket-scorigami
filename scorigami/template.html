@@ -56,9 +56,9 @@ h2{font-size:22px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;margin-bottom:20px}
 .ringhelp{text-align:center;color:var(--ink-2);font-size:13px;margin:0 0 6px}
-.hero svg{width:min(100%,820px);height:auto;display:block}
-.hero .lab{font:600 26px var(--mono);fill:var(--ink)}
-.hero .cap{font:20px var(--body);fill:var(--ink-2)}
+.hero svg{width:min(100%,760px);height:auto;display:block}
+.hero .lab{font:600 24px var(--mono);fill:var(--ink)}
+.hero .cap{font:17px var(--body);fill:var(--ink-2)}
 .hero .ctr{font:700 60px var(--display);fill:var(--ink)}
 .hero .ctr2{font:20px var(--body);fill:var(--ink-2)}
 .hero .tk{font:15px var(--mono);fill:var(--muted)}
@@ -318,7 +318,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
       <div class="group" style="justify-content:center;margin-bottom:8px"><div class="seg" id="ringSeg"><button data-r="ten" aria-pressed="true">Ten rings</button><button data-r="one" aria-pressed="false">One ring</button></div></div>
       <p class="ringhelp" id="ringHelp"></p>
       <div class="ringwrap" id="ringTen"><svg id="rings" viewBox="0 0 1000 1000" aria-label="Ten rings, one per hundred, 0–99 in the middle; totals run clockwise from the top"></svg></div>
-      <div class="ringwrap hero" id="ringOne" hidden><svg id="heroRing" viewBox="0 0 1000 640" role="img" aria-label="All 1,000 totals in one ring, from 0 at the top going clockwise to 999"></svg></div>
+      <div class="ringwrap hero" id="ringOne" hidden><svg id="heroRing" viewBox="0 0 1000 1000" role="img" aria-label="All 1,000 totals in one ring, from 0 at the top going clockwise to 999"></svg></div>
     </div>
     <div id="view-table" class="tablewrap" hidden></div>
     <div id="view-list" hidden></div>
@@ -580,7 +580,7 @@ function paintRings(){
 
 /* ---------- hero ring: all 1,000 totals in one circle ---------- */
 function buildHero(){
-  const svg=document.getElementById('heroRing'), cx=500, cy=320, ri=158, ro=236;
+  const svg=document.getElementById('heroRing'), cx=500, cy=500, ri=318, ro=474;
   const st=[], cnt=[], first=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
   const NV=state.cb?'var(--never-cb)':'var(--never)';
@@ -592,8 +592,8 @@ function buildHero(){
     a=b+1; }
   const dense=s=>{ let k=0,n=0; for(let j=s-12;j<=s+12;j++) if(j>=0&&j<1000){ n++; if(st[j]!=='never') k++; } return k/n; };
   for(let s=400;s<1000;s++) if(st[s]!=='never' && dense(s)<0.45){ const t=(s+0.5)*0.36; const P=r=>{const q=(t-90)*Math.PI/180; return [cx+r*Math.cos(q), cy+r*Math.sin(q)];};
-    const [x0,y0]=P(ro+3),[x1,y1]=P(ro+17); h+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${st[s]==='out'?'var(--out)':'var(--ink-2)'}" stroke-width="2.6" stroke-linecap="round"/>`; }
-  for(let k=0;k<1000;k+=100){ const q=(k*0.36-90)*Math.PI/180; h+=`<line x1="${(cx+(ri-6)*Math.cos(q)).toFixed(1)}" y1="${(cy+(ri-6)*Math.sin(q)).toFixed(1)}" x2="${(cx+ri*Math.cos(q)).toFixed(1)}" y2="${(cy+ri*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.5"/><text class="tk" x="${(cx+(ri-22)*Math.cos(q)).toFixed(1)}" y="${(cy+(ri-22)*Math.sin(q)+5).toFixed(1)}" text-anchor="middle">${k}</text>`; }
+    const [x0,y0]=P(ro+3),[x1,y1]=P(ro+16); h+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${st[s]==='out'?'var(--out)':'var(--ink-2)'}" stroke-width="2.6" stroke-linecap="round"/>`; }
+  for(let k=0;k<1000;k+=100){ const q=(k*0.36-90)*Math.PI/180; h+=`<line x1="${(cx+ro*Math.cos(q)).toFixed(1)}" y1="${(cy+ro*Math.sin(q)).toFixed(1)}" x2="${(cx+(ro+7)*Math.cos(q)).toFixed(1)}" y2="${(cy+(ro+7)*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.5"/><text class="tk" x="${(cx+(ro+17)*Math.cos(q)).toFixed(1)}" y="${(cy+(ro+17)*Math.sin(q)+5).toFixed(1)}" text-anchor="middle">${k}</text>`; }
   // call-outs for the totals that matter
   const reached=st.filter(x=>x!=='never').length, lowGap=st.indexOf('never');
   let mc=0; for(let s=0;s<1000;s++) if(cnt[s]>cnt[mc]) mc=s;
@@ -605,9 +605,12 @@ function buildHero(){
   const L=[...marks].map(([s,cap])=>({s,cap,t:(s+0.5)*0.36})).sort((x,y)=>x.t-y.t);
   for(let i=1;i<L.length;i++) if(L[i].t-L[i-1].t<11) L[i].t=L[i-1].t+11;
   for(const m of L){ const q0=((m.s+0.5)*0.36-90)*Math.PI/180, q=(m.t-90)*Math.PI/180;
-    const [ax,ay]=[cx+(ro+20)*Math.cos(q0), cy+(ro+20)*Math.sin(q0)], [bx,by]=[cx+(ro+46)*Math.cos(q), cy+(ro+46)*Math.sin(q)];
-    const right=Math.cos(q)>=0, tx=bx+(right?6:-6), anchor=Math.abs(Math.cos(q))<0.2?'middle':(right?'start':'end');
-    const ty=by+(Math.sin(q)>0.8?20:Math.sin(q)<-0.8?-8:8);
+    const [ax,ay]=[cx+(ri-3)*Math.cos(q0), cy+(ri-3)*Math.sin(q0)], [bx,by]=[cx+(ri-30)*Math.cos(q), cy+(ri-30)*Math.sin(q)];
+    // at the top and bottom of the hole, text runs away from the centre line so neighbours don't collide; on the sides it runs inward
+    const right=Math.cos(q)>=0, cap=Math.abs(Math.sin(q))>0.6;
+    const anchor= cap ? (right?'start':'end') : (right?'end':'start');
+    const tx=bx+(cap ? (right?4:-4) : (right?-6:6));
+    const ty=by+(Math.sin(q)<-0.6?22:Math.sin(q)>0.6?-8:8);
     const c=st[m.s]==='never'?'var(--never-edge)':st[m.s]==='out'?'var(--out)':'var(--not-edge)';
     h+=`<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="${c}" stroke-width="1.4"/>`;
     h+=`<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}" data-go="${m.s}" style="cursor:pointer"><tspan class="lab">${m.s}</tspan>${m.cap?`<tspan class="cap"> ${m.cap}</tspan>`:''}</text>`; }
