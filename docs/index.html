@@ -495,9 +495,10 @@ function renderKPIs(){
   let latest=null; for(let s=0;s<1000;s++){ const f=cache[s].first; if(f && (!latest || f[0]>latest[0])) latest=f; }
   const lm = latest? M[latest[0]] : null;
   K.classList.toggle('filt', filtered()); document.getElementById('kpinote').hidden=!filtered();
+  const rangeTxt = `of ${(hi+1).toLocaleString()} possible, from 0 to ${hi} (the highest ${filtered()?'with these filters':'score to date'})`;
   K.innerHTML = [
-    [reached.toLocaleString(), 'totals have happened', `of the ${(hi+1).toLocaleString()} from 0 to the highest ever, ${hi}`, 'var(--out)'],
-    [(hi+1-reached).toLocaleString(), 'totals have yet to happen', `between 0 and ${hi} (the highest score to date)`, 'var(--never)'],
+    [reached.toLocaleString(), 'totals have happened', rangeTxt, 'var(--out)'],
+    [(hi+1-reached).toLocaleString(), 'totals have yet to happen', rangeTxt, 'var(--never)'],
     [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
     [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
     [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${lm[1]}` : '', 'var(--accent)']
