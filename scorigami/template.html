@@ -54,7 +54,24 @@ h1{font-size:clamp(34px,5vw,52px);line-height:1}
 h2{font-size:22px}
 .sub{color:var(--ink-2);max-width:68ch;margin:8px 0 0}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;margin-bottom:20px}
+.ringhelp{text-align:center;color:var(--ink-2);font-size:13px;margin:0 0 6px}
+.hero svg{width:min(100%,820px);height:auto;display:block}
+.hero .lab{font:600 26px var(--mono);fill:var(--ink)}
+.hero .cap{font:20px var(--body);fill:var(--ink-2)}
+.hero .ctr{font:700 60px var(--display);fill:var(--ink)}
+.hero .ctr2{font:20px var(--body);fill:var(--ink-2)}
+.hero .tk{font:15px var(--mono);fill:var(--muted)}
+.hero path.s{cursor:pointer}
+@media (max-width:700px){ .hero .cap{display:none} .hero .lab{font-size:30px} }
+/* rings view */
+.ringwrap{display:flex;justify-content:center}
+.ringwrap svg{width:min(100%,760px);height:auto;touch-action:manipulation}
+.rcell{cursor:pointer}
+.rcell.sel{stroke:var(--ink)!important;stroke-width:3px!important}
+.ringlab{font:600 13px var(--body);fill:var(--ink-2)}
+.ringctr{font:700 54px var(--display);fill:var(--ink)}
+.ringctr2{font:15px var(--body);fill:var(--ink-2)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;border-left:4px solid var(--k,var(--line))}
 .kpi b{display:block;font-family:var(--display);font-size:30px;line-height:1.1;font-weight:600}
@@ -262,7 +279,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 <div class="controls">
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="viewSeg">
-      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="cube" aria-pressed="false">3D</button>
+      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Rings</button><button data-v="cube" aria-pressed="false">3D</button>
     </div></div>
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="countBtn" aria-pressed="false">Show times it’s happened</button>
@@ -291,6 +308,12 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
         <input type="range" id="spread" min="0" max="70" value="34">
         <small>Drag the cube to turn it. The bottom layer is 0–99 and the top is 900–999. Within a layer, rows are tens and columns are units.</small>
       </div>
+    </div>
+    <div id="view-rings" hidden>
+      <div class="group" style="justify-content:center;margin-bottom:8px"><div class="seg" id="ringSeg"><button data-r="ten" aria-pressed="true">Ten rings</button><button data-r="one" aria-pressed="false">One ring</button></div></div>
+      <p class="ringhelp" id="ringHelp"></p>
+      <div class="ringwrap" id="ringTen"><svg id="rings" viewBox="0 0 1000 1000" aria-label="Ten rings, one per hundred, 0–99 in the middle; totals run clockwise from the top"></svg></div>
+      <div class="ringwrap hero" id="ringOne" hidden><svg id="heroRing" viewBox="0 0 1000 640" role="img" aria-label="All 1,000 totals in one ring, from 0 at the top going clockwise to 999"></svg></div>
     </div>
     <div id="view-table" class="tablewrap" hidden></div>
     <div id="view-list" hidden></div>
@@ -443,16 +466,16 @@ function ord(n){return n+(['th','st','nd','rd'][n]||'th')}
 /* ---------- KPIs ---------- */
 function renderKPIs(){
   const K=document.getElementById('kpis');
-  if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','still waiting','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
-  let reached=0, top=0, topS=0; const gaps=[];
-  for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
+  if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','scorigamis below the highest','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
+  let reached=0, top=0, topS=0, hi=0; const gaps=[];
+  for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; hi=s; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
   // latest scorigami = the total whose first matching innings came most recently
   let latest=null; for(let s=0;s<1000;s++){ const f=cache[s].first; if(f && (!latest || f[0]>latest[0])) latest=f; }
   const lm = latest? M[latest[0]] : null;
   K.classList.toggle('filt', filtered()); document.getElementById('kpinote').hidden=!filtered();
   K.innerHTML = [
-    [reached.toLocaleString(), 'of 1,000 totals have happened', '', 'var(--out)'],
-    [(1000-reached).toLocaleString(), 'totals still waiting for their first innings', '', 'var(--never)'],
+    [reached.toLocaleString(), 'totals have happened', `of the ${(hi+1).toLocaleString()} from 0 to the highest ever, ${hi}`, 'var(--out)'],
+    [(hi+1-reached).toLocaleString(), 'scorigamis below the highest ever', `gaps between 0 and ${hi}`, 'var(--never)'],
     [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
     [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
     [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${lm[1]}` : '', 'var(--accent)']
@@ -521,6 +544,81 @@ function placeCube(){
 })();
 document.getElementById('spread').addEventListener('input',e=>{state.spread=+e.target.value; placeCube();});
 document.getElementById('layerBtns').addEventListener('click',e=>{const b=e.target.closest('.lay'); if(!b) return; state.layer=+b.dataset.l; placeCube();});
+
+/* ---------- rings ---------- */
+const SVGNS='http://www.w3.org/2000/svg';
+function arc(cx,cy,ri,ro,a0,a1){ const p=(r,a)=>{const t=(a-90)*Math.PI/180; return [(cx+r*Math.cos(t)).toFixed(2),(cy+r*Math.sin(t)).toFixed(2)];};
+  const L=(a1-a0)>180?1:0, [x0,y0]=p(ro,a0),[x1,y1]=p(ro,a1),[x2,y2]=p(ri,a1),[x3,y3]=p(ri,a0);
+  return `M${x0} ${y0}A${ro} ${ro} 0 ${L} 1 ${x1} ${y1}L${x2} ${y2}A${ri} ${ri} 0 ${L} 0 ${x3} ${y3}Z`; }
+const RG={c:500, r0:128, rw:33.5, gap:2.2, gapDeg:12};   // 100 slices per ring over 348°, a gap at the top for labels
+function buildRings(){
+  const g=document.getElementById('rings'); let h='';
+  const step=(360-RG.gapDeg)/100;
+  for(let p=0;p<10;p++){ const ri=RG.r0+p*(RG.rw+RG.gap), ro=ri+RG.rw;
+    for(let k=0;k<100;k++){ const a0=RG.gapDeg/2+k*step+0.25, a1=a0+step-0.5, s=p*100+k;
+      h+=`<path class="rcell" data-s="${s}" d="${arc(RG.c,RG.c,ri,ro,a0,a1)}"/>`; }
+    h+=`<text class="ringlab" x="${RG.c}" y="${RG.c-ri-RG.rw/2+4}" text-anchor="middle">${p?p*100+'s':'0–99'}</text>`; }
+  h+=`<text class="ringctr num" id="ringN" x="${RG.c}" y="${RG.c+8}" text-anchor="middle"></text><text class="ringctr2" id="ringN2" x="${RG.c}" y="${RG.c+38}" text-anchor="middle"></text>`;
+  g.innerHTML=h;
+}
+function paintRings(){
+  let k=0;
+  document.querySelectorAll('#rings .rcell').forEach(el=>{ const s=+el.dataset.s, o=cache[s]; if(o.n) k++;
+    const never=state.empty||!o.n;
+    el.style.fill = never ? (state.cb?'var(--never-cb)':'var(--never)') : o.status==='out' ? 'var(--out)' : 'var(--not)';
+    el.style.stroke = never ? (state.cb?'none':'var(--never-edge)') : o.status==='out' ? 'none' : 'var(--not-edge)';
+    el.style.strokeWidth = never? '1.2px' : '1px';
+    el.classList.toggle('sel', s===state.sel); el.setAttribute('aria-label',`${s}: ${o.n} innings`); });
+  document.getElementById('ringN').textContent=`${k}/1000`;
+  document.getElementById('ringN2').textContent= filtered()?'totals reached with these filters':'totals reached';
+}
+
+/* ---------- hero ring: all 1,000 totals in one circle ---------- */
+function buildHero(){
+  const svg=document.getElementById('heroRing'), cx=500, cy=320, ri=158, ro=236;
+  const st=[], cnt=[], first=[];
+  for(let s=0;s<1000;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
+  const col={out:'var(--out)',not:'var(--not)',never:'var(--never)'};
+  let h=`<circle cx="${cx}" cy="${cy}" r="${(ri+ro)/2}" fill="none" stroke="var(--never)" stroke-width="${ro-ri}"/>`;
+  // runs of the same status drawn as one arc; reached totals in the sparse zone also get an outward tick
+  let a=0; while(a<1000){ let b=a; while(b+1<1000 && st[b+1]===st[a]) b++;
+    if(st[a]!=='never') h+=`<path d="${arc(cx,cy,ri,ro,a*0.36,(b+1)*0.36)}" fill="${col[st[a]]}"/>`;
+    a=b+1; }
+  const dense=s=>{ let k=0,n=0; for(let j=s-12;j<=s+12;j++) if(j>=0&&j<1000){ n++; if(st[j]!=='never') k++; } return k/n; };
+  for(let s=400;s<1000;s++) if(st[s]!=='never' && dense(s)<0.45){ const t=(s+0.5)*0.36; const P=r=>{const q=(t-90)*Math.PI/180; return [cx+r*Math.cos(q), cy+r*Math.sin(q)];};
+    const [x0,y0]=P(ro+3),[x1,y1]=P(ro+17); h+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${st[s]==='out'?'var(--out)':'var(--ink-2)'}" stroke-width="2.6" stroke-linecap="round"/>`; }
+  for(let k=0;k<1000;k+=100){ const q=(k*0.36-90)*Math.PI/180; h+=`<line x1="${(cx+(ri-6)*Math.cos(q)).toFixed(1)}" y1="${(cy+(ri-6)*Math.sin(q)).toFixed(1)}" x2="${(cx+ri*Math.cos(q)).toFixed(1)}" y2="${(cy+ri*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.5"/><text class="tk" x="${(cx+(ri-22)*Math.cos(q)).toFixed(1)}" y="${(cy+(ri-22)*Math.sin(q)+5).toFixed(1)}" text-anchor="middle">${k}</text>`; }
+  // call-outs for the totals that matter
+  const reached=st.filter(x=>x!=='never').length, lowGap=st.indexOf('never');
+  let mc=0; for(let s=0;s<1000;s++) if(cnt[s]>cnt[mc]) mc=s;
+  let hi=-1, hiOut=-1, latest=-1; for(let s=0;s<1000;s++){ if(st[s]!=='never') hi=s; if(st[s]==='out') hiOut=s; if(first[s]>=0 && (latest<0 || first[s]>first[latest])) latest=s; }
+  const marks=new Map(); const add=(s,cap)=>{ if(s>=0) marks.set(s, marks.has(s)? marks.get(s)+' · '+cap : cap); };
+  add(lowGap,'lowest scorigami'); add(mc,'most common'); add(latest,'latest new total'); add(hiOut,'highest all out'); add(hi,'highest total');
+  for(let s=800;s<1000;s++) if(st[s]!=='never' && !marks.has(s)) add(s,'');
+  // place labels on the outside, nudging any that would overlap
+  const L=[...marks].map(([s,cap])=>({s,cap,t:(s+0.5)*0.36})).sort((x,y)=>x.t-y.t);
+  for(let i=1;i<L.length;i++) if(L[i].t-L[i-1].t<11) L[i].t=L[i-1].t+11;
+  for(const m of L){ const q0=((m.s+0.5)*0.36-90)*Math.PI/180, q=(m.t-90)*Math.PI/180;
+    const [ax,ay]=[cx+(ro+20)*Math.cos(q0), cy+(ro+20)*Math.sin(q0)], [bx,by]=[cx+(ro+46)*Math.cos(q), cy+(ro+46)*Math.sin(q)];
+    const right=Math.cos(q)>=0, tx=bx+(right?6:-6), anchor=Math.abs(Math.cos(q))<0.2?'middle':(right?'start':'end');
+    const ty=by+(Math.sin(q)>0.8?20:Math.sin(q)<-0.8?-8:8);
+    const c=st[m.s]==='never'?'var(--never-edge)':st[m.s]==='out'?'var(--out)':'var(--not-edge)';
+    h+=`<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="${c}" stroke-width="1.4"/>`;
+    h+=`<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}" data-go="${m.s}" style="cursor:pointer"><tspan class="lab">${m.s}</tspan>${m.cap?`<tspan class="cap"> ${m.cap}</tspan>`:''}</text>`; }
+  h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${reached}/1000</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${filtered()?'reached with these filters':'totals reached'}</text>`;
+  svg.innerHTML=h;
+}
+document.getElementById('heroRing').addEventListener('click',e=>{ const t=e.target.closest('[data-go]'); if(t) select(+t.dataset.go); });
+state.ring='ten';
+function showRing(){
+  document.querySelectorAll('#ringSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.r===state.ring)));
+  document.getElementById('ringTen').hidden = state.ring!=='ten'; document.getElementById('ringOne').hidden = state.ring!=='one';
+  document.getElementById('ringHelp').textContent = state.ring==='ten'
+    ? 'One ring per hundred, 0–99 in the middle. Each ring runs clockwise from the top, like a clock: 50 is at six o’clock.'
+    : 'All 1,000 totals in a single circle, clockwise from 0 at the top. Labels mark the totals that stand out; ticks outside the ring flag lone totals reached among the scorigamis.';
+  if(state.ring==='one') buildHero(); else paintRings();
+}
+document.getElementById('ringSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; state.ring=b.dataset.r; showRing(); });
 
 /* ---------- table ---------- */
 let sortKey='s', sortDir=1;
@@ -598,9 +696,9 @@ document.getElementById('detail').addEventListener('click',e=>{const a=e.target.
 /* ---------- tooltip & selection ---------- */
 const tip=document.getElementById('tip');
 function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · ${filtered()&&byScore[s].length?'none with these filters':'scorigami: never reached'}`; return `<b>${s}</b> · ${o.n} innings<br>`+o.c.map((v,i)=>v?`${HOW[i].label}: ${v}`:'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
-document.addEventListener('pointerover',e=>{const c=e.target.closest('.cell'); if(!c){tip.style.display='none';return;} tip.innerHTML=tipText(+c.dataset.s); tip.style.display='block';});
+document.addEventListener('pointerover',e=>{const c=e.target.closest('.cell,.rcell'); if(!c){tip.style.display='none';return;} tip.innerHTML=tipText(+c.dataset.s); tip.style.display='block';});
 document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') return; const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-8), y=Math.min(e.clientY+14, innerHeight-tip.offsetHeight-8); tip.style.left=x+'px'; tip.style.top=y+'px'; });
-document.addEventListener('click',e=>{const c=e.target.closest('.cell'); if(c) select(+c.dataset.s);});
+document.addEventListener('click',e=>{const c=e.target.closest('.cell,.rcell'); if(c) select(+c.dataset.s);});
 function select(s, quiet){ state.sel=s; paintAll(false); renderDetail(); if(!quiet && innerWidth<1100) document.getElementById('detail').classList.add('open'); }
 document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('#sheetClose')) document.getElementById('detail').classList.remove('open'); });
 function goTo(s){
@@ -693,7 +791,7 @@ document.getElementById('presets').addEventListener('click',e=>{
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
-document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; paintAll(false);});
+document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; paintAll(false);});
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
 flip('countBtn','labels','count','total'); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
@@ -715,9 +813,10 @@ function paintAll(re){
   if(state.view==='grid') paintCells(gridEl);
   if(state.view==='cube'){ paintCells(cubeEl); placeCube(); }
   if(state.view==='table') renderTable();
+  if(state.view==='rings') showRing();
   if(state.view==='list') renderList();
 }
-buildGrid(); buildCube(); recompute();
+buildGrid(); buildCube(); buildRings(); recompute();
 state.sel = cache.reduce((b,o,s)=>o.n>cache[b].n?s:b,0);
 paintAll(false); renderDetail();
 </script>

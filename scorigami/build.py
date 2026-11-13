@@ -1,4 +1,4 @@
-"""Build the Scorigami: Test Cricket (Men’s) from up to three sources.
+"""Build the Men's Test scorigami from up to three sources.
 
 Sources, applied in this order (later sources overwrite earlier ones for the same innings):
   1. data/test_matches_kaggle.csv   historical base to March 2024. Declarations are INFERRED.
@@ -557,7 +557,7 @@ def make_images(status, reached):
     col = {"out": "#4f806d", "not": "#efe7d2", "never": "#f2c9ca"}
     im = Image.new("RGB", (1200, 630), bg); d = ImageDraw.Draw(im)
     TX = (1200 - (5 * (10 * 16 + 9 * 2) + 4 * 24)) // 2
-    d.text((TX - 3, 52), "Scorigami: Test Cricket (Men’s)", font=_font(64, True), fill=ink)
+    d.text((TX - 3, 52), "Men’s Test Scorigami", font=_font(64, True), fill=ink)
     d.text((TX, 136), f"{reached:,} of 1,000 innings totals have happened. {1000 - reached:,} are still waiting.",
            font=_font(28), fill=ink2)
     cell, gap, pgap = 16, 2, 24                 # ten 10×10 boards, five across, two down
