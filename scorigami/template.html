@@ -398,7 +398,7 @@ const ix = r => r[3]===1?0: r[3]===2?1: r[3]===3?(r[10]===0?3:2): 4;   // inning
 const fo = r => r[10]===2?1:0;   // 0 = match had a follow-on, 1 = it didn't
 const RES = ['Won','Lost','Drawn','Tied'];
 const FO = ['Match with follow on','No follow on'];
-const TOSS = ['Won, chose to bat','Won, chose to bowl','Lost, opposition batted','Lost, sent in','Not recorded'];
+const TOSS = ['Won, batted','Won, bowled','Lost, fielded','Lost, sent in','Not recorded'];
 const T = DATA.teams, M = DATA.matches;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
@@ -434,8 +434,8 @@ const FILTERS = [
     {l:'1970–1999',kids:['1970s','1980s','1990s'].map(v=>({v,l:v}))},
     {l:'2000–today',kids:['2000s','2010s','2020s'].map(v=>({v,l:v}))}]},
   {id:'toss', label:'Toss', key:r=>String(r[11]), opts:[
-    {l:'Won toss',kids:[{v:'0',l:'Chose to bat'},{v:'1',l:'Chose to bowl'}]},
-    {l:'Lost toss',kids:[{v:'3',l:'Sent in'},{v:'2',l:'Opposition batted'}]},{v:'4',l:'Not recorded'}]},
+    {l:'Won toss',kids:[{v:'0',l:'Batted'},{v:'1',l:'Bowled'}]},
+    {l:'Lost toss',kids:[{v:'3',l:'Sent in'},{v:'2',l:'Fielded'}]},{v:'4',l:'Not recorded'}]},
   {id:'res', label:'Team’s result', key:r=>String(r[9]), opts:RES.map((l,i)=>({v:String(i),l}))},
   {id:'fo', label:'Follow-on', key:r=>String(fo(r)), opts:[{v:'0',l:'Match with follow-on'},{v:'1',l:'No follow-on'}]},
 ];
