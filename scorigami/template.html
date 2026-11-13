@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Test Cricket Scorigami</title>
+<meta name="description" content="__DESC__">
+<meta name="theme-color" content="#2f5e4f">
+<link rel="canonical" href="__SITE__">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Test Cricket Scorigami">
+<meta property="og:title" content="Men’s Test Scorigami">
+<meta property="og:description" content="__DESC__">
+<meta property="og:url" content="__SITE__">
+<meta property="og:image" content="__SITE__og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Every Test innings total from 0 to 999 as ten small boards: green for totals a side has been bowled out on, cream for totals reached but never all out, pink for totals that have never happened.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f5e4f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23b3121d'/%3E%3Cpath d='M14 6v20M18 6v20' stroke='%23f6f1e3' stroke-width='1.3'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,7 +26,7 @@
 :root{
   color-scheme: light;
   --bg:#f4f6f3; --surface:#ffffff; --ink:#131714; --ink-2:#4a524c; --muted:#78807a; --line:#d8ddd7; --accent:#1d5a43;
-  --out:#2f5e4f; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#e0d8c2; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#e9a9ab; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --out:#4f806d; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#5c5a50; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#cf4a53; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#2f5e4f; --e1:#86a89b; --e2:#2a78d6; --e3:#7357d6; --e4:#eda100; --e5:#8a8f8b; --e6:#2a78d6;
   --q1:#cde2fb; --q2:#9ec5f4; --q3:#6da7ec; --q4:#3987e5; --q5:#256abf; --q6:#184f95; --q7:#0d366b; --q0:#eef0ec;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -20,14 +34,14 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   color-scheme: dark;
   --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
-  --out:#3e7a66; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#ece5d2; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#7d2a30; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
 }}
 :root[data-theme="dark"]{
   color-scheme: dark;
   --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
-  --out:#3e7a66; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#ece5d2; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#7d2a30; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
 }
@@ -54,7 +68,15 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-co
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
 .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 10px 4px 8px;font:500 13px var(--body);cursor:pointer}
 .chip i{width:10px;height:10px;border-radius:3px;background:var(--c)}
-.chip[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+.tog{padding-left:8px!important}
+.tog::before{content:"";flex:none;width:28px;height:16px;border-radius:999px;background:radial-gradient(circle at 8px 50%,#fff 5.5px,transparent 6px),var(--line);transition:background .15s}
+.tog[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.tog[aria-pressed="true"]::before{background:radial-gradient(circle at 20px 50%,#fff 5.5px,transparent 6px),var(--accent)}
+.kpinote{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:-8px 0 12px;font-size:13px;color:var(--ink-2)}
+.kpis.filt .kpi{border-style:dashed;border-left-style:solid}
+.ftoggle{display:none}
+.cell.flash{animation:flash 1.4s ease-out}
+@keyframes flash{0%,30%{outline:3px solid var(--accent);outline-offset:3px;transform:scale(1.35);z-index:2}100%{outline-color:transparent;transform:none}}
 .chip.sm{font-size:12px;padding:3px 9px}
 .linkbtn{border:0;background:none;color:var(--accent);font:500 13px var(--body);cursor:pointer;padding:4px 2px}
 .filters{display:flex;flex-direction:column;gap:8px;margin:-4px 0 16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
@@ -80,16 +102,24 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-co
 .preset:hover{color:var(--ink);border-color:var(--accent)}
 .preset[aria-pressed="true"]{border-style:solid;border-color:var(--accent);color:var(--accent)}
 .rank td:nth-child(1){color:var(--muted)}
-.rank td{text-align:left}.rank td.num{text-align:right}
+.rank td{text-align:left;vertical-align:top}.rank td.num{text-align:right}
+.rank th{text-align:left}
+.rank .who b{font-weight:600}
+.rank small{display:block;color:var(--muted);font-size:12px;white-space:normal}
+.rank small a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.rank .res{white-space:normal;min-width:120px}
+.rank.withT .tsm{display:none}
+.star{color:var(--accent);font-weight:700;cursor:help}
+.rank .c-end .m{display:none}
 .more{margin:10px 0 0}
 input[type=number]{width:84px;font:14px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
 button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
 @media (max-width:1100px){.layout{grid-template-columns:1fr}}
 .board{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-.legend{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 20px;font-size:13px;color:var(--ink-2);margin-bottom:14px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
-.legend .key{display:inline-flex;align-items:center;gap:9px}
+.legend .key{display:flex;align-items:flex-start;gap:9px}
 .legend .key .kt{display:block}
 .legend .sw{width:30px;height:30px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .legend .sw svg{width:20px;height:20px}
@@ -103,12 +133,14 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .panel h3 small{font:12px var(--body);color:var(--muted)}
 .pgrid{display:grid;grid-template-columns:16px repeat(10,1fr);gap:2px}
 .pgrid .ax{font:10px var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:center}
-.cell{aspect-ratio:1;border:0;border-radius:3px;padding:0;font:9.5px/1 var(--mono);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--q0);color:var(--ink-2);min-width:0}
+.cell{scroll-margin-top:70px;aspect-ratio:1;border:0;border-radius:3px;padding:0;font:9.5px/1 var(--mono);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--q0);color:var(--ink-2);min-width:0}
 .cell.sel{outline:2px solid var(--ink);outline-offset:1px;z-index:1}
 .cell{position:relative}
 .cell .mk{position:absolute;top:0;right:1px;font:600 8px/1 var(--body);opacity:.85;pointer-events:none}
 .lead{font-size:17px;max-width:62ch;margin:10px 0 0;color:var(--ink)}
 .lead b{font-weight:600}
+.lead a{color:var(--accent)}
+.kicker{margin:6px 0 0;font-family:var(--display);font-size:clamp(19px,2.4vw,24px);font-weight:600;color:var(--ink-2);letter-spacing:.01em}
 .howto{display:inline-block;margin-top:8px;font-size:14px;color:var(--ink-2)}
 .kpi small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .active{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px;font-size:13px;color:var(--ink-2)}
@@ -125,7 +157,29 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
   .sheetclose{display:block;position:absolute;top:12px;right:14px;border:0;background:var(--bg);color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
   .detail .list{max-height:none}
 }
-@media (max-width:700px){ .kpis{grid-template-columns:1fr 1fr} .kpi b{font-size:24px} .filters .glabel{min-width:0} }
+@media (max-width:700px){
+  .kpis{grid-template-columns:1fr 1fr;gap:6px} .kpi{padding:7px 10px} .kpi b{font-size:22px} .kpi span{font-size:12px;line-height:1.3;display:block} .kpi small{font-size:11px}
+  .lead{font-size:15.5px} .howto{font-size:13px}
+  .filters .glabel{min-width:0}
+  .ftoggle{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:7px 12px;font:600 13.5px var(--body);cursor:pointer;margin-bottom:12px}
+  .ftoggle b{color:var(--accent)}
+  .filters:not(.fopen){display:none}
+  /* ranked innings as cards */
+  .rank thead{display:none}
+  .rank,.rank tbody{display:block}
+  .rank tr{display:grid;grid-template-columns:30px 1fr auto;grid-template-areas:"rank who tot" ". end end" ". res res";gap:2px 8px;padding:8px 2px;border-bottom:1px solid var(--line)}
+  .rank td{border:0;padding:0;white-space:normal}
+  .rank .c-rank{grid-area:rank}.rank .c-who{grid-area:who}.rank .c-tot{grid-area:tot;font-size:15px}
+  .rank .c-end{grid-area:end;font-size:12.5px;color:var(--ink-2)}
+  .rank .c-inn,.rank .c-toss,.rank .c-tgt{display:none}
+  .rank.withT .tsm{display:inline}
+  .rank .c-res{grid-area:res;font-size:12.5px;color:var(--ink-2);min-width:0}
+  .rank .c-end .m{display:inline}
+  .rank .c-res small{display:inline;font-size:12.5px}
+  .rank .c-res small::before{content:" · "}
+  .kpi:last-child:nth-child(odd){grid-column:1/-1}
+  .tablewrap{max-height:none}
+}
 /* cube */
 .cubewrap{display:flex;gap:16px;flex-wrap:wrap}
 .scene{flex:1 1 420px;height:560px;perspective:1500px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;overflow:hidden}
@@ -152,7 +206,7 @@ tbody tr:hover{background:var(--bg)}
 .detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;position:sticky;top:16px}
 .dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .dhead .big{font-family:var(--display);font-size:64px;line-height:.9;font-weight:700}
-.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
+.pill{box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
 .stack{display:flex;height:14px;gap:2px;margin:14px 0 8px;border-radius:4px;overflow:hidden}
 .stack div{background:var(--c)}
 .breakdown{display:grid;grid-template-columns:auto 1fr auto;gap:3px 10px;font-size:13.5px;margin-bottom:12px}
@@ -171,6 +225,13 @@ tbody tr:hover{background:var(--bg)}
 footer{margin-top:28px;color:var(--ink-2);font-size:13.5px;max-width:80ch}
 footer h2{font-size:18px;color:var(--ink);margin:14px 0 4px}
 footer p{margin:0 0 8px}
+footer ul{margin:0 0 10px;padding-left:20px}
+footer li{margin:0 0 5px}
+footer li ul{margin:5px 0 0}
+footer a{color:var(--accent)}
+footer .keylist{list-style:none;padding:0}
+footer .keylist li{display:flex;gap:10px;align-items:flex-start}
+footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 .board{position:relative}
 .void-msg{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:110px;z-index:5;pointer-events:none}
 .void-msg>div{position:sticky;top:30vh}
@@ -189,24 +250,27 @@ footer p{margin:0 0 8px}
 <header>
   <div>
     <h1>Men’s Test Scorigami</h1>
-    <p class="lead">A <b>scorigami</b> is a total that no men’s Test innings has ever finished on. This board shows every total from 0 to 999: which have happened, how often, and how those innings ended.</p>
+    <p class="kicker">Every total a men’s Test innings has finished on, from 0 to 999</p>
+    <p class="lead">A <b>scorigami</b> is a score that has never happened before. The writer Jon Bois <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">came up with it for NFL final scores</a>, and fans have since built boards for rugby, tennis and baseball. This is the Test cricket version: the final run total of every men’s Test innings, how often each total has come up, and how those innings ended.</p>
     <span class="howto">Tap any number to see every innings that finished on it.</span>
   </div>
 </header>
 
 <section class="kpis" id="kpis" aria-label="Summary"></section>
+<div class="kpinote" id="kpinote" hidden><span>These figures count only the innings that match your filters.</span><button class="linkbtn" id="kpiReset">Show all innings</button></div>
 
 <div class="controls">
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="viewSeg">
-      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button>
-    </div><button class="linkbtn" data-v="cube">3D view</button></div>
+      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="cube" aria-pressed="false">3D</button>
+    </div></div>
   <div class="group"><span class="glabel">Display</span>
-    <button class="chip" id="countBtn" aria-pressed="false" style="padding-left:10px">Show times it’s happened</button>
-    <button class="chip" id="cbBtn" aria-pressed="false" style="padding-left:10px" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
+    <button class="chip tog" id="countBtn" aria-pressed="false">Show times it’s happened</button>
+    <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
   <div class="group"><label for="jump">Go to</label><input id="jump" type="number" min="0" max="999" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
-<div class="filters" aria-label="Filters">
+<button class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Filters &amp; quick questions <b id="fcount"></b> ▾</button>
+<div class="filters" id="filtersBox" aria-label="Filters">
   <div class="group"><span class="glabel">Filter</span><div class="fbar" id="fbar"></div><button class="linkbtn" id="resetBtn">Reset all</button></div>
   <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
 </div>
@@ -236,15 +300,45 @@ footer p{margin:0 0 8px}
 
 <footer>
   <h2>What the colours mean</h2>
-  <p>Each cell is a team total from 0 to 999. <b>Green, like the outfield (bowled out):</b> a side has been dismissed for exactly this total at least once. All ten down, they left everything out on the field. <b>Cream, like Test whites (never bowled out):</b> innings have ended here, but never all out. Declared, chased down, or still batting when the match was drawn, they’re still out there in their whites, undefeated. <b>Red, like the ball (never happened):</b> no men’s Test innings has ever finished on this total. The ball is still in play, and it’s a scorigami waiting to happen. Under <b>Display</b> you can show how many times each total has happened, or switch to <b>high-contrast colours</b>, where the scorigamis turn orange and are easier to pick out if you see some colours differently. With filters on, the board recolours using only the innings that match.</p>
+  <p>Each square is a team total from 0 to 999, coloured by how innings on that total have ended.</p>
+  <ul class="keylist">
+    <li><span class="sq" style="background:var(--out)"></span><span><b>Complete – all out.</b> A side has been bowled out for exactly this total at least once.</span></li>
+    <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Complete – not out.</b> Innings have ended on this total, but none of them all out. They were declared, won the match by chasing down a target, or were still batting when the match was drawn.</span></li>
+    <li><span class="sq" style="background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
+  </ul>
+  <p>Under <b>Display</b> you can show how many times each total has happened, or switch to <b>high-contrast colours</b>, which turn the scorigamis orange. With filters on, the board recolours using only the innings that match.</p>
+
   <h2>How endings are decided</h2>
-  <p>Endings come from the scorecards: <b>all out</b>, <b>declared</b>, <b>successful chase</b>, or <b>match drawn</b> with the side still batting at the end. <b>All out, short-handed</b> is an innings that ended with fewer than ten wickets down because a batter was absent hurt, retired hurt, ill, or retired not out and didn’t return. The rest are innings the result settles on its own: all out with all ten wickets down, or a successful chase. <b>Forfeited</b> innings count as declarations on 0/0 and are marked with an asterisk (*). The only ones in men’s Tests came at Centurion in 2000, when England forfeited their first innings and South Africa their second. The Laws of the time didn’t provide for a first-innings forfeit, so England’s was scored as 0/0 declared; on this site England’s shows as 0/0d* and South Africa’s as forfeited*, and both count as forfeits on 0. <b>Other</b> is England’s 298/4 at The Oval in 2006, when the match was awarded to England after Pakistan refused to take the field.</p>
+  <ul>
+    <li><b>All out:</b> all ten wickets down.</li>
+    <li><b>All out, short-handed:</b> the innings ended with fewer than ten wickets down because a batter was absent hurt, retired hurt or ill and didn’t come back. A few scorecards record a batter who retired hurt as “retired not out”. Those count as retired hurt here and are marked with an asterisk (*), with a note saying where they were recorded that way.</li>
+    <li><b>Declared:</b> the batting side closed its innings.
+      <ul><li><b>Forfeited*:</b> counted as a declaration on 0. The only men’s Test forfeits came at Centurion in 2000. The Laws of the time didn’t provide for a first-innings forfeit, so England’s was scored as 0/0 declared (shown as 0/0d*); South Africa’s second-innings forfeit is shown as forfeited*.</li></ul></li>
+    <li><b>Successful chase:</b> the side batting last reached its target and won.</li>
+    <li><b>Match drawn:</b> the side was still batting when the match ended in a draw. That covers a rearguard to save the Test, a chase that ran out of time, and the odd stranger case, such as the 1939 “timeless” Test at Durban, abandoned on the tenth day with England 42 short of 696, because they had a boat home to catch.</li>
+    <li><b>Other:</b> England’s 298/4 at The Oval in 2006, when the match was awarded to England after Pakistan refused to come back out after tea on the fourth day, in protest at a ball-tampering penalty.</li>
+  </ul>
+
   <h2>Using the filters</h2>
-  <p>Each filter is a dropdown: tick what to keep, or hover a line and click “only”. The innings filter splits a 3rd innings played following on from an ordinary one. The toss and result filters describe the side that made the total. The quick questions set the filters for you and open <b>Ranked innings</b>.</p>
+  <ul>
+    <li>Each filter is a dropdown: tick what to keep, or hover a line and click “only”.</li>
+    <li>The innings filter splits a 3rd innings played following on from an ordinary one.</li>
+    <li>The toss and result filters describe the side that made the total.</li>
+    <li>For 4th innings, the target is shown alongside the total.</li>
+    <li>The quick questions set the filters for you and open <b>Ranked innings</b>.</li>
+  </ul>
+
   <h2>Sources and credits</h2>
-  <p>Match data from <a href="https://cricsheet.org" style="color:var(--accent)">Cricsheet</a>, used under the <a href="https://opendatacommons.org/licenses/by/1-0/" style="color:var(--accent)">Open Data Commons Attribution License</a>. Historical results and innings endings checked against scorecards on <a href="https://www.espncricinfo.com" style="color:var(--accent)">ESPNcricinfo</a>; every innings links to its scorecard there. Scores and results are facts; the scorigami, classifications and design are this site’s own. Not affiliated with Cricsheet, ESPNcricinfo or the ICC. Spotted an error? Corrections are welcome.</p>
+  <ul>
+    <li><b>Scorigami</b> is Jon Bois’s idea, from his 2014 SB Nation article and his 2016 video <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">“Chart Party: Scorigami”</a> on NFL scores. This site borrows the idea for Test cricket.</li>
+    <li><b>Match data</b> from <a href="https://cricsheet.org">Cricsheet</a>, used under the <a href="https://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License</a>.</li>
+    <li><b>Results and innings endings</b> checked against scorecards on <a href="https://www.espncricinfo.com">ESPNcricinfo</a>. Every innings links to its scorecard there.</li>
+    <li>Scores and results are facts; the classifications and design are this site’s own. Not affiliated with Jon Bois, SB Nation, Cricsheet, ESPNcricinfo or the ICC.</li>
+  </ul>
   <p><span id="coverage"></span></p>
-  <p id="srcNote"></p>
+  <p id="srcNote" hidden></p>
+  <p>Spotted an error? Corrections are welcome.</p>
+  <p id="updated" style="color:var(--muted)"></p>
 </footer>
 <div id="tip" role="tooltip"></div>
 
@@ -259,7 +353,8 @@ const HOW = [
   {k:'other', label:'Other', short:'other', v:'--e5'},
   {k:'forfeit', label:'Forfeited (0/0d)', short:'forfeited', v:'--e2'}
 ];
-const WHY = ['Absent hurt','Retired hurt','Ill','Retired not out','Several reasons','Not recorded'];
+const WHY = ['Absent hurt','Retired hurt','Ill','Other reason','Several reasons','Not recorded'];
+const note = r => (DATA.notes||{})[r[0]+'-'+r[3]];
 const INN = ['1st','2nd','3rd','3rd (following on)','4th'];
 const ix = r => r[3]===1?0: r[3]===2?1: r[3]===3?(r[10]===0?3:2): 4;   // innings bucket, follow-on 3rd split out
 const fo = r => r[10]===2?1:0;   // 0 = match had a follow-on, 1 = it didn't
@@ -269,11 +364,18 @@ const TOSS = ['Won, chose to bat','Won, chose to bowl','Lost, opposition batted'
 const T = DATA.teams, M = DATA.matches;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
+// Target for each 4th innings: the other side's runs minus the batting side's earlier runs, plus one
+(function(){ const byM={}; DATA.inn.forEach(r=>(byM[r[0]]=byM[r[0]]||[]).push(r));
+  Object.values(byM).forEach(rs=>{ const f=rs.find(r=>r[3]===4); if(!f) return;
+    let own=0, opp=0; rs.forEach(r=>{ if(r[3]<4){ if(r[1]===f[1]) own+=r[4]; else opp+=r[4]; } });
+    f.tgt = opp-own+1; }); })();
+const tgt = r => (r[3]===4 && r.tgt>0) ? r.tgt : null;
 DATA.inn.forEach((r,i)=>{ if(r[4]<1000) byScore[r[4]].push(r); });
 const META = DATA.meta || {};
 (function(){ const d=META.last? new Date(META.last+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'';
-  const s=META.src||{}; document.getElementById('coverage').textContent = `Covers ${(META.tests||0).toLocaleString()} men’s Tests from ${META.first||1877} to ${d} (${DATA.inn.length.toLocaleString()} innings). ${((s.cricsheet||0)+(s.statsguru||0)+(s.manual||0)+(s.cricinfo||0)).toLocaleString()} innings have been checked against their scorecards; the other ${(s.csv||0).toLocaleString()} are all-outs with all ten wickets down or successful chases, which the scores and result settle on their own. Last updated ${META.built||''}.`;
-  document.getElementById('srcNote').textContent = (META.last||'') > '2024-03-31' ? '' : 'Not yet included: Tests after the CSV ends (March 2024), until the Cricsheet update runs.'; })();
+  const s=META.src||{}; document.getElementById('coverage').textContent = `Covers ${(META.tests||0).toLocaleString()} men’s Tests from ${META.first||1877} to ${d} (${DATA.inn.length.toLocaleString()} innings). ${((s.cricsheet||0)+(s.statsguru||0)+(s.manual||0)+(s.cricinfo||0)).toLocaleString()} innings have been checked against their scorecards; the other ${(s.csv||0).toLocaleString()} are all-outs with all ten wickets down or successful chases, which the scores and result settle on their own.`;
+  document.getElementById('updated').textContent = META.built ? `Last updated ${new Date(META.built+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})}.` : '';
+  const sn=document.getElementById('srcNote'); sn.textContent = (META.last||'') > '2024-03-31' ? '' : 'Not yet included: Tests after the CSV ends (March 2024), until the Cricsheet update runs.'; sn.hidden=!sn.textContent; })();
 
 const state = {view:'grid', labels:'total', cb:false, marks:false, fsel:{}, preset:null, rankDir:-1, rankN:100, sel:null, layer:-1, rx:-24, ry:-38, spread:34, nums:true};
 
@@ -309,10 +411,10 @@ FILTERS.forEach(f=>{
 function pass(r){ for(const f of FILTERS) if(!state.fsel[f.id].has(f.key(r))) return false; return true; }
 function filtered(){ return FILTERS.some(f=>state.fsel[f.id].size<f.leaves.length); }
 function info(s){
-  let star=false; const c=[0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null;
-  for(const r of byScore[s]){ if(!pass(r)) continue; c[r[6]]++; n++; if(r[6]===6 || (DATA.notes||{})[r[0]+'-'+r[3]]) star=true; ii[ix(r)]++; rr[r[9]]++; if(r[6]===1) w[why(r)]++; if(first===null||r[0]<first[0]) first=r; if(last===null||r[0]>last[0]) last=r; }
+  let star=false, starN=false; const c=[0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null;
+  for(const r of byScore[s]){ if(!pass(r)) continue; c[r[6]]++; n++; if(r[6]===6) star=true; else if(note(r)) starN=true; ii[ix(r)]++; rr[r[9]]++; if(r[6]===1) w[why(r)]++; if(first===null||r[0]<first[0]) first=r; if(last===null||r[0]>last[0]) last=r; }
   const out=c[0]+c[1];
-  return {star,c,w,ii,rr,n,out,not:n-out,status: out?'out': n?'not':'never', first,last};
+  return {star,starN,c,w,ii,rr,n,out,not:n-out,status: out?'out': n?'not':'never', first,last};
 }
 let cache=[];
 function recompute(){ cache = Array.from({length:1000},(_,s)=>info(s)); }
@@ -323,16 +425,16 @@ const ICON={
 };
 function cellStyle(s){
   const o=cache[s];
-  if(state.empty || !o.n) return state.cb ? ['var(--never-cb)','var(--never-cb-ink)',''] : ['var(--never)','var(--never-ink)','inset 0 0 0 1.5px var(--never-edge)'];
+  if(state.empty || !o.n) return state.cb ? ['var(--never-cb)','var(--never-cb-ink)',''] : ['var(--never)','var(--never-ink)','inset 0 0 0 2px var(--never-edge)'];
   if(o.status==='out') return ['var(--out)','var(--out-ink)',''];
-  return ['var(--not)','var(--not-ink)','inset 0 0 0 1px var(--not-edge)'];
+  return ['var(--not)','var(--not-ink)','inset 0 0 0 1.25px var(--not-edge)'];
 }
 function marks(o){ if(!state.marks || !o.n || o.status!=='not') return ''; return (o.c[2]?'d':'')+(o.c[4]?'*':'')+(o.c[3]?'✓':''); }
 function fmtInn(r){
   const h=r[6], w=r[5], R=r[4];
   if(h===6) return r[3]<=2 ? '0/0d*' : 'forfeited*';
   if(h===0) return `${R}`;
-  if(h===1) return `${R} all out (${w} wkts, ${WHY[why(r)].toLowerCase()})`;
+  if(h===1) return `${R} all out (${w} wkts, ${WHY[why(r)].toLowerCase()}${note(r)?'*':''})`;
   if(h===2) return `${R}/${w}d`;
   return `${R}/${w}`;
 }
@@ -341,16 +443,17 @@ function ord(n){return n+(['th','st','nd','rd'][n]||'th')}
 /* ---------- KPIs ---------- */
 function renderKPIs(){
   const K=document.getElementById('kpis');
-  if(state.empty){ K.innerHTML=['totals have happened','still waiting','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
+  if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','still waiting','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
   let reached=0, top=0, topS=0; const gaps=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
   // latest scorigami = the total whose first matching innings came most recently
   let latest=null; for(let s=0;s<1000;s++){ const f=cache[s].first; if(f && (!latest || f[0]>latest[0])) latest=f; }
   const lm = latest? M[latest[0]] : null;
+  K.classList.toggle('filt', filtered()); document.getElementById('kpinote').hidden=!filtered();
   K.innerHTML = [
     [reached.toLocaleString(), 'of 1,000 totals have happened', '', 'var(--out)'],
     [(1000-reached).toLocaleString(), 'totals still waiting for their first innings', '', 'var(--never)'],
-    [gaps[0]??'—', 'lowest total never reached', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
+    [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
     [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
     [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${lm[1]}` : '', 'var(--accent)']
   ].map(([b,t,sub,k])=>`<div class="kpi" style="--k:${k}"><b class="num">${b}</b><span>${t}</span>${sub?`<small>${sub}</small>`:''}</div>`).join('');
@@ -358,12 +461,12 @@ function renderKPIs(){
 
 /* ---------- legend ---------- */
 function renderLegend(){
-  const nv=state.cb?'background:var(--never-cb);color:var(--never-cb-ink)':'background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 1.5px var(--never-edge)';
+  const nv=state.cb?'background:var(--never-cb);color:var(--never-cb-ink)':'background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 2px var(--never-edge)';
   const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
   document.getElementById('legend').innerHTML =
-    item('background:var(--out);color:var(--out-ink)','out','Bowled out','All ten down. It’s done.') +
-    item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1px var(--not-edge)','not','Never bowled out','Still out there in their whites, undefeated.') +
-    item(nv,'never','Never happened','The ball’s still in play.');
+    item('background:var(--out);color:var(--out-ink)','out','Complete – all out','At least one side has been bowled out for exactly this total.') +
+    item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)','not','Complete – not out','Innings have ended here, but never all out: declared, chased down, or batting at the close.') +
+    (filtered()? item(nv,'never','None with these filters','No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
 }
 
 /* ---------- grid ---------- */
@@ -436,13 +539,20 @@ document.getElementById('view-table').addEventListener('click',e=>{
 
 /* ---------- ranked innings ---------- */
 function renderList(){
-  const all=DATA.inn.filter(pass).sort((a,b)=>(a[4]-b[4])*state.rankDir || a[0]-b[0]);
+  const byTarget = state.preset!==null && PRESETS[state.preset].key==='target';
+  const val = r => byTarget ? tgt(r) : r[4];
+  const all=DATA.inn.filter(r=>pass(r) && (!byTarget || tgt(r)!==null)).sort((a,b)=>(val(a)-val(b))*state.rankDir || a[0]-b[0]);
+  const showT = byTarget || (state.fsel.inn.size===1 && state.fsel.inn.has('4'));
   const rows=all.slice(0,state.rankN); let rank=0, prev=null;
   const desc=filtered()?FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).map(f=>f.label.toLowerCase()+': '+summary(f)).join('; '):'no filters';
-  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc}).</span></div>`;
-  h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>#</th><th>Total</th><th>Team</th><th>Opponent</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Team’s result</th><th>Year</th><th>Match result</th><th></th></tr></thead><tbody>`+
-    rows.map((r,i)=>{ if(prev===null||r[4]!==prev){rank=i+1; prev=r[4];} const m=M[r[0]];
-      return `<tr data-s="${r[4]}"><td class="num">${rank}</td><td class="num"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td><td>${T[r[1]]}</td><td>${T[r[2]]}</td><td>${INN[ix(r)]}</td><td><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${r[6]===1?WHY[why(r)]:HOW[r[6]].label}</td><td>${['Won, batted','Won, bowled','Lost, opp. batted','Lost, sent in','–'][r[11]]}</td><td>${RES[r[9]]}</td><td class="num">${m[1]}</td><td style="white-space:normal;min-width:180px">${m[3]}</td><td>${m[0]?`<a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener" style="color:var(--accent)">Scorecard ↗</a>`:''}</td></tr>`; }).join('')+
+  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc})${byTarget?'. Ranked by the target the side was set':''}.</span></div>`;
+  h+=`<div class="tablewrap"><table class="rank${showT?' withT':''}"><thead><tr><th>#</th>${showT?'<th style="text-align:right">Target</th>':''}<th style="text-align:right">Total</th><th>Innings</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Result</th></tr></thead><tbody>`+
+    rows.map((r,i)=>{ if(prev===null||val(r)!==prev){rank=i+1; prev=val(r);} const m=M[r[0]];
+      const nt=note(r), endTxt=(r[6]===1?'All out, '+WHY[why(r)].toLowerCase():HOW[r[6]].label)+(nt?`<span class="star" title="${nt}">*</span>`:'');
+      return `<tr data-s="${r[4]}"><td class="num c-rank">${rank}</td>${showT?`<td class="num c-tgt">${tgt(r)??'–'}</td>`:''}<td class="num c-tot"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td>`+
+        `<td class="c-who"><b>${T[r[1]]}</b> v ${T[r[2]]}<small>${m[1]} · ${m[2]||''}${tgt(r)?`<span class="tsm"> · target ${tgt(r)}</span>`:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</small></td>`+
+        `<td class="c-inn">${INN[ix(r)]}</td><td class="c-end"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${endTxt}<span class="m"> · ${INN[ix(r)]} innings · ${['won toss, batted','won toss, bowled','lost toss, opp. batted','lost toss, sent in',''][r[11]]}</span></td>`+
+        `<td class="c-toss">${['Won, batted','Won, bowled','Lost, opp. batted','Lost, sent in','–'][r[11]]}</td><td class="c-res">${RES[r[9]]}<small>${m[3]}</small></td></tr>`; }).join('')+
     `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="moreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
   document.getElementById('view-list').innerHTML=h;
 }
@@ -457,11 +567,12 @@ document.getElementById('view-list').addEventListener('click',e=>{
 function renderDetail(){
   const D=document.getElementById('detail'); const s=state.sel; if(s===null){D.innerHTML='';return;}
   const o=cache[s];
-  const pill = o.status==='out'?[ICON.out+'Bowled out here','var(--out)','#fff']: o.status==='not'?[ICON.not+'Never bowled out here','var(--not)','var(--not-ink)']:[ICON.never+'Never happened', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
+  const hidden = !o.n && filtered() && byScore[s].length>0;   // it has happened, just not with these filters
+  const pill = o.status==='out'?[ICON.out+'Complete – all out','var(--out)','#fff']: o.status==='not'?[ICON.not+'Complete – not out','var(--not)','var(--not-ink)']: hidden?['Not with these filters','var(--bg)','var(--ink-2)']:[ICON.never+'Scorigami!', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
   let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
   if(!o.n){
     const nb=[]; for(let d=1;d<1000&&nb.length<2;d++){ if(s-d>=0&&cache[s-d].n&&!nb.some(x=>x<s)) nb.push(s-d); if(s+d<1000&&cache[s+d].n&&!nb.some(x=>x>s)) nb.push(s+d); }
-    h+=`<p class="empty">No innings ${filtered()?'matching the filters ':''}has finished on ${s}. ${nb.length?`Nearest totals reached: ${nb.sort((a,b)=>a-b).map(x=>`<a href="#" data-go="${x}" style="color:var(--accent)">${x}</a>`).join(' and ')}.`:''}</p>`;
+    h+=`<p class="empty">No innings ${filtered()?'matching the filters ':''}has finished on ${s}.${hidden?` (${byScore[s].length} ${byScore[s].length===1?'innings has':'innings have'} without them.)`:''} ${nb.length?`Nearest totals reached: ${nb.sort((a,b)=>a-b).map(x=>`<a href="#" data-go="${x}" style="color:var(--accent)">${x}</a>`).join(' and ')}.`:''}</p>`;
     D.innerHTML=h; return;
   }
   h+=`<p style="margin:10px 0 0;color:var(--ink-2)"><b class="num" style="color:var(--ink)">${o.n}</b> innings ${o.n===1?'has':'have'} finished on ${s}.</p>`;
@@ -470,6 +581,7 @@ function renderDetail(){
   const shown=o.c.map((v,i)=>i===2? v+o.c[6] : i===6? 0 : v);
   h+=`<div class="breakdown">${shown.map((v,i)=>v?`<i style="--c:var(${HOW[i].v})"></i><span>${HOW[i].label}</span><b class="num">${v}</b>`+(i===1?o.w.map((x,j)=>x?sub(WHY[j],x):'').join(''):'')+(i===2&&o.c[6]?sub('Forfeited (0/0d)',o.c[6]):''):'').join('')}</div>`;
   if(o.star) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Includes forfeited innings, counted as 0/0 declared.</p>`;
+  else if(o.starN) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Counted here as retired hurt; see the note on the innings below.</p>`;
   h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">By innings: ${o.ii.map((x,i)=>`${INN[i]} <b class="num" style="color:var(--ink)">${x}</b>`).join(' · ')}</p>`;
   h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">Toss: ${[0,1,3,2].map(i=>[i,byScore[s].filter(r=>pass(r)&&r[11]===i).length]).filter(x=>x[1]).map(([i,n])=>`${TOSS[i].toLowerCase()} <b class="num" style="color:var(--ink)">${n}</b>`).join(' · ')}</p>`;
   h+=`<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2)">Team went on to: ${o.rr.map((x,i)=>x?`${RES[i].toLowerCase()} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
@@ -477,7 +589,7 @@ function renderDetail(){
   h+=`<h2 style="font-size:17px;margin-top:6px">Every innings, newest first</h2><div class="list">`+list.map(r=>{
     const m=M[r[0]];
     return `<div class="row"><span class="y">${m[1]}</span><span class="t"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${T[r[1]]} <span class="num">${fmtInn(r)}</span> <span style="font-weight:400;color:var(--ink-2)">v ${T[r[2]]}</span></span>
-      <span class="m">${ord(r[3])} innings${r[10]===0?' (following on)':''} · ${(DATA.notes||{})[r[0]+'-'+r[3]]?'<i>'+DATA.notes[r[0]+'-'+r[3]]+'</i> · ':''}${r[6]===1?'all out, short-handed ('+WHY[why(r)].toLowerCase()+')':HOW[r[6]].short}${m[2]?' · '+m[2]:''}<br>${m[3]} · ${m[4]?'Test '+m[4]:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</span></div>`;
+      <span class="m">${ord(r[3])} innings${r[10]===0?' (following on)':''}${tgt(r)?' (target '+tgt(r)+')':''} · ${note(r)&&r[6]!==1?'<i>'+note(r)+'</i> · ':''}${r[6]===1?'all out, short-handed ('+WHY[why(r)].toLowerCase()+(note(r)?'*':'')+')':HOW[r[6]].short}${m[2]?' · '+m[2]:''}${r[6]===1&&note(r)?'<br><i>* '+note(r)+'</i>':''}<br>${m[3]} · ${m[4]?'Test '+m[4]:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</span></div>`;
   }).join('')+`</div>`;
   D.innerHTML=h;
 }
@@ -485,13 +597,20 @@ document.getElementById('detail').addEventListener('click',e=>{const a=e.target.
 
 /* ---------- tooltip & selection ---------- */
 const tip=document.getElementById('tip');
-function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · never reached`; return `<b>${s}</b> · ${o.n} innings<br>`+o.c.map((v,i)=>v?`${HOW[i].label}: ${v}`:'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
+function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · ${filtered()&&byScore[s].length?'none with these filters':'scorigami: never reached'}`; return `<b>${s}</b> · ${o.n} innings<br>`+o.c.map((v,i)=>v?`${HOW[i].label}: ${v}`:'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
 document.addEventListener('pointerover',e=>{const c=e.target.closest('.cell'); if(!c){tip.style.display='none';return;} tip.innerHTML=tipText(+c.dataset.s); tip.style.display='block';});
 document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') return; const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-8), y=Math.min(e.clientY+14, innerHeight-tip.offsetHeight-8); tip.style.left=x+'px'; tip.style.top=y+'px'; });
 document.addEventListener('click',e=>{const c=e.target.closest('.cell'); if(c) select(+c.dataset.s);});
 function select(s, quiet){ state.sel=s; paintAll(false); renderDetail(); if(!quiet && innerWidth<1100) document.getElementById('detail').classList.add('open'); }
 document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('#sheetClose')) document.getElementById('detail').classList.remove('open'); });
-document.getElementById('jump').addEventListener('change',e=>{const v=Math.round(+e.target.value); if(v>=0&&v<1000) select(v);});
+function goTo(s){
+  select(s);
+  if(state.view!=='grid') return;
+  const c=gridEl.querySelector(`.cell[data-s="${s}"]`); if(!c) return;
+  c.scrollIntoView({block: innerWidth<1100?'start':'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+}
+document.getElementById('jump').addEventListener('change',e=>{const v=Math.round(+e.target.value); if(v>=0&&v<1000) goTo(v);});
 
 /* ---------- controls ---------- */
 /* ---------- filter dropdowns ---------- */
@@ -527,7 +646,7 @@ function renderActive(){
   A.hidden=false; A.innerHTML=`<span>Showing</span>`+on.map(f=>`<button class="x" data-clear="${f.id}">${f.label}: ${summary(f)}</button>`).join('')+`<span>· ${n.toLocaleString()} innings</span><button class="linkbtn" data-clear="*">Clear all</button>`;
 }
 document.getElementById('activeBar').addEventListener('click',e=>{ const b=e.target.closest('[data-clear]'); if(!b) return; const id=b.dataset.clear; if(id==='*') resetSel(); else { const F=FILTERS.find(f=>f.id===id); state.fsel[id]=new Set(F.leaves.map(l=>l.v)); } state.preset=null; syncPresets(); refilter(); });
-function refilter(){ state.rankN=100; syncFilters(); renderActive(); paintAll(true); renderDetail(); }
+function refilter(){ state.rankN=100; syncFilters(); const k=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).length; document.getElementById('fcount').textContent=k?`(${k} on)`:''; renderActive(); paintAll(true); renderDetail(); }
 function closePops(except){ document.querySelectorAll('.pop').forEach(p=>{ if(p.id!==except){ p.hidden=true; document.getElementById('fb-'+p.id.slice(4)).setAttribute('aria-expanded','false'); } }); }
 buildFilters(); syncFilters();
 if(innerWidth>=700) document.getElementById('qq').open=true;
@@ -553,9 +672,9 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePops(); });
 /* ---------- quick questions ---------- */
 const ALLOUT=()=>FILTERS[0].leaves.filter(l=>l.v==='0'||l.v[0]==='s').map(l=>l.v);
 const PRESETS=[
-  {l:'Highest 4th-innings totals to save a Test', set:{inn:['4'],end:['4']}, dir:-1},
+  {l:'Biggest 4th-innings totals in drawn Tests', set:{inn:['4'],res:['2']}, dir:-1},
   {l:'Highest successful chases', set:{inn:['4'],end:['3']}, dir:-1},
-  {l:'Lowest totals defended in the 4th innings', set:{inn:['4'],res:['1'],end:()=>ALLOUT()}, dir:-1, note:'highest 4th-innings all-outs that still lost'},
+  {l:'Lowest targets successfully defended', set:{inn:['4'],res:['1']}, dir:1, key:'target'},
   {l:'Lowest declarations that won', set:{end:['2'],res:['0']}, dir:1},
   {l:'Highest declarations that lost', set:{end:['2'],res:['1']}, dir:-1},
   {l:'Biggest totals following on', set:{inn:['3']}, dir:-1},
@@ -577,7 +696,9 @@ document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); s
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; paintAll(false);});
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
 flip('countBtn','labels','count','total'); flip('cbBtn','cb',true,false);
-document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) select(opts[Math.floor(Math.random()*opts.length)]); });
+document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
+document.getElementById('kpiReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
+document.getElementById('ftoggle').addEventListener('click',e=>{ const f=document.getElementById('filtersBox'); const open=f.classList.toggle('fopen'); e.currentTarget.setAttribute('aria-expanded',String(open)); });
 
 
 function paintAll(re){

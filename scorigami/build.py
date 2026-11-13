@@ -17,6 +17,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import csv
 import io
 import json
@@ -48,6 +49,7 @@ def why_from_text(note: str) -> str:
         part = part.strip()
         if not part: continue
         if "hurt" in part or "injur" in part: found.add("absent_hurt" if "absent" in part else "retired_hurt")
+        elif part == "retired not out": found.add("retired_hurt")   # how some scorecards record a batter retired hurt
         elif "ill" in part: found.add("ill")
         else: found.add("other")
     return "unknown" if not found else (found.pop() if len(found) == 1 else "several")
@@ -64,6 +66,14 @@ TEAM_ALIASES = {
 RES = ["won", "lost", "drawn", "tied"]
 NOTES = {("63864", 2): "Forfeited. The Laws then didn’t provide for a first-innings forfeit, so the scorers recorded it as 0/0 declared",
          ("63864", 3): "Forfeited, counted here on 0"}
+RNO_SRC = defaultdict(set)   # (match id, innings) -> sources that recorded a batter "retired not out"
+
+
+def mark_rno(mid, inn, note, src):
+    if "retired not out" in (note or "").lower():
+        RNO_SRC[(str(mid), inn)].add(src)
+
+
 FO = ["following_on", "follow_on_match", "no_follow_on"]
 TOSS = ["won_bat", "won_bowl", "lost_opp_batted", "lost_sent_in", "unknown"]
 
@@ -251,12 +261,13 @@ def load_cricsheet(store: Store, zpath: Path) -> int:
                     continue
                 bat = team(inn["team"])
                 opp = next((t for t in teams if t != bat), "")
-                runs, wk, retired = 0, 0, False
+                runs, wk, retired, rno = 0, 0, False, False
                 for ov in inn.get("overs", []):
                     for dlv in ov.get("deliveries", []):
                         runs += dlv.get("runs", {}).get("total", 0)
                         wk += sum(1 for w in dlv.get("wickets", []) if w.get("kind") not in NOT_DISMISSALS)
-                        retired |= any(w.get("kind") == "retired hurt" for w in dlv.get("wickets", []))
+                        retired |= any(w.get("kind") in NOT_DISMISSALS for w in dlv.get("wickets", []))
+                        rno |= any(w.get("kind") == "retired not out" for w in dlv.get("wickets", []))
                 pr = inn.get("penalty_runs", {})
                 runs += pr.get("pre", 0) + pr.get("post", 0)
                 last = inn is real[-1]
@@ -270,6 +281,7 @@ def load_cricsheet(store: Store, zpath: Path) -> int:
                 absent = bool(inn.get("absent_hurt"))
                 why = ("several" if absent and retired else "absent_hurt" if absent
                        else "retired_hurt" if retired else "unknown")
+                if rno and how == "allout_short": mark_rno(mid, pos + 1, "retired not out", "Cricsheet")
                 store.put(mid, pos + 1, {"bat": bat, "opp": opp, "inn": pos + 1, "runs": runs,
                                          "wkts": min(wk, 10), "how": how, "why": why}, "cricsheet")
             n += 1
@@ -347,6 +359,7 @@ def load_cricinfo_new(store: Store, path: Path) -> int:
             elif ev == 3: how = "chase"
             elif last and ("drawn" in res.lower() or "draw" in res.lower()): how = "draw"
             else: how = "other"
+            if how == "allout_short": mark_rno(mid, k + 1, note, "ESPNcricinfo")
             store.put(mid, k + 1, {"bat": bat, "opp": opp, "inn": k + 1, "runs": runs or 0, "wkts": wk or 0,
                                    "how": how, "why": why_from_text(note) if how == "allout_short" else None},
                       "cricinfo")
@@ -402,6 +415,7 @@ def load_cricinfo_check(store: Store, path: Path) -> int:
                 m = store.matches[mid]; res = m["result"] or ""
                 how = ("chase" if res.startswith(old["bat"]) and "wicket" in res
                        else "draw" if "drawn" in res else "other")
+            if how == "allout_short": mark_rno(mid, inn, note, "ESPNcricinfo")
             store.put(mid, inn, {"bat": old["bat"], "opp": old["opp"], "inn": inn, "runs": runs,
                                  "wkts": wk, "how": how, "why": why_from_text(note)}, "cricinfo")
             n += 1
@@ -488,7 +502,7 @@ def write_outputs(store: Store, counts_src: dict):
     remap = {old: new for new, old in enumerate(used)}
     page = {
         "teams": teams, "how": HOW, "why": WHY, "res": RES,
-        "notes": {f"{remap[midx[mid]]}-{inn}": t for (mid, inn), t in NOTES.items() if (mid, inn) in store.inn},
+        "notes": {f"{remap[midx[mid]]}-{inn}": t for (mid, inn), t in all_notes(store).items() if (mid, inn) in store.inn},
         "matches": [[int(mlist[i]["mid"]) if mlist[i]["mid"].isdigit() else 0, mlist[i]["year"] or "",
                      mlist[i]["venue"] or "", mlist[i]["result"] or "", mlist[i]["test"]] for i in used],
         "inn": [[remap[midx[mid]], ti[r["bat"]], ti.get(r["opp"], 0), inn, r["runs"], r["wkts"] or 0,
@@ -504,10 +518,73 @@ def write_outputs(store: Store, counts_src: dict):
             "checked": counts_src,
         },
     }
+    status = ["never"] * 1000
+    for _, r in recs:
+        if r["runs"] < 1000 and status[r["runs"]] != "out":
+            status[r["runs"]] = "out" if r["how"] in ("allout", "allout_short") else "not"
+    reached = sum(s != "never" for s in status)
+    desc = (f"Every men’s Test innings total from 0 to 999: {reached:,} have happened, "
+            f"{1000 - reached:,} are still waiting. See how each one ended, and which are scorigamis.")
+    make_images(status, reached)
     tpl = (ROOT / "scorigami" / "template.html").read_text(encoding="utf-8")
-    (DOCS / "index.html").write_text(tpl.replace("__DATA__", json.dumps(page, separators=(",", ":"))),
-                                     encoding="utf-8")
+    html = (tpl.replace("__SITE__", SITE_URL).replace("__DESC__", desc)
+               .replace("__DATA__", json.dumps(page, separators=(",", ":"))))
+    (DOCS / "index.html").write_text(html, encoding="utf-8")
     return page["meta"]
+
+
+SITE_URL = os.environ.get("SITE_URL", "https://buckle-badger.github.io/test-cricket-scorigami/")
+FONT_DIRS = ["/usr/share/fonts/truetype/dejavu", "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/dejavu"]
+
+
+def _font(size, bold=False):
+    from PIL import ImageFont
+    names = ["DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"] if bold else ["DejaVuSans.ttf", "LiberationSans-Regular.ttf"]
+    for d in FONT_DIRS:
+        for n in names:
+            if Path(d, n).exists():
+                return ImageFont.truetype(str(Path(d, n)), size)
+    return ImageFont.load_default(size=size)
+
+
+def make_images(status, reached):
+    """Link-preview card (docs/og.png) and home-screen icon (docs/icon.png). Skipped if Pillow is missing."""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError:
+        print("Pillow not installed: skipping preview images", file=sys.stderr); return
+    bg, ink, ink2 = "#f4f6f3", "#131714", "#4a524c"
+    col = {"out": "#4f806d", "not": "#efe7d2", "never": "#f2c9ca"}
+    im = Image.new("RGB", (1200, 630), bg); d = ImageDraw.Draw(im)
+    TX = (1200 - (5 * (10 * 16 + 9 * 2) + 4 * 24)) // 2
+    d.text((TX - 3, 52), "Men’s Test Scorigami", font=_font(64, True), fill=ink)
+    d.text((TX, 136), f"{reached:,} of 1,000 innings totals have happened. {1000 - reached:,} are still waiting.",
+           font=_font(28), fill=ink2)
+    cell, gap, pgap = 16, 2, 24                 # ten 10×10 boards, five across, two down
+    pw = 10 * cell + 9 * gap
+    x0 = (1200 - (5 * pw + 4 * pgap)) // 2; y0 = 210
+    for p in range(10):
+        px, py = x0 + (p % 5) * (pw + pgap), y0 + (p // 5) * (pw + pgap)
+        for t in range(10):
+            for u in range(10):
+                x, y = px + u * (cell + gap), py + t * (cell + gap)
+                d.rounded_rectangle([x, y, x + cell, y + cell], radius=3, fill=col[status[p * 100 + t * 10 + u]])
+    im.save(DOCS / "og.png", optimize=True)
+
+    ic = Image.new("RGB", (180, 180), "#2f5e4f"); d = ImageDraw.Draw(ic)
+    d.ellipse([34, 34, 146, 146], fill="#b3121d")
+    d.line([(84, 40), (84, 140)], fill="#f6f1e3", width=3); d.line([(96, 40), (96, 140)], fill="#f6f1e3", width=3)
+    ic.save(DOCS / "icon.png", optimize=True)
+
+
+def all_notes(store):
+    """Fixed notes plus one for every short-handed innings a source recorded as "retired not out"."""
+    notes = dict(NOTES)
+    for key, srcs in RNO_SRC.items():
+        r = store.inn.get(key)
+        if r and r["how"] == "allout_short" and key not in notes:
+            notes[key] = "Recorded on " + " and ".join(sorted(srcs, reverse=True)) + " as “retired not out”"
+    return notes
 
 
 def main(argv=None):
