@@ -55,3 +55,7 @@ python -m scorigami.build            # downloads Cricsheet
 python -m scorigami.build --no-download
 python -m pytest -q tests            # fixture tests (the fixtures are synthetic)
 ```
+
+## Copyright
+
+© 2026 BuckleBadger. All rights reserved; see `LICENSE`. Match data is Cricsheet's, used under the Open Data Commons Attribution License.
