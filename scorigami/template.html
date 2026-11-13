@@ -249,6 +249,8 @@ footer a{color:var(--accent)}
 footer .keylist{list-style:none;padding:0}
 footer .keylist li{display:flex;gap:10px;align-items:flex-start}
 footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
+.sq-never{background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)}
+.cb .sq-never{background:var(--never-cb);box-shadow:none}
 .board{position:relative}
 .void-msg{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:110px;z-index:5;pointer-events:none}
 .void-msg>div{position:sticky;top:30vh}
@@ -327,7 +329,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
   <ul class="keylist">
     <li><span class="sq" style="background:var(--out)"></span><span><b>Complete – all out.</b> A side has been bowled out for exactly this total at least once.</span></li>
     <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Complete – not out.</b> Innings have ended on this total, but none of them all out. They were declared, won the match by chasing down a target, or were still batting when the match was drawn.</span></li>
-    <li><span class="sq" style="background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
+    <li><span class="sq sq-never"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
   </ul>
   <p>Under <b>Display</b> you can show how many times each total has happened, or switch to <b>high-contrast colours</b>, which turn the scorigamis orange. With filters on, the board recolours using only the innings that match.</p>
 
@@ -809,6 +811,7 @@ function paintAll(re){
     if(!reduce && state.view==='grid'){ gridEl.classList.add('boom'); setTimeout(()=>gridEl.classList.remove('boom'),650); }
     if(!reduce){ board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }
   }
+  document.documentElement.classList.toggle('cb', state.cb);
   renderKPIs(); renderLegend();
   if(state.view==='grid') paintCells(gridEl);
   if(state.view==='cube'){ paintCells(cubeEl); placeCube(); }
