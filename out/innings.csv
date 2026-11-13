@@ -3470,7 +3470,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 955,63342,1983-04-22,Sri Lanka,Australia,2,271,10,allout,,lost,follow_on_match,lost_opp_batted,cricinfo,Australia won by an innings and 38 runs
 955,63342,1983-04-22,Sri Lanka,Australia,3,205,10,allout,,lost,following_on,lost_opp_batted,cricinfo,Australia won by an innings and 38 runs
 956,63339,1983-04-28,India,West Indies,1,457,10,allout,,drawn,no_follow_on,lost_sent_in,cricinfo,Match drawn
-956,63339,1983-04-28,West Indies,India,2,550,9,allout_short,other,drawn,no_follow_on,won_bowl,cricinfo,Match drawn
+956,63339,1983-04-28,West Indies,India,2,550,9,allout_short,retired_hurt,drawn,no_follow_on,won_bowl,cricinfo,Match drawn
 956,63339,1983-04-28,India,West Indies,3,247,5,declared,,drawn,no_follow_on,lost_sent_in,cricinfo,Match drawn
 957,63343,1983-07-14,England,New Zealand,1,209,10,allout,,won,no_follow_on,won_bat,cricinfo,England won by 189 runs
 957,63343,1983-07-14,New Zealand,England,2,196,10,allout,,lost,no_follow_on,lost_opp_batted,cricinfo,England won by 189 runs
@@ -8312,7 +8312,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2290,1122310,2017-12-26,Zimbabwe,South Africa,3,121,10,allout,,lost,following_on,lost_opp_batted,cricinfo,South Africa won by an innings and 120 runs
 2291,1072309,2018-01-04,England,Australia,1,346,10,allout,,lost,no_follow_on,won_bat,cricinfo,Australia won by an innings and 123 runs
 2291,1072309,2018-01-04,Australia,England,2,649,7,declared,,won,no_follow_on,lost_opp_batted,cricinfo,Australia won by an innings and 123 runs
-2291,1072309,2018-01-04,England,Australia,3,180,9,allout_short,other,lost,no_follow_on,won_bat,cricinfo,Australia won by an innings and 123 runs
+2291,1072309,2018-01-04,England,Australia,3,180,9,allout_short,retired_hurt,lost,no_follow_on,won_bat,cricinfo,Australia won by an innings and 123 runs
 2292,1122276,2018-01-05,South Africa,India,1,286,10,allout,,won,no_follow_on,won_bat,cricsheet,South Africa won by 72 runs
 2292,1122276,2018-01-05,India,South Africa,2,209,10,allout,,lost,no_follow_on,lost_opp_batted,cricsheet,South Africa won by 72 runs
 2292,1122276,2018-01-05,South Africa,India,3,130,10,allout,,won,no_follow_on,won_bat,cricsheet,South Africa won by 72 runs
@@ -8698,7 +8698,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2395,1233958,2020-12-11,West Indies,New Zealand,3,317,10,allout,,lost,following_on,won_bowl,cricsheet,New Zealand won by an innings and 12 runs
 2396,1223869,2020-12-17,India,Australia,1,244,10,allout,,lost,no_follow_on,won_bat,cricinfo,Australia won by 8 wickets
 2396,1223869,2020-12-17,Australia,India,2,191,10,allout,,won,no_follow_on,lost_opp_batted,cricinfo,Australia won by 8 wickets
-2396,1223869,2020-12-17,India,Australia,3,36,9,allout_short,other,lost,no_follow_on,won_bat,cricinfo,Australia won by 8 wickets
+2396,1223869,2020-12-17,India,Australia,3,36,9,allout_short,retired_hurt,lost,no_follow_on,won_bat,cricinfo,Australia won by 8 wickets
 2396,1223869,2020-12-17,Australia,India,4,93,2,chase,,won,no_follow_on,lost_opp_batted,cricinfo,Australia won by 8 wickets
 2397,1233962,2020-12-26,New Zealand,Pakistan,1,431,10,allout,,won,no_follow_on,lost_sent_in,cricinfo,New Zealand won by 101 runs
 2397,1233962,2020-12-26,Pakistan,New Zealand,2,239,10,allout,,lost,no_follow_on,won_bowl,cricinfo,New Zealand won by 101 runs
@@ -8708,7 +8708,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2398,1223870,2020-12-26,India,Australia,2,326,10,allout,,won,no_follow_on,lost_opp_batted,cricsheet,India won by 8 wickets
 2398,1223870,2020-12-26,Australia,India,3,200,10,allout,,lost,no_follow_on,won_bat,cricsheet,India won by 8 wickets
 2398,1223870,2020-12-26,India,Australia,4,70,2,chase,,won,no_follow_on,lost_opp_batted,cricsheet,India won by 8 wickets
-2399,1237356,2020-12-26,Sri Lanka,South Africa,1,396,9,allout_short,other,lost,no_follow_on,won_bat,cricinfo,South Africa won by an innings and 45 runs
+2399,1237356,2020-12-26,Sri Lanka,South Africa,1,396,9,allout_short,retired_hurt,lost,no_follow_on,won_bat,cricinfo,South Africa won by an innings and 45 runs
 2399,1237356,2020-12-26,South Africa,Sri Lanka,2,621,10,allout,,won,no_follow_on,lost_opp_batted,cricinfo,South Africa won by an innings and 45 runs
 2399,1237356,2020-12-26,Sri Lanka,South Africa,3,180,9,allout_short,absent_hurt,lost,no_follow_on,won_bat,cricinfo,South Africa won by an innings and 45 runs
 2400,1233963,2021-01-03,Pakistan,New Zealand,1,297,10,allout,,lost,no_follow_on,lost_sent_in,cricinfo,New Zealand won by an innings and 176 runs
@@ -8947,7 +8947,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2461,1277101,2022-04-08,South Africa,Bangladesh,3,176,6,declared,,won,no_follow_on,won_bat,cricinfo,South Africa won by 332 runs
 2461,1277101,2022-04-08,Bangladesh,South Africa,4,80,10,allout,,lost,no_follow_on,lost_opp_batted,cricinfo,South Africa won by 332 runs
 2462,1308488,2022-05-15,Sri Lanka,Bangladesh,1,397,10,allout,,drawn,no_follow_on,won_bat,cricinfo,Match drawn
-2462,1308488,2022-05-15,Bangladesh,Sri Lanka,2,465,9,allout_short,other,drawn,no_follow_on,lost_opp_batted,cricinfo,Match drawn
+2462,1308488,2022-05-15,Bangladesh,Sri Lanka,2,465,9,allout_short,retired_hurt,drawn,no_follow_on,lost_opp_batted,cricinfo,Match drawn
 2462,1308488,2022-05-15,Sri Lanka,Bangladesh,3,260,6,draw,,drawn,no_follow_on,won_bat,cricinfo,Match drawn
 2463,1308489,2022-05-23,Bangladesh,Sri Lanka,1,365,10,allout,,lost,no_follow_on,won_bat,cricsheet,Sri Lanka won by 10 wickets
 2463,1308489,2022-05-23,Sri Lanka,Bangladesh,2,506,10,allout,,won,no_follow_on,lost_opp_batted,cricsheet,Sri Lanka won by 10 wickets
@@ -9113,7 +9113,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2506,1377011,2023-06-14,Bangladesh,Afghanistan,1,382,10,allout,,won,no_follow_on,lost_sent_in,cricinfo,Bangladesh won by 546 runs
 2506,1377011,2023-06-14,Afghanistan,Bangladesh,2,146,10,allout,,lost,no_follow_on,won_bowl,cricinfo,Bangladesh won by 546 runs
 2506,1377011,2023-06-14,Bangladesh,Afghanistan,3,425,4,declared,,won,no_follow_on,lost_sent_in,cricinfo,Bangladesh won by 546 runs
-2506,1377011,2023-06-14,Afghanistan,Bangladesh,4,115,9,allout_short,other,lost,no_follow_on,won_bowl,cricinfo,Bangladesh won by 546 runs
+2506,1377011,2023-06-14,Afghanistan,Bangladesh,4,115,9,allout_short,retired_hurt,lost,no_follow_on,won_bowl,cricinfo,Bangladesh won by 546 runs
 2507,1336043,2023-06-16,England,Australia,1,393,8,declared,,lost,no_follow_on,won_bat,cricinfo,Australia won by 2 wickets
 2507,1336043,2023-06-16,Australia,England,2,386,10,allout,,won,no_follow_on,lost_opp_batted,cricinfo,Australia won by 2 wickets
 2507,1336043,2023-06-16,England,Australia,3,273,10,allout,,lost,no_follow_on,won_bat,cricinfo,Australia won by 2 wickets
