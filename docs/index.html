@@ -29,6 +29,7 @@
   --out:#4f806d; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#5c5a50; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#cf4a53; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#2f5e4f; --e1:#86a89b; --e2:#2a78d6; --e3:#7357d6; --e4:#eda100; --e5:#8a8f8b; --e6:#2a78d6;
   --q1:#cde2fb; --q2:#9ec5f4; --q3:#6da7ec; --q4:#3987e5; --q5:#256abf; --q6:#184f95; --q7:#0d366b; --q0:#eef0ec;
+  --qi1:#131714; --qi2:#131714; --qi3:#131714; --qi4:#ffffff; --qi5:#ffffff; --qi6:#ffffff; --qi7:#ffffff; --dot:#131714;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -37,6 +38,7 @@
   --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
+  --qi1:#ffffff; --qi2:#ffffff; --qi3:#ffffff; --qi4:#ffffff; --qi5:#131714; --qi6:#131714; --qi7:#131714; --dot:#f6f1e3;
 }}
 :root[data-theme="dark"]{
   color-scheme: dark;
@@ -44,6 +46,7 @@
   --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
   --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
+  --qi1:#ffffff; --qi2:#ffffff; --qi3:#ffffff; --qi4:#ffffff; --qi5:#131714; --qi6:#131714; --qi7:#131714; --dot:#f6f1e3;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -142,6 +145,10 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .legend .sw{width:30px;height:30px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .legend .sw svg{width:20px;height:20px}
 .legend .key b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;line-height:1.2}
+.heatkey b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;margin-bottom:5px}
+.heatkey .bands{display:flex;gap:3px;flex-wrap:wrap}
+.heatkey .bands span{display:flex;flex-direction:column;align-items:center;font:11.5px var(--mono);color:var(--ink-2);gap:3px}
+.heatkey .bands i{display:block;width:30px;height:16px;border-radius:3px}
 .legend .key small{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.3}
 .pill svg{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
 .legend i{width:13px;height:13px;border-radius:3px;background:var(--c);border:1px solid var(--line)}
@@ -154,6 +161,8 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .cell{scroll-margin-top:70px;aspect-ratio:1;border:0;border-radius:3px;padding:0;font:9.5px/1 var(--mono);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--q0);color:var(--ink-2);min-width:0}
 .cell.sel{outline:2px solid var(--ink);outline-offset:1px;z-index:1}
 .cell{position:relative}
+.cell .hd{position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:var(--dot);pointer-events:none}
+.layer .cell .hd{display:none}
 .cell .mk{position:absolute;top:0;right:1px;font:600 8px/1 var(--body);opacity:.85;pointer-events:none}
 .lead{font-size:17px;max-width:62ch;margin:10px 0 0;color:var(--ink)}
 .lead b{font-weight:600}
@@ -287,7 +296,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
       <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="cube" aria-pressed="false">3D</button>
     </div></div>
   <div class="group"><span class="glabel">Display</span>
-    <button class="chip tog" id="countBtn" aria-pressed="false">Show times it’s happened</button>
+    <button class="chip tog" id="countBtn" aria-pressed="false" title="Shade each total by how often it has come up">Frequency heat map</button>
     <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
   <div class="group"><label for="jump">Go to</label><input id="jump" type="number" min="0" max="999" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
@@ -334,7 +343,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
     <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Complete – not out.</b> Innings have ended on this total, but none of them all out. They were declared, won the match by chasing down a target, or were still batting when the match was drawn.</span></li>
     <li><span class="sq sq-never"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
   </ul>
-  <p>Under <b>Display</b> you can show how many times each total has happened (on the <b>Grids</b> view), or switch to <b>high-contrast colours</b>, which turn the scorigamis orange. With filters on, every view recolours using only the innings that match.</p>
+  <p>Under <b>Display</b>, the <b>frequency heat map</b> shades every total in blue by how often it has come up (darker means more often; the Grids view also shows the count), with a dot marking totals that have never ended all out. <b>High-contrast colours</b> turn the scorigamis orange. With filters on, every view recolours using only the innings that match.</p>
 
   <h2>How endings are decided</h2>
   <ul>
@@ -366,6 +375,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
   <p><span id="coverage"></span></p>
   <p id="srcNote" hidden></p>
   <p>Spotted an error? Corrections are welcome.</p>
+  <p id="copy">© <span id="copyYears">2026</span> Jérémy Tupper. All rights reserved. Match data remains under its own licence, as credited above.</p>
   <p id="updated" style="color:var(--muted)"></p>
 </footer>
 <div id="tip" role="tooltip"></div>
@@ -402,6 +412,7 @@ DATA.inn.forEach((r,i)=>{ if(r[4]<1000) byScore[r[4]].push(r); });
 const META = DATA.meta || {};
 (function(){ const d=META.last? new Date(META.last+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'';
   const s=META.src||{}; document.getElementById('coverage').textContent = `Covers ${(META.tests||0).toLocaleString()} men’s Tests from ${META.first||1877} to ${d} (${DATA.inn.length.toLocaleString()} innings). ${((s.cricsheet||0)+(s.statsguru||0)+(s.manual||0)+(s.cricinfo||0)).toLocaleString()} innings have been checked against their scorecards; the other ${(s.csv||0).toLocaleString()} are all-outs with all ten wickets down or successful chases, which the scores and result settle on their own.`;
+  { const y=+(META.built||'2026').slice(0,4); document.getElementById('copyYears').textContent = y>2026 ? `2026–${y}` : '2026'; }
   document.getElementById('updated').textContent = META.built ? `Last updated ${new Date(META.built+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})}.` : '';
   const sn=document.getElementById('srcNote'); sn.textContent = (META.last||'') > '2024-03-31' ? '' : 'Not yet included: Tests after the CSV ends (March 2024), until the Cricsheet update runs.'; sn.hidden=!sn.textContent; })();
 
@@ -451,9 +462,12 @@ const ICON={
   not:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(35 12 12)"><path d="M10.9 1.6h2.2v6.6h-2.2z" fill="currentColor"/><path d="M8.4 9.4c0-.9.6-1.4 1.4-1.4h4.4c.8 0 1.4.5 1.4 1.4V19c0 2.1-1.6 3.4-3.6 3.4S8.4 21.1 8.4 19z"/><path d="M12 11v8.5" stroke-width="1.1"/></g></svg>',
   never:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M8.6 4.6c2.2 3.6 2.2 11.2 0 14.8"/><path d="M15.4 4.6c-2.2 3.6-2.2 11.2 0 14.8"/><path d="M10.4 7.5h1.3M10.8 10.5h1.2M10.8 13.5h1.2M10.4 16.5h1.3M12.3 7.5h1.3M12 10.5h1.2M12 13.5h1.2M12.3 16.5h1.3" stroke-width="1.1"/></svg>'
 };
+const HEAT=[[1,1,'1'],[2,3,'2–3'],[4,7,'4–7'],[8,14,'8–14'],[15,22,'15–22'],[23,31,'23–31'],[32,1e9,'32+']];
+const band = n => HEAT.findIndex(([lo,hi])=>n>=lo&&n<=hi)+1;   // 1–7
 function cellStyle(s){
   const o=cache[s];
   if(state.empty || !o.n) return state.cb ? ['var(--never-cb)','var(--never-cb-ink)',''] : ['var(--never)','var(--never-ink)','inset 0 0 0 2px var(--never-edge)'];
+  if(state.heat){ const b=band(o.n); return [`var(--q${b})`,`var(--qi${b})`,'']; }
   if(o.status==='out') return ['var(--out)','var(--out-ink)',''];
   return ['var(--not)','var(--not-ink)','inset 0 0 0 1.25px var(--not-edge)'];
 }
@@ -491,6 +505,12 @@ function renderKPIs(){
 function renderLegend(){
   const nv=state.cb?'background:var(--never-cb);color:var(--never-cb-ink)':'background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 2px var(--never-edge)';
   const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
+  if(state.heat){
+    document.getElementById('legend').innerHTML = `<div class="heatkey"><b>Times each total has come up${filtered()?' (with these filters)':''}</b><div class="bands">${HEAT.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` +
+      item(nv,'never',filtered()?'None with these filters':'Scorigami!','No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
+      `<span class="key"><span class="sw" style="background:var(--q4);position:relative"><span class="hd" style="position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--dot)"></span></span><span class="kt"><b>${state.view==='grid'?'Dot':'Dark outline'}: never all out</b><small>Innings have ended on this total, but never with the side bowled out.</small></span></span>`;
+    return;
+  }
   document.getElementById('legend').innerHTML =
     item('background:var(--out);color:var(--out-ink)','out','Complete – all out','At least one side has been bowled out for exactly this total.') +
     item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)','not','Complete – not out','Innings have ended here, but never all out: declared, chased down, or batting at the close.') +
@@ -513,7 +533,8 @@ function paintCells(root){
   root.querySelectorAll('.cell').forEach(el=>{
     const s=+el.dataset.s, o=cache[s]; const [bg,ink,edge]=cellStyle(s); el.style.background=bg; el.style.color=ink; el.style.boxShadow=edge; el.style.fontWeight=o.n?'400':'600';
     el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel);
-    if(root===gridEl){ const lab = state.labels==='count' ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
+    if(root!==gridEl && state.heat && o.n && o.status==='not') el.style.boxShadow='inset 0 0 0 2px var(--dot)';
+    if(root===gridEl){ const lab = state.heat ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:'') + (state.heat && o.n && o.status==='not' && !state.empty ? '<span class="hd"></span>' : ''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
   });
   for(let p=0;p<10;p++){ const e=document.getElementById('pc'+p); if(e){ let k=0; for(let s=p*100;s<p*100+100;s++) if(cache[s].n) k++; e.textContent=`${k}/100 reached`; } }
 }
@@ -570,9 +591,9 @@ function paintRings(){
   let k=0;
   document.querySelectorAll('#rings .rcell').forEach(el=>{ const s=+el.dataset.s, o=cache[s]; if(o.n) k++;
     const never=state.empty||!o.n;
-    el.style.fill = never ? (state.cb?'var(--never-cb)':'var(--never)') : o.status==='out' ? 'var(--out)' : 'var(--not)';
-    el.style.stroke = never ? (state.cb?'none':'var(--never-edge)') : o.status==='out' ? 'none' : 'var(--not-edge)';
-    el.style.strokeWidth = never? '1.2px' : '1px';
+    el.style.fill = never ? (state.cb?'var(--never-cb)':'var(--never)') : state.heat ? `var(--q${band(o.n)})` : o.status==='out' ? 'var(--out)' : 'var(--not)';
+    el.style.stroke = never ? (state.cb?'none':'var(--never-edge)') : state.heat ? (o.status==='not'?'var(--dot)':'none') : o.status==='out' ? 'none' : 'var(--not-edge)';
+    el.style.strokeWidth = never? '1.2px' : (state.heat && o.status==='not') ? '2.4px' : '1px';
     el.classList.toggle('sel', s===state.sel); el.setAttribute('aria-label',`${s}: ${o.n} innings`); });
   document.getElementById('ringN').textContent=`${k}/1000`;
   document.getElementById('ringN2').textContent= filtered()?'totals reached with these filters':'totals reached';
@@ -584,11 +605,12 @@ function buildHero(){
   const st=[], cnt=[], first=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
   const NV=state.cb?'var(--never-cb)':'var(--never)';
-  const col={out:'var(--out)',not:'var(--not)',never:NV};
+  const col={out:'var(--out)',not:'var(--not)',never:NV}; for(let b=1;b<=7;b++) col['q'+b]=`var(--q${b})`;
+  const key=st.map((x,s)=> x!=='never' && state.heat ? 'q'+band(cnt[s]) : x);
   let h=`<circle cx="${cx}" cy="${cy}" r="${(ri+ro)/2}" fill="none" stroke="${NV}" stroke-width="${ro-ri}"/>`;
   // runs of the same status drawn as one arc; reached totals in the sparse zone also get an outward tick
-  let a=0; while(a<1000){ let b=a; while(b+1<1000 && st[b+1]===st[a]) b++;
-    if(st[a]!=='never') h+=`<path d="${arc(cx,cy,ri,ro,a*0.36,(b+1)*0.36)}" fill="${col[st[a]]}"/>`;
+  let a=0; while(a<1000){ let b=a; while(b+1<1000 && key[b+1]===key[a]) b++;
+    if(key[a]!=='never') h+=`<path d="${arc(cx,cy,ri,ro,a*0.36,(b+1)*0.36)}" fill="${col[key[a]]}"/>`;
     a=b+1; }
   const dense=s=>{ let k=0,n=0; for(let j=s-12;j<=s+12;j++) if(j>=0&&j<1000){ n++; if(st[j]!=='never') k++; } return k/n; };
   for(let s=400;s<1000;s++) if(st[s]!=='never' && dense(s)<0.45){ const t=(s+0.5)*0.36; const P=r=>{const q=(t-90)*Math.PI/180; return [cx+r*Math.cos(q), cy+r*Math.sin(q)];};
@@ -800,10 +822,10 @@ document.getElementById('presets').addEventListener('click',e=>{
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
-document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; syncCountBtn(); paintAll(false);});
-function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view==='grid'; b.disabled=!on; b.title= on? '' : 'Only on the Grids view, where each square has room for a number'; }
+document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
+function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or 3D'; }
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
-flip('countBtn','labels','count','total'); flip('cbBtn','cb',true,false);
+flip('countBtn','heat',true,false); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
 document.getElementById('kpiReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
 document.getElementById('ftoggle').addEventListener('click',e=>{ const f=document.getElementById('filtersBox'); const open=f.classList.toggle('fopen'); e.currentTarget.setAttribute('aria-expanded',String(open)); });
