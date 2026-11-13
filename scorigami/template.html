@@ -88,6 +88,7 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .tog{padding-left:8px!important}
 .tog::before{content:"";flex:none;width:28px;height:16px;border-radius:999px;background:radial-gradient(circle at 8px 50%,#fff 5.5px,transparent 6px),var(--line);transition:background .15s}
 .tog[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.tog:disabled{opacity:.4;cursor:not-allowed}
 .tog[aria-pressed="true"]::before{background:radial-gradient(circle at 20px 50%,#fff 5.5px,transparent 6px),var(--accent)}
 .kpinote{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:-8px 0 12px;font-size:13px;color:var(--ink-2)}
 .kpis.filt .kpi{border-style:dashed;border-left-style:solid}
@@ -213,6 +214,8 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 input[type=range]{width:100%;accent-color:var(--accent)}
 /* table */
 .tablewrap{max-height:640px;overflow:auto}
+.sorthint{margin:0 0 8px;font-size:13px;color:var(--ink-2);position:sticky;left:0}
+th[data-k]:hover{color:var(--accent)}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 th{position:sticky;top:0;background:var(--surface);font-weight:600;color:var(--ink-2);cursor:pointer}
@@ -281,7 +284,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 <div class="controls">
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="viewSeg">
-      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Rings</button><button data-v="cube" aria-pressed="false">3D</button>
+      <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="cube" aria-pressed="false">3D</button>
     </div></div>
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="countBtn" aria-pressed="false">Show times it’s happened</button>
@@ -296,7 +299,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 </div>
 
 <div class="layout">
-  <section class="board" aria-label="Scorigami board">
+  <section class="board" aria-label="Scorigami views">
     <div class="active" id="activeBar" hidden></div>
     <div class="legend" id="legend"></div>
     <div class="void-msg" id="voidMsg" hidden><div role="alert"><b>Never happened</b><p id="voidText">No men’s Test innings matches this combination of filters.</p><button id="voidReset">Reset filters</button></div></div>
@@ -331,7 +334,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
     <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Complete – not out.</b> Innings have ended on this total, but none of them all out. They were declared, won the match by chasing down a target, or were still batting when the match was drawn.</span></li>
     <li><span class="sq sq-never"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
   </ul>
-  <p>Under <b>Display</b> you can show how many times each total has happened, or switch to <b>high-contrast colours</b>, which turn the scorigamis orange. With filters on, the board recolours using only the innings that match.</p>
+  <p>Under <b>Display</b> you can show how many times each total has happened (on the <b>Grids</b> view), or switch to <b>high-contrast colours</b>, which turn the scorigamis orange. With filters on, every view recolours using only the innings that match.</p>
 
   <h2>How endings are decided</h2>
   <ul>
@@ -580,8 +583,9 @@ function buildHero(){
   const svg=document.getElementById('heroRing'), cx=500, cy=320, ri=158, ro=236;
   const st=[], cnt=[], first=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
-  const col={out:'var(--out)',not:'var(--not)',never:'var(--never)'};
-  let h=`<circle cx="${cx}" cy="${cy}" r="${(ri+ro)/2}" fill="none" stroke="var(--never)" stroke-width="${ro-ri}"/>`;
+  const NV=state.cb?'var(--never-cb)':'var(--never)';
+  const col={out:'var(--out)',not:'var(--not)',never:NV};
+  let h=`<circle cx="${cx}" cy="${cy}" r="${(ri+ro)/2}" fill="none" stroke="${NV}" stroke-width="${ro-ri}"/>`;
   // runs of the same status drawn as one arc; reached totals in the sparse zone also get an outward tick
   let a=0; while(a<1000){ let b=a; while(b+1<1000 && st[b+1]===st[a]) b++;
     if(st[a]!=='never') h+=`<path d="${arc(cx,cy,ri,ro,a*0.36,(b+1)*0.36)}" fill="${col[st[a]]}"/>`;
@@ -629,7 +633,7 @@ function renderTable(){
   const key = r=> sortKey==='s'?r.s: sortKey==='n'?r.n: sortKey==='f'?(r.f??9999): sortKey==='l'?(r.l??-1): sortKey[0]==='i'? r.ii[+sortKey[1]-1] : r.c[+sortKey];
   rows.sort((a,b)=>(key(a)-key(b))*sortDir || a.s-b.s);
   const head=[['s','Total'],['n','Innings'],...HOW.map((h,i)=>[String(i),h.label]),...INN.map((l,i)=>['i'+(i+1),l+' inns']),['f','First'],['l','Latest']];
-  document.getElementById('view-table').innerHTML=`<table><thead><tr>${head.map(([k,l])=>`<th data-k="${k}" scope="col">${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
+  document.getElementById('view-table').innerHTML=`<p class="sorthint">One row per total. Click a column heading to sort by it; click it again to reverse.</p><table><thead><tr>${head.map(([k,l])=>`<th data-k="${k}" scope="col">${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
     rows.map(r=>`<tr data-s="${r.s}"><td class="num"><b>${r.s}</b></td><td class="num">${r.n||'–'}</td>${r.c.map(v=>`<td class="num">${v||''}</td>`).join('')}${r.ii.map(v=>`<td class="num">${v||''}</td>`).join('')}<td class="num">${r.f??''}</td><td class="num">${r.l??''}</td></tr>`).join('')+`</tbody></table>`;
 }
 document.getElementById('view-table').addEventListener('click',e=>{
@@ -793,7 +797,8 @@ document.getElementById('presets').addEventListener('click',e=>{
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
-document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; paintAll(false);});
+document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; syncCountBtn(); paintAll(false);});
+function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view==='grid'; b.disabled=!on; b.title= on? '' : 'Only on the Grids view, where each square has room for a number'; }
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
 flip('countBtn','labels','count','total'); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
