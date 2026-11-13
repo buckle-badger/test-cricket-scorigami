@@ -4,7 +4,7 @@ Builds the scorigami page (`docs/index.html`) and three CSVs (`out/`) from:
 
 | Source | Covers | Endings | How it arrives |
 |---|---|---|---|
-| `data/test_matches_kaggle.csv` | Tests 1–2537 (to March 2024) | inferred from batting order and result | already here |
+| `data/test_matches_kaggle.csv` ([Kaggle: Test Cricket Matches Dataset (1877–2024)](https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023), by Bhuvanesh Prasad, Apache License 2.0, see `data/LICENSE-kaggle-dataset.txt`) | Tests 1–2537 (to March 2024) | inferred from batting order and result | already here |
 | Cricsheet `tests_male_json.zip` | men's Tests from 2001, updated after each match | exact (`declared`, `forfeited`, retirements) | downloaded on every build |
 | `data/statsguru*.csv` | every Test, if you export it | exact (`d` suffix, all-outs shown without a slash) | you export it once with `tools/statsguru_export.js` |
 
@@ -58,4 +58,4 @@ python -m pytest -q tests            # fixture tests (the fixtures are synthetic
 
 ## Copyright
 
-© 2026 BuckleBadger. All rights reserved; see `LICENSE`. Match data is Cricsheet's, used under the Open Data Commons Attribution License.
+© 2026 BuckleBadger. All rights reserved; see `LICENSE`. Match data comes from Bhuvanesh Prasad's Kaggle dataset (to March 2024, Apache License 2.0) and from Cricsheet, used under the Open Data Commons Attribution License.

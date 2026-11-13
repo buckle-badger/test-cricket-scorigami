@@ -3,7 +3,15 @@ Copyright (c) 2026 BuckleBadger. All rights reserved.
 The code, page design, text and classifications in this repository are the
 author's work and may not be copied, modified or republished without permission.
 
-Match data comes from Cricsheet (https://cricsheet.org) and is used under the
-Open Data Commons Attribution License (https://opendatacommons.org/licenses/by/1-0/).
-That data remains under its own licence. Scores and results are facts and are not
+Match data to March 2024 comes from Bhuvanesh Prasad's "Test Cricket Matches Dataset
+(1877 - 2024)" on Kaggle
+(https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023),
+used under the Apache License 2.0; a copy of that licence is in
+data/LICENSE-kaggle-dataset.txt. The file data/test_matches_kaggle.csv is
+redistributed unchanged.
+
+Later match data comes from Cricsheet (https://cricsheet.org) and is used under
+the Open Data Commons Attribution License (https://opendatacommons.org/licenses/by/1-0/).
+
+Both datasets remain under their own licences. Scores and results are facts and are not
 claimed here.
