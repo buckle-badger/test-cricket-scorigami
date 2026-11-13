@@ -584,7 +584,7 @@ function renderDetail(){
   else if(o.starN) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Counted here as retired hurt; see the note on the innings below.</p>`;
   h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">By innings: ${o.ii.map((x,i)=>`${INN[i]} <b class="num" style="color:var(--ink)">${x}</b>`).join(' · ')}</p>`;
   h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">Toss: ${[0,1,3,2].map(i=>[i,byScore[s].filter(r=>pass(r)&&r[11]===i).length]).filter(x=>x[1]).map(([i,n])=>`${TOSS[i].toLowerCase()} <b class="num" style="color:var(--ink)">${n}</b>`).join(' · ')}</p>`;
-  h+=`<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2)">Team went on to: ${o.rr.map((x,i)=>x?`${RES[i].toLowerCase()} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
+  h+=`<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2)">Team went on to: ${o.rr.map((x,i)=>x?`${['win','lose','draw','tie'][i]} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
   const list=byScore[s].filter(pass).sort((a,b)=>b[0]-a[0]);
   h+=`<h2 style="font-size:17px;margin-top:6px">Every innings, newest first</h2><div class="list">`+list.map(r=>{
     const m=M[r[0]];
