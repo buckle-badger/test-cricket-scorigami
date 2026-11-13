@@ -1,0 +1,185 @@
+match_id,test,date,team,innings,field,old,old_source,new,new_source
+62396,1,,Australia,1,how,declared,csv,allout_short,cricinfo
+62412,17,,Australia,3,how,declared,csv,allout_short,cricinfo
+62431,36,,Australia,3,how,declared,csv,allout_short,cricinfo
+62434,39,,England,3,how,draw,csv,declared,cricinfo
+62457,62,,England,2,how,declared,csv,allout_short,cricinfo
+62462,67,1902-01-17,England,3,how,declared,csv,allout_short,cricinfo
+62474,79,1904-01-01,England,1,how,declared,csv,allout_short,cricinfo
+62474,79,1904-01-01,England,3,how,declared,csv,allout_short,cricinfo
+62478,83,1905-05-29,Australia,2,how,declared,csv,allout_short,cricinfo
+62498,103,1909-07-01,England,2,how,declared,csv,allout_short,cricinfo
+62528,142,1921-07-02,England,2,how,declared,csv,allout_short,cricinfo
+62536,150,1923-01-18,South Africa,2,how,declared,csv,allout_short,cricinfo
+62560,174,1928-07-21,England,2,how,declared,csv,allout_short,cricinfo
+62562,176,1928-11-30,Australia,2,how,declared,csv,allout_short,cricinfo
+62563,177,1928-12-14,Australia,1,how,declared,csv,allout_short,cricinfo
+62563,177,1928-12-14,Australia,3,how,declared,csv,allout_short,cricinfo
+62580,194,1930-06-13,England,3,how,declared,csv,allout_short,cricinfo
+62591,202,1931-01-01,England,3,how,draw,csv,allout_short,cricinfo
+62602,216,1932-02-12,Australia,2,how,declared,csv,allout_short,cricinfo
+62608,222,1933-01-13,Australia,2,how,declared,csv,allout_short,cricinfo
+62611,225,1933-03-24,New Zealand,2,how,declared,csv,allout_short,cricinfo
+62614,228,1933-07-22,England,2,how,declared,csv,allout_short,cricinfo
+62618,232,1934-02-10,India,2,how,declared,csv,allout_short,cricinfo
+62623,237,1934-08-18,England,2,how,declared,csv,allout_short,cricinfo
+62648,262,1937-08-14,New Zealand,3,how,declared,csv,allout_short,cricinfo
+62649,263,1938-06-10,Australia,3,how,draw,csv,declared,cricinfo
+62652,266,1938-08-20,Australia,2,how,declared,csv,allout_short,cricinfo
+62660,274,1939-08-19,England,3,how,draw,csv,declared,cricinfo
+62669,283,1947-02-28,England,1,how,declared,csv,allout_short,cricinfo
+62669,283,1947-02-28,England,3,how,declared,csv,allout_short,cricinfo
+62670,284,1947-03-21,England,2,how,draw,csv,declared,cricinfo
+62687,301,1948-07-08,Australia,2,how,declared,csv,allout_short,cricinfo
+62694,311,1949-02-04,India,2,how,declared,csv,allout_short,cricinfo
+62703,317,1949-08-13,New Zealand,3,how,draw,csv,declared,cricinfo
+62720,334,1951-06-07,South Africa,3,how,declared,csv,allout_short,cricinfo
+62753,367,1953-02-19,India,1,how,declared,csv,allout_short,cricinfo
+62755,371,1953-03-28,India,1,how,declared,csv,allout_short,cricinfo
+62771,385,1954-03-17,England,2,how,declared,csv,allout_short,cricinfo
+62791,405,1955-04-26,Australia,2,how,declared,csv,allout_short,cricinfo
+62807,421,1956-02-03,West Indies,2,how,declared,csv,allout_short,cricinfo
+62811,425,1956-06-07,Australia,2,how,declared,csv,allout_short,cricinfo
+62844,458,1958-08-21,New Zealand,1,how,declared,csv,allout_short,cricinfo
+62849,467,1959-02-06,India,3,how,draw,csv,allout_short,cricinfo
+62940,552,1964-01-21,England,2,how,declared,csv,allout_short,cricinfo
+62953,567,1964-10-10,Australia,1,how,declared,csv,allout_short,cricinfo
+62953,567,1964-10-10,Australia,3,how,declared,csv,allout_short,cricinfo
+62972,589,1965-05-05,West Indies,2,how,declared,csv,allout_short,cricinfo
+62975,586,1965-04-02,Pakistan,3,how,draw,csv,declared,cricinfo
+62977,591,1965-05-27,New Zealand,2,how,declared,csv,allout_short,cricinfo
+62990,604,1966-03-11,England,2,how,declared,csv,allout_short,cricinfo
+63024,638,1968-06-20,Australia,2,how,declared,csv,allout_short,cricinfo
+63025,639,1968-07-11,Australia,2,how,declared,csv,allout_short,cricinfo
+63041,655,1969-07-10,West Indies,2,how,declared,csv,allout_short,cricinfo
+63055,669,1969-12-24,India,2,how,declared,csv,allout_short,cricinfo
+63074,688,1971-06-17,Pakistan,2,how,declared,csv,allout_short,cricinfo
+63083,697,1972-04-20,West Indies,1,how,declared,csv,allout_short,cricinfo
+63092,709,1973-01-25,England,2,how,declared,csv,allout_short,cricinfo
+63097,710,1973-02-02,Pakistan,1,how,declared,csv,allout_short,cricinfo
+63097,710,1973-02-02,New Zealand,2,how,declared,csv,allout_short,cricinfo
+63102,718,1973-03-23,West Indies,2,how,declared,csv,allout_short,cricinfo
+63162,776,1976-04-21,India,3,how,declared,csv,allout_short,cricinfo
+63179,789,1976-12-24,Australia,2,how,declared,csv,allout_short,cricinfo
+63184,797,1977-02-18,West Indies,2,how,declared,csv,allout_short,cricinfo
+63188,803,1977-04-15,Pakistan,2,how,declared,csv,allout_short,cricinfo
+63233,847,1979-02-16,Pakistan,3,how,draw,csv,declared,cricinfo
+63260,875,1980-02-22,West Indies,3,how,draw,csv,declared,cricinfo
+63269,883,1980-07-24,West Indies,2,how,declared,csv,allout_short,cricinfo
+63269,883,1980-07-24,England,3,how,draw,csv,declared,cricinfo
+63270,884,1980-08-07,England,3,how,draw,csv,declared,cricinfo
+63272,886,1980-11-24,Pakistan,1,how,declared,csv,allout_short,cricinfo
+63281,895,1981-02-07,India,3,how,declared,csv,allout_short,cricinfo
+63285,902,1981-04-10,England,3,how,draw,csv,declared,cricinfo
+63287,898,1981-03-06,India,1,how,declared,csv,allout_short,cricinfo
+63299,912,1981-12-09,England,3,how,draw,csv,declared,cricinfo
+63300,914,1981-12-23,England,3,how,draw,csv,declared,cricinfo
+63302,918,1982-01-13,India,3,how,draw,csv,declared,cricinfo
+63303,920,1982-01-30,India,2,how,draw,csv,declared,cricinfo
+63316,930,1982-07-08,India,2,how,declared,csv,allout_short,cricinfo
+63339,956,1983-04-28,West Indies,2,how,declared,csv,allout_short,cricinfo
+63339,956,1983-04-28,India,3,how,draw,csv,declared,cricinfo
+63371,988,1984-04-28,Australia,3,how,declared,csv,allout_short,cricinfo
+63380,994,1984-08-23,Sri Lanka,3,how,draw,csv,declared,cricinfo
+63400,1014,1985-04-06,West Indies,3,how,draw,csv,declared,cricinfo
+63402,1016,1985-05-04,New Zealand,2,how,declared,csv,allout_short,cricinfo
+63402,1016,1985-05-04,New Zealand,3,how,declared,csv,allout_short,cricinfo
+63435,1049,1986-07-24,England,1,how,declared,csv,allout_short,cricinfo
+63441,1055,1986-10-24,Pakistan,1,how,declared,csv,allout_short,cricinfo
+63466,1080,1987-11-25,India,3,how,declared,csv,allout_short,cricinfo
+63468,1088,1987-12-26,India,2,how,declared,csv,allout_short,cricinfo
+63478,1093,1988-02-25,New Zealand,3,how,draw,csv,declared,cricinfo
+63483,1097,1988-04-22,Pakistan,1,how,declared,csv,allout_short,cricinfo
+63487,1101,1988-07-21,England,1,how,declared,csv,allout_short,cricinfo
+63523,1136,1990-02-02,India,3,how,declared,csv,allout_short,cricinfo
+63532,1146,1990-06-21,England,3,how,draw,csv,declared,cricinfo
+63536,1150,1990-08-23,England,3,how,draw,csv,declared,cricinfo
+63549,1162,1991-01-31,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+63554,1168,1991-04-05,Australia,3,how,draw,csv,declared,cricinfo
+63575,1189,1992-06-04,England,2,how,draw,csv,declared,cricinfo
+63577,1191,1992-07-02,Pakistan,3,how,draw,csv,declared,cricinfo
+63587,1201,1992-11-26,South Africa,1,how,declared,csv,allout_short,cricinfo
+63587,1201,1992-11-26,South Africa,3,how,declared,csv,allout_short,cricinfo
+63651,1266,1994-08-18,South Africa,1,how,declared,csv,allout_short,cricinfo
+63679,1293,1995-03-18,New Zealand,2,how,declared,csv,allout_short,cricinfo
+63688,1302,1995-08-10,England,1,how,declared,csv,allout_short,cricinfo
+63698,1313,1995-11-17,Australia,3,how,declared,csv,allout_short,cricinfo
+63700,1312,1995-11-16,England,1,how,draw,csv,declared,cricinfo
+63710,1323,1996-01-20,Zimbabwe,2,how,declared,csv,allout_short,cricinfo
+63714,1328,1996-06-20,England,3,how,draw,csv,declared,cricinfo
+63715,1329,1996-07-04,England,2,how,declared,csv,allout_short,cricinfo
+63715,1329,1996-07-04,India,3,how,draw,csv,allout_short,cricinfo
+63717,1331,1996-08-08,Pakistan,3,how,draw,csv,declared,cricinfo
+63738,1350,1997-01-16,India,1,how,declared,csv,allout_short,cricinfo
+63739,1351,1997-01-24,New Zealand,3,how,draw,csv,declared,cricinfo
+63748,1364,1997-04-04,West Indies,1,how,declared,csv,allout_short,cricinfo
+63752,1366,1997-04-19,Sri Lanka,3,how,draw,csv,declared,cricinfo
+63755,1370,1997-06-19,England,3,how,draw,csv,declared,cricinfo
+63760,1369,1997-06-13,Sri Lanka,1,how,declared,csv,allout_short,cricinfo
+63760,1369,1997-06-13,Sri Lanka,3,how,declared,csv,allout_short,cricinfo
+63762,1374,1997-08-02,Sri Lanka,2,how,draw,csv,declared,cricinfo
+63777,1390,1997-12-03,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+63782,1395,1998-01-14,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+63804,1417,1998-06-04,England,3,how,draw,csv,declared,cricinfo
+63842,1456,1999-07-22,England,3,how,declared,csv,allout_short,cricinfo
+63845,1459,1999-09-09,Australia,3,how,declared,csv,allout_short,cricinfo
+63879,1492,2000-03-24,Zimbabwe,3,how,declared,csv,allout_short,cricinfo
+63899,1513,2000-11-15,England,3,how,draw,csv,declared,cricinfo
+63904,1522,2000-12-08,South Africa,2,how,draw,csv,declared,cricinfo
+63923,1536,2001-03-15,New Zealand,3,how,draw,csv,declared,cricinfo
+63943,1555,2001-08-14,India,1,how,declared,csv,allout_short,cricinfo
+63943,1555,2001-08-14,India,3,how,declared,csv,allout_short,cricinfo
+63987,1602,2002-05-10,West Indies,2,how,draw,csv,declared,cricinfo
+63992,1606,2002-06-13,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+63998,1612,2002-08-08,India,3,how,draw,csv,declared,cricinfo
+64004,1616,2002-10-09,India,1,how,declared,csv,allout_short,cricinfo
+64009,1623,2002-11-07,England,2,how,declared,csv,allout_short,cricinfo
+64030,1641,2003-04-25,New Zealand,3,how,draw,csv,declared,cricinfo
+64031,1644,2003-05-03,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+64050,1664,2003-10-17,South Africa,1,how,declared,csv,allout_short,cricinfo
+64087,1702,2004-06-03,New Zealand,3,how,declared,csv,allout_short,cricinfo
+64095,1711,2004-08-12,West Indies,1,how,declared,csv,allout_short,cricinfo
+64096,1712,2004-08-19,West Indies,2,how,declared,csv,allout_short,cricinfo
+238203,1795,2006-03-31,Australia,2,how,declared,csv,allout_short,cricinfo
+238217,1796,2006-04-03,Sri Lanka,3,how,declared,csv,allout_short,cricinfo
+291354,1863,2008-01-24,India,3,how,draw,csv,declared,cricinfo
+296901,1876,2008-05-23,New Zealand,1,how,declared,csv,allout_short,cricinfo
+296901,1876,2008-05-23,New Zealand,3,how,declared,csv,allout_short,cricinfo
+296909,1880,2008-07-10,South Africa,3,how,draw,csv,declared,cricinfo
+332911,1870,2008-03-26,South Africa,3,how,draw,csv,declared,cricinfo
+350345,1893,2008-11-19,South Africa,1,how,declared,csv,allout_short,cricinfo
+350473,1913,2009-03-06,South Africa,2,how,declared,csv,allout_short,cricinfo
+351683,1904,2009-01-03,South Africa,2,how,declared,csv,allout_short,cricinfo
+352663,1911,2009-02-26,England,3,how,draw,csv,declared,cricinfo
+361759,1890,2008-10-25,New Zealand,3,how,draw,csv,declared,cricinfo
+439153,1961,2010-06-18,South Africa,3,how,draw,csv,declared,cricinfo
+456670,1966,2010-07-26,Sri Lanka,3,how,draw,csv,declared,cricinfo
+520605,2037,2012-03-23,New Zealand,2,how,declared,csv,allout_short,cricinfo
+565809,2066,2012-12-13,England,3,how,draw,csv,declared,cricinfo
+573007,2056,2012-11-09,South Africa,1,how,declared,csv,allout_short,cricinfo
+573011,2067,2012-12-14,Australia,3,how,declared,csv,allout_short,cricinfo
+598813,2076,2013-03-02,Australia,1,how,allout_short,csv,declared,cricinfo
+667711,2128,2014-07-09,India,3,how,draw,csv,declared,cricinfo
+667717,2134,2014-08-07,England,2,how,declared,csv,allout_short,cricinfo
+727927,2140,2014-10-22,Pakistan,1,how,declared,csv,allout_short,cricinfo
+858495,2161,2015-05-06,Bangladesh,2,how,declared,csv,allout_short,cricinfo
+892519,2198,2016-01-03,Australia,2,how,draw,csv,declared,cricinfo
+995455,2217,2016-08-13,Sri Lanka,1,how,declared,csv,allout_short,cricinfo
+1000883,2242,2016-12-26,Pakistan,1,how,allout_short,csv,declared,cricinfo
+1019985,2246,2017-01-12,Bangladesh,3,how,declared,csv,allout_short,cricinfo
+1072308,2289,2017-12-26,Australia,3,how,draw,csv,declared,cricinfo
+1109602,2265,2017-07-26,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+1119535,2304,2018-05-24,Pakistan,2,how,declared,csv,allout_short,cricinfo
+1130744,2295,2018-01-31,Bangladesh,3,how,draw,csv,declared,cricinfo
+1144165,2348,2019-02-21,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+1145001,2345,2019-02-01,Sri Lanka,2,how,declared,csv,allout_short,cricinfo
+1153640,2325,2018-11-11,Zimbabwe,2,how,declared,csv,allout_short,cricinfo
+1198242,2392,2020-08-13,England,2,how,draw,csv,declared,cricinfo
+1223869,2396,2020-12-17,India,3,how,declared,csv,allout_short,cricinfo
+1308488,2462,2022-05-15,Bangladesh,2,how,declared,csv,allout_short,cricinfo
+1336127,2504,2023-06-01,Ireland,3,how,declared,csv,allout_short,cricinfo
+1348655,2499,2023-03-09,India,2,how,declared,csv,allout_short,cricinfo
+1348655,2499,2023-03-09,Australia,3,how,draw,csv,declared,cricinfo
+1375846,2524,2024-01-25,West Indies,3,how,declared,csv,allout_short,cricinfo
+1387603,2520,2023-12-26,South Africa,2,how,declared,csv,allout_short,cricinfo
+1416073,2527,2024-02-02,Sri Lanka,2,how,declared,csv,allout_short,cricinfo

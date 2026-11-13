@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Cricket Scorigami</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: scoreboard header, KPI strip, one control row, the 10×10×10 board (grid / cube / table) beside a detail card for the selected total. */
+:root{
+  color-scheme: light;
+  --bg:#f4f6f3; --surface:#ffffff; --ink:#131714; --ink-2:#4a524c; --muted:#78807a; --line:#d8ddd7; --accent:#1d5a43;
+  --out:#2f5e4f; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#e0d8c2; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#e9a9ab; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --e0:#2f5e4f; --e1:#86a89b; --e2:#2a78d6; --e3:#7357d6; --e4:#eda100; --e5:#8a8f8b; --e6:#2a78d6;
+  --q1:#cde2fb; --q2:#9ec5f4; --q3:#6da7ec; --q4:#3987e5; --q5:#256abf; --q6:#184f95; --q7:#0d366b; --q0:#eef0ec;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme: dark;
+  --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
+  --out:#3e7a66; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#ece5d2; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#7d2a30; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
+  --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
+  --out:#3e7a66; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#ece5d2; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#7d2a30; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
+  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
+  --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding:24px clamp(16px,3vw,40px) 48px}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,5vw,52px);line-height:1}
+h2{font-size:22px}
+.sub{color:var(--ink-2);max-width:68ch;margin:8px 0 0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;border-left:4px solid var(--k,var(--line))}
+.kpi b{display:block;font-family:var(--display);font-size:30px;line-height:1.1;font-weight:600}
+.kpi span{color:var(--ink-2);font-size:13px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-bottom:16px}
+.group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.group>label,.glabel{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--ink-2);font:500 13px var(--body);padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 10px 4px 8px;font:500 13px var(--body);cursor:pointer}
+.chip i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.chip[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+.chip.sm{font-size:12px;padding:3px 9px}
+.linkbtn{border:0;background:none;color:var(--accent);font:500 13px var(--body);cursor:pointer;padding:4px 2px}
+.filters{display:flex;flex-direction:column;gap:8px;margin:-4px 0 16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.filters .group{gap:6px 8px}
+.filters .glabel{min-width:118px}
+.fbar{display:flex;flex-wrap:wrap;gap:8px}
+.fwrap{position:relative}
+.fbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 10px;font:500 13px var(--body);cursor:pointer}
+.fbtn b{font-weight:600}
+.fbtn.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.fbtn::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);margin-left:2px;opacity:.6}
+.pop{position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:270px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.16);padding:8px}
+.opt{display:grid;grid-template-columns:18px 12px 1fr auto auto;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;font-size:13.5px;cursor:pointer}
+.opt:hover{background:var(--bg)}
+.opt input{margin:0;accent-color:var(--accent)}
+.opt i{width:10px;height:10px;border-radius:3px;background:var(--c,transparent)}
+.opt .cnt{font:12px var(--mono);color:var(--muted)}
+.opt .only{border:0;background:none;color:var(--accent);font:500 12px var(--body);cursor:pointer;visibility:hidden;padding:0 2px}
+.opt:hover .only,.opt .only:focus-visible{visibility:visible}
+.kids{margin-left:26px;border-left:1px solid var(--line);padding-left:4px}
+.popfoot{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.preset{border:1px dashed var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:4px 11px;font:500 12.5px var(--body);cursor:pointer}
+.preset:hover{color:var(--ink);border-color:var(--accent)}
+.preset[aria-pressed="true"]{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.rank td:nth-child(1){color:var(--muted)}
+.rank td{text-align:left}.rank td.num{text-align:right}
+.more{margin:10px 0 0}
+input[type=number]{width:84px;font:14px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+@media (max-width:1100px){.layout{grid-template-columns:1fr}}
+.board{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .key{display:inline-flex;align-items:center;gap:9px}
+.legend .key .kt{display:block}
+.legend .sw{width:30px;height:30px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.legend .sw svg{width:20px;height:20px}
+.legend .key b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;line-height:1.2}
+.legend .key small{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.3}
+.pill svg{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
+.legend i{width:13px;height:13px;border-radius:3px;background:var(--c);border:1px solid var(--line)}
+/* hundreds grid */
+.panels{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px 16px}
+.panel h3{font-size:17px;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.panel h3 small{font:12px var(--body);color:var(--muted)}
+.pgrid{display:grid;grid-template-columns:16px repeat(10,1fr);gap:2px}
+.pgrid .ax{font:10px var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:center}
+.cell{aspect-ratio:1;border:0;border-radius:3px;padding:0;font:9.5px/1 var(--mono);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--q0);color:var(--ink-2);min-width:0}
+.cell.sel{outline:2px solid var(--ink);outline-offset:1px;z-index:1}
+.cell{position:relative}
+.cell .mk{position:absolute;top:0;right:1px;font:600 8px/1 var(--body);opacity:.85;pointer-events:none}
+.lead{font-size:17px;max-width:62ch;margin:10px 0 0;color:var(--ink)}
+.lead b{font-weight:600}
+.howto{display:inline-block;margin-top:8px;font-size:14px;color:var(--ink-2)}
+.kpi small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.active{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px;font-size:13px;color:var(--ink-2)}
+.active button.x{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:2px 6px 2px 10px;font:500 12.5px var(--body);cursor:pointer}
+.active button.x::after{content:"×";margin-left:6px;color:var(--muted)}
+.qq summary{cursor:pointer;list-style:none;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;min-width:118px}
+.qq summary::-webkit-details-marker{display:none}
+.qq[open] summary{margin-bottom:6px}
+.sheetclose{display:none}
+@media (max-width:1100px){
+  .layout .detail{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;max-height:78vh;overflow:auto;border-radius:16px 16px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);transform:translateY(105%);transition:transform .25s ease;padding-top:28px}
+  .layout .detail.open{transform:none}
+  .detail::before{content:"";position:absolute;top:10px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--line)}
+  .sheetclose{display:block;position:absolute;top:12px;right:14px;border:0;background:var(--bg);color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+  .detail .list{max-height:none}
+}
+@media (max-width:700px){ .kpis{grid-template-columns:1fr 1fr} .kpi b{font-size:24px} .filters .glabel{min-width:0} }
+/* cube */
+.cubewrap{display:flex;gap:16px;flex-wrap:wrap}
+.scene{flex:1 1 420px;height:560px;perspective:1500px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;overflow:hidden}
+.scene:active{cursor:grabbing}
+.cube{position:relative;width:230px;height:230px;transform-style:preserve-3d}
+.layer{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);gap:3px;transform-style:preserve-3d;transition:opacity .2s}
+.layer .cell{font-size:0;border-radius:2px}
+.layer .cell.never{opacity:.28}
+.layer.dim{opacity:.07}
+.cubeside{flex:0 0 150px;display:flex;flex-direction:column;gap:6px}
+.cubeside button.lay{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 10px;text-align:left;font:13px var(--body);cursor:pointer;display:flex;justify-content:space-between}
+.cubeside button.lay[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.cubeside small{color:var(--muted);font-size:12px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+/* table */
+.tablewrap{max-height:640px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{position:sticky;top:0;background:var(--surface);font-weight:600;color:var(--ink-2);cursor:pointer}
+td:first-child,th:first-child{text-align:left}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--bg)}
+/* detail */
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;position:sticky;top:16px}
+.dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.dhead .big{font-family:var(--display);font-size:64px;line-height:.9;font-weight:700}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
+.stack{display:flex;height:14px;gap:2px;margin:14px 0 8px;border-radius:4px;overflow:hidden}
+.stack div{background:var(--c)}
+.breakdown{display:grid;grid-template-columns:auto 1fr auto;gap:3px 10px;font-size:13.5px;margin-bottom:12px}
+.breakdown i{width:11px;height:11px;border-radius:3px;background:var(--c);align-self:center}
+.list{max-height:420px;overflow:auto;border-top:1px solid var(--line);margin-top:6px}
+.row{display:grid;grid-template-columns:44px 1fr;gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.row .y{font-family:var(--mono);color:var(--muted)}
+.row .t{font-weight:600}
+.row .m{grid-column:2;color:var(--ink-2)}
+.row a{color:var(--accent);text-decoration:none;font-weight:500}
+.row a:hover{text-decoration:underline}
+.tag{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin-right:6px}
+.empty{color:var(--ink-2);font-size:14px}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:7px 10px;border-radius:6px;max-width:260px;z-index:10;display:none;line-height:1.4}
+#tip b{font-family:var(--mono)}
+footer{margin-top:28px;color:var(--ink-2);font-size:13.5px;max-width:80ch}
+footer h2{font-size:18px;color:var(--ink);margin:14px 0 4px}
+footer p{margin:0 0 8px}
+.board{position:relative}
+.void-msg{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:110px;z-index:5;pointer-events:none}
+.void-msg>div{position:sticky;top:30vh}
+.void-msg div{pointer-events:auto;background:var(--surface);border:2px solid var(--ink);border-radius:12px;padding:22px 28px;max-width:420px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.void-msg b{display:block;font-family:var(--display);font-size:44px;line-height:1;letter-spacing:.02em;margin-bottom:8px}
+.void-msg p{margin:0 0 14px;color:var(--ink-2)}
+.void-msg button{border:0;background:var(--accent);color:var(--surface);font:600 14px var(--body);padding:8px 16px;border-radius:7px;cursor:pointer}
+.cell{transition:transform .55s cubic-bezier(.2,.7,.3,1),opacity .55s,background-color .3s}
+.boom .cell{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4);opacity:0}
+.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-4px)}60%{transform:translate(-5px,2px)}80%{transform:translate(3px,-1px)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.boom .cell{transform:none;opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Men’s Test Scorigami</h1>
+    <p class="lead">A <b>scorigami</b> is a total that no men’s Test innings has ever finished on. This board shows every total from 0 to 999: which have happened, how often, and how those innings ended.</p>
+    <span class="howto">Tap any number to see every innings that finished on it.</span>
+  </div>
+</header>
+
+<section class="kpis" id="kpis" aria-label="Summary"></section>
+
+<div class="controls">
+  <div class="group"><span class="glabel">View</span>
+    <div class="seg" id="viewSeg">
+      <button data-v="grid" aria-pressed="true">Board</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button>
+    </div><button class="linkbtn" data-v="cube">3D view</button></div>
+  <div class="group"><span class="glabel">Display</span>
+    <button class="chip" id="countBtn" aria-pressed="false" style="padding-left:10px">Show times it’s happened</button>
+    <button class="chip" id="cbBtn" aria-pressed="false" style="padding-left:10px" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
+  <div class="group"><label for="jump">Go to</label><input id="jump" type="number" min="0" max="999" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
+</div>
+<div class="filters" aria-label="Filters">
+  <div class="group"><span class="glabel">Filter</span><div class="fbar" id="fbar"></div><button class="linkbtn" id="resetBtn">Reset all</button></div>
+  <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
+</div>
+</div>
+
+<div class="layout">
+  <section class="board" aria-label="Scorigami board">
+    <div class="active" id="activeBar" hidden></div>
+    <div class="legend" id="legend"></div>
+    <div class="void-msg" id="voidMsg" hidden><div role="alert"><b>Never happened</b><p id="voidText">No men’s Test innings matches this combination of filters.</p><button id="voidReset">Reset filters</button></div></div>
+    <div id="view-grid" class="panels"></div>
+    <div id="view-cube" class="cubewrap" hidden>
+      <div class="scene" id="scene"><div class="cube" id="cube"></div></div>
+      <div class="cubeside">
+        <span class="glabel">Layer</span>
+        <div id="layerBtns" style="display:flex;flex-direction:column;gap:4px"></div>
+        <label class="glabel" for="spread" style="margin-top:8px">Spread</label>
+        <input type="range" id="spread" min="0" max="70" value="34">
+        <small>Drag the cube to turn it. The bottom layer is 0–99 and the top is 900–999. Within a layer, rows are tens and columns are units.</small>
+      </div>
+    </div>
+    <div id="view-table" class="tablewrap" hidden></div>
+    <div id="view-list" hidden></div>
+  </section>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<footer>
+  <h2>What the colours mean</h2>
+  <p>Each cell is a team total from 0 to 999. <b>Green, like the outfield (bowled out):</b> a side has been dismissed for exactly this total at least once. All ten down, they left everything out on the field. <b>Cream, like Test whites (never bowled out):</b> innings have ended here, but never all out. Declared, chased down, or still batting when the match was drawn, they’re still out there in their whites, undefeated. <b>Red, like the ball (never happened):</b> no men’s Test innings has ever finished on this total. The ball is still in play, and it’s a scorigami waiting to happen. Under <b>Display</b> you can show how many times each total has happened, or switch to <b>high-contrast colours</b>, where the scorigamis turn orange and are easier to pick out if you see some colours differently. With filters on, the board recolours using only the innings that match.</p>
+  <h2>How endings are decided</h2>
+  <p>Endings come from the scorecards: <b>all out</b>, <b>declared</b>, <b>successful chase</b>, or <b>match drawn</b> with the side still batting at the end. <b>All out, short-handed</b> is an innings that ended with fewer than ten wickets down because a batter was absent hurt, retired hurt, ill, or retired not out and didn’t return. The rest are innings the result settles on its own: all out with all ten wickets down, or a successful chase. <b>Forfeited</b> innings count as declarations on 0/0 and are marked with an asterisk (*). The only ones in men’s Tests came at Centurion in 2000, when England forfeited their first innings and South Africa their second. The Laws of the time didn’t provide for a first-innings forfeit, so England’s was scored as 0/0 declared; on this site England’s shows as 0/0d* and South Africa’s as forfeited*, and both count as forfeits on 0. <b>Other</b> is England’s 298/4 at The Oval in 2006, when the match was awarded to England after Pakistan refused to take the field.</p>
+  <h2>Using the filters</h2>
+  <p>Each filter is a dropdown: tick what to keep, or hover a line and click “only”. The innings filter splits a 3rd innings played following on from an ordinary one. The toss and result filters describe the side that made the total. The quick questions set the filters for you and open <b>Ranked innings</b>.</p>
+  <h2>Sources and credits</h2>
+  <p>Match data from <a href="https://cricsheet.org" style="color:var(--accent)">Cricsheet</a>, used under the <a href="https://opendatacommons.org/licenses/by/1-0/" style="color:var(--accent)">Open Data Commons Attribution License</a>. Historical results and innings endings checked against scorecards on <a href="https://www.espncricinfo.com" style="color:var(--accent)">ESPNcricinfo</a>; every innings links to its scorecard there. Scores and results are facts; the scorigami, classifications and design are this site’s own. Not affiliated with Cricsheet, ESPNcricinfo or the ICC. Spotted an error? Corrections are welcome.</p>
+  <p><span id="coverage"></span></p>
+  <p id="srcNote"></p>
+</footer>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const DATA = __DATA__;
+const HOW = [
+  {k:'allout', label:'All out', short:'all out', v:'--e0', out:true},
+  {k:'allout_short', label:'All out, short-handed', short:'all out (short-handed)', v:'--e1', out:true},
+  {k:'declared', label:'Declared', short:'declared', v:'--e2'},
+  {k:'chase', label:'Successful chase', short:'successful chase', v:'--e3'},
+  {k:'draw', label:'Match drawn (batting at the end)', short:'still batting when the match was drawn', v:'--e4'},
+  {k:'other', label:'Other', short:'other', v:'--e5'},
+  {k:'forfeit', label:'Forfeited (0/0d)', short:'forfeited', v:'--e2'}
+];
+const WHY = ['Absent hurt','Retired hurt','Ill','Retired not out','Several reasons','Not recorded'];
+const INN = ['1st','2nd','3rd','3rd (following on)','4th'];
+const ix = r => r[3]===1?0: r[3]===2?1: r[3]===3?(r[10]===0?3:2): 4;   // innings bucket, follow-on 3rd split out
+const fo = r => r[10]===2?1:0;   // 0 = match had a follow-on, 1 = it didn't
+const RES = ['Won','Lost','Drawn','Tied'];
+const FO = ['Match with follow on','No follow on'];
+const TOSS = ['Won, chose to bat','Won, chose to bowl','Lost, opposition batted','Lost, sent in','Not recorded'];
+const T = DATA.teams, M = DATA.matches;
+const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
+const byScore = Array.from({length:1000},()=>[]);
+DATA.inn.forEach((r,i)=>{ if(r[4]<1000) byScore[r[4]].push(r); });
+const META = DATA.meta || {};
+(function(){ const d=META.last? new Date(META.last+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'';
+  const s=META.src||{}; document.getElementById('coverage').textContent = `Covers ${(META.tests||0).toLocaleString()} men’s Tests from ${META.first||1877} to ${d} (${DATA.inn.length.toLocaleString()} innings). ${((s.cricsheet||0)+(s.statsguru||0)+(s.manual||0)+(s.cricinfo||0)).toLocaleString()} innings have been checked against their scorecards; the other ${(s.csv||0).toLocaleString()} are all-outs with all ten wickets down or successful chases, which the scores and result settle on their own. Last updated ${META.built||''}.`;
+  document.getElementById('srcNote').textContent = (META.last||'') > '2024-03-31' ? '' : 'Not yet included: Tests after the CSV ends (March 2024), until the Cricsheet update runs.'; })();
+
+const state = {view:'grid', labels:'total', cb:false, marks:false, fsel:{}, preset:null, rankDir:-1, rankN:100, sel:null, layer:-1, rx:-24, ry:-38, spread:34, nums:true};
+
+const FILTERS = [
+  {id:'end', label:'How it ended', key:r=> r[6]===1?'s'+why(r):String(r[6]), opts:[
+    {v:'0',l:'All out',c:'--e0'},
+    {l:'All out, short-handed',c:'--e1',kids:WHY.map((w,i)=>({v:'s'+i,l:w}))},
+    {l:'Declared',c:'--e2',kids:[{v:'2',l:'Declared'},{v:'6',l:'Forfeited (0/0d)'}]},{v:'3',l:'Successful chase',c:'--e3'},{v:'4',l:'Match drawn (batting at the end)',c:'--e4'},{v:'5',l:'Other',c:'--e5'}]},
+  {id:'inn', label:'Innings', key:r=>String(ix(r)), opts:[
+    {v:'0',l:'1st'},{v:'1',l:'2nd'},{l:'3rd',kids:[{v:'2',l:'Normal'},{v:'3',l:'Following on',short:'3rd (following on)'}]},{v:'4',l:'4th'}]},
+  {id:'team', label:'Team', key:r=>T[r[1]], opts:[...T].sort().map(t=>({v:t,l:t}))},
+  {id:'opp', label:'Against', key:r=>T[r[2]], opts:[...T].sort().map(t=>({v:t,l:t}))},
+  {id:'era', label:'Era', key:r=>{const y=+M[r[0]][1]; return String(Math.floor(y/10)*10)+'s';}, opts:[
+    {l:'1877–1914',kids:['1870s','1880s','1890s','1900s','1910s'].map(v=>({v,l:v}))},
+    {l:'1920–1939',kids:['1920s','1930s'].map(v=>({v,l:v}))},
+    {l:'1946–1969',kids:['1940s','1950s','1960s'].map(v=>({v,l:v}))},
+    {l:'1970–1999',kids:['1970s','1980s','1990s'].map(v=>({v,l:v}))},
+    {l:'2000–today',kids:['2000s','2010s','2020s'].map(v=>({v,l:v}))}]},
+  {id:'toss', label:'Toss', key:r=>String(r[11]), opts:[
+    {l:'Won toss',kids:[{v:'0',l:'Chose to bat'},{v:'1',l:'Chose to bowl'}]},
+    {l:'Lost toss',kids:[{v:'3',l:'Sent in'},{v:'2',l:'Opposition batted'}]},{v:'4',l:'Not recorded'}]},
+  {id:'res', label:'Team’s result', key:r=>String(r[9]), opts:RES.map((l,i)=>({v:String(i),l}))},
+  {id:'fo', label:'Follow-on', key:r=>String(fo(r)), opts:[{v:'0',l:'Match with follow-on'},{v:'1',l:'No follow-on'}]},
+];
+// count every leaf, drop leaves that never occur, then drop parents left empty
+FILTERS.forEach(f=>{
+  const cnt={}; DATA.inn.forEach(r=>{const k=f.key(r); cnt[k]=(cnt[k]||0)+1;});
+  const prune=o=>{ if(o.kids){ o.kids=o.kids.filter(k=>cnt[k.v]); o.n=o.kids.reduce((a,k)=>a+cnt[k.v],0); o.kids.forEach(k=>k.n=cnt[k.v]); return o.kids.length>0; } o.n=cnt[o.v]||0; return o.n>0; };
+  f.opts=f.opts.filter(prune);
+  f.leaves=f.opts.flatMap(o=>o.kids?o.kids.map(k=>({...k,parent:o})):[o]);
+  state.fsel[f.id]=new Set(f.leaves.map(l=>l.v));
+});
+function pass(r){ for(const f of FILTERS) if(!state.fsel[f.id].has(f.key(r))) return false; return true; }
+function filtered(){ return FILTERS.some(f=>state.fsel[f.id].size<f.leaves.length); }
+function info(s){
+  let star=false; const c=[0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null;
+  for(const r of byScore[s]){ if(!pass(r)) continue; c[r[6]]++; n++; if(r[6]===6 || (DATA.notes||{})[r[0]+'-'+r[3]]) star=true; ii[ix(r)]++; rr[r[9]]++; if(r[6]===1) w[why(r)]++; if(first===null||r[0]<first[0]) first=r; if(last===null||r[0]>last[0]) last=r; }
+  const out=c[0]+c[1];
+  return {star,c,w,ii,rr,n,out,not:n-out,status: out?'out': n?'not':'never', first,last};
+}
+let cache=[];
+function recompute(){ cache = Array.from({length:1000},(_,s)=>info(s)); }
+const ICON={
+  out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 21h16"/><path d="M8 21V9"/><path d="M12 21V9"/><path d="M15.5 21l3.2-11.4"/><path d="M6.6 5.6l3.6-.9"/><path d="M13.6 3.6l3.4 1.6"/></svg>',
+  not:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(35 12 12)"><path d="M10.9 1.6h2.2v6.6h-2.2z" fill="currentColor"/><path d="M8.4 9.4c0-.9.6-1.4 1.4-1.4h4.4c.8 0 1.4.5 1.4 1.4V19c0 2.1-1.6 3.4-3.6 3.4S8.4 21.1 8.4 19z"/><path d="M12 11v8.5" stroke-width="1.1"/></g></svg>',
+  never:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M8.6 4.6c2.2 3.6 2.2 11.2 0 14.8"/><path d="M15.4 4.6c-2.2 3.6-2.2 11.2 0 14.8"/><path d="M10.4 7.5h1.3M10.8 10.5h1.2M10.8 13.5h1.2M10.4 16.5h1.3M12.3 7.5h1.3M12 10.5h1.2M12 13.5h1.2M12.3 16.5h1.3" stroke-width="1.1"/></svg>'
+};
+function cellStyle(s){
+  const o=cache[s];
+  if(state.empty || !o.n) return state.cb ? ['var(--never-cb)','var(--never-cb-ink)',''] : ['var(--never)','var(--never-ink)','inset 0 0 0 1.5px var(--never-edge)'];
+  if(o.status==='out') return ['var(--out)','var(--out-ink)',''];
+  return ['var(--not)','var(--not-ink)','inset 0 0 0 1px var(--not-edge)'];
+}
+function marks(o){ if(!state.marks || !o.n || o.status!=='not') return ''; return (o.c[2]?'d':'')+(o.c[4]?'*':'')+(o.c[3]?'✓':''); }
+function fmtInn(r){
+  const h=r[6], w=r[5], R=r[4];
+  if(h===6) return r[3]<=2 ? '0/0d*' : 'forfeited*';
+  if(h===0) return `${R}`;
+  if(h===1) return `${R} all out (${w} wkts, ${WHY[why(r)].toLowerCase()})`;
+  if(h===2) return `${R}/${w}d`;
+  return `${R}/${w}`;
+}
+function ord(n){return n+(['th','st','nd','rd'][n]||'th')}
+
+/* ---------- KPIs ---------- */
+function renderKPIs(){
+  const K=document.getElementById('kpis');
+  if(state.empty){ K.innerHTML=['totals have happened','still waiting','lowest never reached','most common','latest scorigami'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
+  let reached=0, top=0, topS=0; const gaps=[];
+  for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
+  // latest scorigami = the total whose first matching innings came most recently
+  let latest=null; for(let s=0;s<1000;s++){ const f=cache[s].first; if(f && (!latest || f[0]>latest[0])) latest=f; }
+  const lm = latest? M[latest[0]] : null;
+  K.innerHTML = [
+    [reached.toLocaleString(), 'of 1,000 totals have happened', '', 'var(--out)'],
+    [(1000-reached).toLocaleString(), 'totals still waiting for their first innings', '', 'var(--never)'],
+    [gaps[0]??'—', 'lowest total never reached', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
+    [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
+    [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${lm[1]}` : '', 'var(--accent)']
+  ].map(([b,t,sub,k])=>`<div class="kpi" style="--k:${k}"><b class="num">${b}</b><span>${t}</span>${sub?`<small>${sub}</small>`:''}</div>`).join('');
+}
+
+/* ---------- legend ---------- */
+function renderLegend(){
+  const nv=state.cb?'background:var(--never-cb);color:var(--never-cb-ink)':'background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 1.5px var(--never-edge)';
+  const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
+  document.getElementById('legend').innerHTML =
+    item('background:var(--out);color:var(--out-ink)','out','Bowled out','All ten down. It’s done.') +
+    item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1px var(--not-edge)','not','Never bowled out','Still out there in their whites, undefeated.') +
+    item(nv,'never','Never happened','The ball’s still in play.');
+}
+
+/* ---------- grid ---------- */
+const gridEl=document.getElementById('view-grid');
+function buildGrid(){
+  let h='';
+  for(let p=0;p<10;p++){
+    h+=`<div class="panel"><h3>${p?p*100+'s':'0–99'}<small id="pc${p}"></small></h3><div class="pgrid" role="grid" aria-label="Totals ${p*100} to ${p*100+99}"><span></span>`;
+    for(let u=0;u<10;u++) h+=`<span class="ax">${u}</span>`;
+    for(let t=0;t<10;t++){ h+=`<span class="ax">${t}</span>`; for(let u=0;u<10;u++){const s=p*100+t*10+u; h+=`<button class="cell" data-s="${s}" aria-label="${s}" style="--dx:${Math.round((Math.random()-.5)*900)}px;--dy:${Math.round((Math.random()-.3)*700)}px;--rot:${Math.round((Math.random()-.5)*540)}deg">${s}</button>`;} }
+    h+=`</div></div>`;
+  }
+  gridEl.innerHTML=h;
+}
+function paintCells(root){
+  root.querySelectorAll('.cell').forEach(el=>{
+    const s=+el.dataset.s, o=cache[s]; const [bg,ink,edge]=cellStyle(s); el.style.background=bg; el.style.color=ink; el.style.boxShadow=edge; el.style.fontWeight=o.n?'400':'600';
+    el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel);
+    if(root===gridEl){ const lab = state.labels==='count' ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
+  });
+  for(let p=0;p<10;p++){ const e=document.getElementById('pc'+p); if(e){ let k=0; for(let s=p*100;s<p*100+100;s++) if(cache[s].n) k++; e.textContent=`${k}/100 reached`; } }
+}
+
+/* ---------- cube ---------- */
+const cubeEl=document.getElementById('cube');
+function buildCube(){
+  let h='';
+  for(let p=0;p<10;p++){
+    h+=`<div class="layer" data-p="${p}">`;
+    for(let t=9;t>=0;t--) for(let u=0;u<10;u++){const s=p*100+t*10+u; h+=`<button class="cell" data-s="${s}" aria-label="${s}" tabindex="-1"></button>`;}
+    h+=`</div>`;
+  }
+  cubeEl.innerHTML=h;
+  document.getElementById('layerBtns').innerHTML = `<button class="lay" data-l="-1" aria-pressed="true">All layers</button>` +
+    Array.from({length:10},(_,i)=>9-i).map(p=>`<button class="lay" data-l="${p}" aria-pressed="false"><span>${p?p*100+'s':'0–99'}</span><small class="num" id="lc${p}"></small></button>`).join('');
+}
+function placeCube(){
+  cubeEl.style.transform=`rotateX(${state.rx}deg) rotateY(${state.ry}deg)`;
+  cubeEl.querySelectorAll('.layer').forEach(l=>{
+    const p=+l.dataset.p; const y=(4.5-p)*state.spread;
+    l.style.transform=`translateY(${y}px) rotateX(90deg)`;
+    l.classList.toggle('dim', state.layer>=0 && state.layer!==p);
+  });
+  document.querySelectorAll('#layerBtns .lay').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.l===state.layer)));
+  for(let p=0;p<10;p++){ const e=document.getElementById('lc'+p); if(e){let k=0; for(let s=p*100;s<p*100+100;s++) if(cache[s].n) k++; e.textContent=k;} }
+}
+(function dragRotate(){
+  const sc=document.getElementById('scene'); let d=null;
+  sc.addEventListener('pointerdown',e=>{ if(e.target.classList.contains('cell')) return; d={x:e.clientX,y:e.clientY,rx:state.rx,ry:state.ry}; sc.setPointerCapture(e.pointerId); });
+  sc.addEventListener('pointermove',e=>{ if(!d) return; state.ry=d.ry+(e.clientX-d.x)*0.4; state.rx=Math.max(-89,Math.min(89,d.rx-(e.clientY-d.y)*0.4)); placeCube(); });
+  sc.addEventListener('pointerup',()=>d=null); sc.addEventListener('pointercancel',()=>d=null);
+})();
+document.getElementById('spread').addEventListener('input',e=>{state.spread=+e.target.value; placeCube();});
+document.getElementById('layerBtns').addEventListener('click',e=>{const b=e.target.closest('.lay'); if(!b) return; state.layer=+b.dataset.l; placeCube();});
+
+/* ---------- table ---------- */
+let sortKey='s', sortDir=1;
+function renderTable(){
+  const rows=[]; for(let s=0;s<1000;s++){const o=cache[s]; rows.push({s,n:o.n,c:o.c,ii:o.ii,f:o.first?+M[o.first[0]][1]:null,l:o.last?+M[o.last[0]][1]:null});}
+  const key = r=> sortKey==='s'?r.s: sortKey==='n'?r.n: sortKey==='f'?(r.f??9999): sortKey==='l'?(r.l??-1): sortKey[0]==='i'? r.ii[+sortKey[1]-1] : r.c[+sortKey];
+  rows.sort((a,b)=>(key(a)-key(b))*sortDir || a.s-b.s);
+  const head=[['s','Total'],['n','Innings'],...HOW.map((h,i)=>[String(i),h.label]),...INN.map((l,i)=>['i'+(i+1),l+' inns']),['f','First'],['l','Latest']];
+  document.getElementById('view-table').innerHTML=`<table><thead><tr>${head.map(([k,l])=>`<th data-k="${k}" scope="col">${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
+    rows.map(r=>`<tr data-s="${r.s}"><td class="num"><b>${r.s}</b></td><td class="num">${r.n||'–'}</td>${r.c.map(v=>`<td class="num">${v||''}</td>`).join('')}${r.ii.map(v=>`<td class="num">${v||''}</td>`).join('')}<td class="num">${r.f??''}</td><td class="num">${r.l??''}</td></tr>`).join('')+`</tbody></table>`;
+}
+document.getElementById('view-table').addEventListener('click',e=>{
+  const th=e.target.closest('th'); if(th){ const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=(k==='s'||k==='f')?1:-1;} renderTable(); return; }
+  const tr=e.target.closest('tr[data-s]'); if(tr) select(+tr.dataset.s);
+});
+
+/* ---------- ranked innings ---------- */
+function renderList(){
+  const all=DATA.inn.filter(pass).sort((a,b)=>(a[4]-b[4])*state.rankDir || a[0]-b[0]);
+  const rows=all.slice(0,state.rankN); let rank=0, prev=null;
+  const desc=filtered()?FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).map(f=>f.label.toLowerCase()+': '+summary(f)).join('; '):'no filters';
+  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc}).</span></div>`;
+  h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>#</th><th>Total</th><th>Team</th><th>Opponent</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Team’s result</th><th>Year</th><th>Match result</th><th></th></tr></thead><tbody>`+
+    rows.map((r,i)=>{ if(prev===null||r[4]!==prev){rank=i+1; prev=r[4];} const m=M[r[0]];
+      return `<tr data-s="${r[4]}"><td class="num">${rank}</td><td class="num"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td><td>${T[r[1]]}</td><td>${T[r[2]]}</td><td>${INN[ix(r)]}</td><td><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${r[6]===1?WHY[why(r)]:HOW[r[6]].label}</td><td>${['Won, batted','Won, bowled','Lost, opp. batted','Lost, sent in','–'][r[11]]}</td><td>${RES[r[9]]}</td><td class="num">${m[1]}</td><td style="white-space:normal;min-width:180px">${m[3]}</td><td>${m[0]?`<a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener" style="color:var(--accent)">Scorecard ↗</a>`:''}</td></tr>`; }).join('')+
+    `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="moreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
+  document.getElementById('view-list').innerHTML=h;
+}
+document.getElementById('view-list').addEventListener('click',e=>{
+  const b=e.target.closest('#rankSeg button'); if(b){ state.rankDir=+b.dataset.d; state.rankN=100; renderList(); return; }
+  if(e.target.closest('#moreBtn')){ state.rankN+=100; renderList(); return; }
+  if(e.target.closest('a')) return;
+  const tr=e.target.closest('tr[data-s]'); if(tr) select(+tr.dataset.s);
+});
+
+/* ---------- detail ---------- */
+function renderDetail(){
+  const D=document.getElementById('detail'); const s=state.sel; if(s===null){D.innerHTML='';return;}
+  const o=cache[s];
+  const pill = o.status==='out'?[ICON.out+'Bowled out here','var(--out)','#fff']: o.status==='not'?[ICON.not+'Never bowled out here','var(--not)','var(--not-ink)']:[ICON.never+'Never happened', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
+  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
+  if(!o.n){
+    const nb=[]; for(let d=1;d<1000&&nb.length<2;d++){ if(s-d>=0&&cache[s-d].n&&!nb.some(x=>x<s)) nb.push(s-d); if(s+d<1000&&cache[s+d].n&&!nb.some(x=>x>s)) nb.push(s+d); }
+    h+=`<p class="empty">No innings ${filtered()?'matching the filters ':''}has finished on ${s}. ${nb.length?`Nearest totals reached: ${nb.sort((a,b)=>a-b).map(x=>`<a href="#" data-go="${x}" style="color:var(--accent)">${x}</a>`).join(' and ')}.`:''}</p>`;
+    D.innerHTML=h; return;
+  }
+  h+=`<p style="margin:10px 0 0;color:var(--ink-2)"><b class="num" style="color:var(--ink)">${o.n}</b> innings ${o.n===1?'has':'have'} finished on ${s}.</p>`;
+  h+=`<div class="stack" aria-hidden="true">${o.c.map((v,i)=>v?`<div style="flex:${v};--c:var(${HOW[i].v})"></div>`:'').join('')}</div>`;
+  const sub=(t,x)=>`<span></span><span style="color:var(--ink-2);padding-left:10px">${t}</span><span class="num" style="color:var(--ink-2)">${x}</span>`;
+  const shown=o.c.map((v,i)=>i===2? v+o.c[6] : i===6? 0 : v);
+  h+=`<div class="breakdown">${shown.map((v,i)=>v?`<i style="--c:var(${HOW[i].v})"></i><span>${HOW[i].label}</span><b class="num">${v}</b>`+(i===1?o.w.map((x,j)=>x?sub(WHY[j],x):'').join(''):'')+(i===2&&o.c[6]?sub('Forfeited (0/0d)',o.c[6]):''):'').join('')}</div>`;
+  if(o.star) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Includes forfeited innings, counted as 0/0 declared.</p>`;
+  h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">By innings: ${o.ii.map((x,i)=>`${INN[i]} <b class="num" style="color:var(--ink)">${x}</b>`).join(' · ')}</p>`;
+  h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">Toss: ${[0,1,3,2].map(i=>[i,byScore[s].filter(r=>pass(r)&&r[11]===i).length]).filter(x=>x[1]).map(([i,n])=>`${TOSS[i].toLowerCase()} <b class="num" style="color:var(--ink)">${n}</b>`).join(' · ')}</p>`;
+  h+=`<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2)">Team went on to: ${o.rr.map((x,i)=>x?`${RES[i].toLowerCase()} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
+  const list=byScore[s].filter(pass).sort((a,b)=>b[0]-a[0]);
+  h+=`<h2 style="font-size:17px;margin-top:6px">Every innings, newest first</h2><div class="list">`+list.map(r=>{
+    const m=M[r[0]];
+    return `<div class="row"><span class="y">${m[1]}</span><span class="t"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${T[r[1]]} <span class="num">${fmtInn(r)}</span> <span style="font-weight:400;color:var(--ink-2)">v ${T[r[2]]}</span></span>
+      <span class="m">${ord(r[3])} innings${r[10]===0?' (following on)':''} · ${(DATA.notes||{})[r[0]+'-'+r[3]]?'<i>'+DATA.notes[r[0]+'-'+r[3]]+'</i> · ':''}${r[6]===1?'all out, short-handed ('+WHY[why(r)].toLowerCase()+')':HOW[r[6]].short}${m[2]?' · '+m[2]:''}<br>${m[3]} · ${m[4]?'Test '+m[4]:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</span></div>`;
+  }).join('')+`</div>`;
+  D.innerHTML=h;
+}
+document.getElementById('detail').addEventListener('click',e=>{const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); select(+a.dataset.go);}});
+
+/* ---------- tooltip & selection ---------- */
+const tip=document.getElementById('tip');
+function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · never reached`; return `<b>${s}</b> · ${o.n} innings<br>`+o.c.map((v,i)=>v?`${HOW[i].label}: ${v}`:'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
+document.addEventListener('pointerover',e=>{const c=e.target.closest('.cell'); if(!c){tip.style.display='none';return;} tip.innerHTML=tipText(+c.dataset.s); tip.style.display='block';});
+document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') return; const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-8), y=Math.min(e.clientY+14, innerHeight-tip.offsetHeight-8); tip.style.left=x+'px'; tip.style.top=y+'px'; });
+document.addEventListener('click',e=>{const c=e.target.closest('.cell'); if(c) select(+c.dataset.s);});
+function select(s, quiet){ state.sel=s; paintAll(false); renderDetail(); if(!quiet && innerWidth<1100) document.getElementById('detail').classList.add('open'); }
+document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('#sheetClose')) document.getElementById('detail').classList.remove('open'); });
+document.getElementById('jump').addEventListener('change',e=>{const v=Math.round(+e.target.value); if(v>=0&&v<1000) select(v);});
+
+/* ---------- controls ---------- */
+/* ---------- filter dropdowns ---------- */
+function leafLabel(f,l){ return l.short || (l.parent? (f.id==='end'? l.l : f.id==='toss'? l.parent.l.replace(' toss','')+', '+l.l.toLowerCase() : l.parent.l+' '+l.l.toLowerCase()) : l.l); }
+function summary(f){
+  const S=state.fsel[f.id]; if(S.size===f.leaves.length) return 'All';
+  for(const o of f.opts) if(o.kids && o.kids.every(k=>S.has(k.v)) && S.size===o.kids.length) return o.l;
+  const on=f.leaves.filter(l=>S.has(l.v)); if(on.length<=2) return on.map(l=>leafLabel(f,l)).join(', ');
+  return `${on.length} of ${f.leaves.length}`;
+}
+function optRow(f,o,isParent){
+  const c=o.c?`style="--c:var(${o.c})"`:'';
+  return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}</span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
+}
+function buildFilters(){
+  document.getElementById('fbar').innerHTML = FILTERS.map(f=>`<div class="fwrap"><button class="fbtn" id="fb-${f.id}" data-f="${f.id}" aria-expanded="false" aria-haspopup="true"></button>
+    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}">${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
+    <div class="popfoot"><button class="linkbtn" data-all="${f.id}" type="button">Select all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
+}
+function syncFilters(){
+  FILTERS.forEach(f=>{
+    const S=state.fsel[f.id], btn=document.getElementById('fb-'+f.id);
+    btn.innerHTML=`${f.label}: <b>${summary(f)}</b>`; btn.classList.toggle('on', S.size<f.leaves.length);
+    document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>i.checked=S.has(i.dataset.v));
+    document.querySelectorAll(`#pop-${f.id} input[data-p]`).forEach(i=>{ const k=f.opts[+i.dataset.p].kids.filter(x=>S.has(x.v)).length; i.checked=k===f.opts[+i.dataset.p].kids.length; i.indeterminate=k>0&&!i.checked; });
+  });
+}
+function vals(f,el){ return el.dataset.p!==undefined ? f.opts[+el.dataset.p].kids.map(k=>k.v) : [el.dataset.v]; }
+function renderActive(){
+  const A=document.getElementById('activeBar'); const on=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length);
+  if(!on.length){ A.hidden=true; return; }
+  const n=DATA.inn.filter(pass).length;
+  A.hidden=false; A.innerHTML=`<span>Showing</span>`+on.map(f=>`<button class="x" data-clear="${f.id}">${f.label}: ${summary(f)}</button>`).join('')+`<span>· ${n.toLocaleString()} innings</span><button class="linkbtn" data-clear="*">Clear all</button>`;
+}
+document.getElementById('activeBar').addEventListener('click',e=>{ const b=e.target.closest('[data-clear]'); if(!b) return; const id=b.dataset.clear; if(id==='*') resetSel(); else { const F=FILTERS.find(f=>f.id===id); state.fsel[id]=new Set(F.leaves.map(l=>l.v)); } state.preset=null; syncPresets(); refilter(); });
+function refilter(){ state.rankN=100; syncFilters(); renderActive(); paintAll(true); renderDetail(); }
+function closePops(except){ document.querySelectorAll('.pop').forEach(p=>{ if(p.id!==except){ p.hidden=true; document.getElementById('fb-'+p.id.slice(4)).setAttribute('aria-expanded','false'); } }); }
+buildFilters(); syncFilters();
+if(innerWidth>=700) document.getElementById('qq').open=true;
+document.getElementById('fbar').addEventListener('click',e=>{
+  const fb=e.target.closest('.fbtn');
+  if(fb){ const p=document.getElementById('pop-'+fb.dataset.f); closePops(p.id); p.hidden=!p.hidden; fb.setAttribute('aria-expanded',String(!p.hidden)); return; }
+  const f=FILTERS.find(x=>x.id===(e.target.closest('[data-f]')||{}).dataset?.f || x.id===e.target.dataset.all);
+  if(e.target.dataset.close!==undefined){ closePops(); return; }
+  if(e.target.dataset.all){ const F=FILTERS.find(x=>x.id===e.target.dataset.all); state.fsel[F.id]=new Set(F.leaves.map(l=>l.v)); state.preset=null; syncPresets(); refilter(); return; }
+  const only=e.target.closest('.only');
+  if(only){ e.preventDefault(); const F=FILTERS.find(x=>x.id===only.dataset.f); state.fsel[F.id]=new Set(vals(F,only)); state.preset=null; syncPresets(); refilter(); }
+});
+document.getElementById('fbar').addEventListener('change',e=>{
+  const i=e.target; if(i.type!=='checkbox') return; const F=FILTERS.find(x=>x.id===i.dataset.f); const S=state.fsel[F.id];
+  const vs=vals(F,i); const on = i.dataset.p!==undefined ? !vs.every(v=>S.has(v)) : i.checked;
+  vs.forEach(v=> on? S.add(v): S.delete(v));
+  if(S.size===0){ vs.forEach(v=>S.add(v)); }   // a filter can't be emptied; use "only" instead
+  state.preset=null; syncPresets(); refilter();
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('.fwrap')) closePops(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePops(); });
+
+/* ---------- quick questions ---------- */
+const ALLOUT=()=>FILTERS[0].leaves.filter(l=>l.v==='0'||l.v[0]==='s').map(l=>l.v);
+const PRESETS=[
+  {l:'Highest 4th-innings totals to save a Test', set:{inn:['4'],end:['4']}, dir:-1},
+  {l:'Highest successful chases', set:{inn:['4'],end:['3']}, dir:-1},
+  {l:'Lowest totals defended in the 4th innings', set:{inn:['4'],res:['1'],end:()=>ALLOUT()}, dir:-1, note:'highest 4th-innings all-outs that still lost'},
+  {l:'Lowest declarations that won', set:{end:['2'],res:['0']}, dir:1},
+  {l:'Highest declarations that lost', set:{end:['2'],res:['1']}, dir:-1},
+  {l:'Biggest totals following on', set:{inn:['3']}, dir:-1},
+  {l:'Wins after following on', set:{inn:['3'],res:['0']}, dir:-1},
+  {l:'Highest totals after being sent in', set:{inn:['0'],toss:['3']}, dir:-1},
+  {l:'Lowest all-outs after choosing to bat', set:{inn:['0'],toss:['0'],end:()=>ALLOUT()}, dir:1},
+];
+document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>`<button class="preset" data-p="${i}" aria-pressed="false">${p.l}</button>`).join('');
+function syncPresets(){ document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.p===state.preset))); }
+function resetSel(){ FILTERS.forEach(f=>state.fsel[f.id]=new Set(f.leaves.map(l=>l.v))); }
+document.getElementById('presets').addEventListener('click',e=>{
+  const b=e.target.closest('.preset'); if(!b) return; const P=PRESETS[+b.dataset.p];
+  resetSel(); Object.entries(P.set).forEach(([k,v])=>state.fsel[k]=new Set(typeof v==='function'?v():v));
+  state.preset=+b.dataset.p; state.rankDir=P.dir; syncPresets();
+  document.querySelector('#viewSeg button[data-v="list"]').click(); refilter();
+});
+document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
+document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
+document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list'; paintAll(false);});
+function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
+flip('countBtn','labels','count','total'); flip('cbBtn','cb',true,false);
+document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) select(opts[Math.floor(Math.random()*opts.length)]); });
+
+
+function paintAll(re){
+  if(re) recompute();
+  const wasEmpty=state.empty; state.empty = cache.every(o=>!o.n);
+  const vm=document.getElementById('voidMsg'); vm.hidden=!state.empty;
+  if(state.empty && !wasEmpty){
+    document.getElementById('voidText').textContent='No men’s Test innings has ever matched this combination of filters. Not once in '+DATA.inn.length.toLocaleString()+' innings.';
+    const board=document.querySelector('.board'); const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduce && state.view==='grid'){ gridEl.classList.add('boom'); setTimeout(()=>gridEl.classList.remove('boom'),650); }
+    if(!reduce){ board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }
+  }
+  renderKPIs(); renderLegend();
+  if(state.view==='grid') paintCells(gridEl);
+  if(state.view==='cube'){ paintCells(cubeEl); placeCube(); }
+  if(state.view==='table') renderTable();
+  if(state.view==='list') renderList();
+}
+buildGrid(); buildCube(); recompute();
+state.sel = cache.reduce((b,o,s)=>o.n>cache[b].n?s:b,0);
+paintAll(false); renderDetail();
+</script>
+</body>
+</html>
