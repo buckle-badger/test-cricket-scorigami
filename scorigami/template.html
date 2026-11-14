@@ -288,7 +288,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
   <div>
     <h1>Scorigami: Test Cricket (Men’s)</h1>
     <p class="kicker">Every total a men’s Test innings has finished on, from 0 to 999</p>
-    <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, fans have since built boards for rugby, tennis and baseball. This is the Test cricket version: the final run total of every men’s Test innings, how often each total has come up, and how those innings ended.</p>
+    <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, fans have since built scorigami grids for other sports (rugby, tennis, baseball, association football…). This is the Test cricket version: the final run total of every men’s Test innings, how often each total has come up, and how those innings ended.</p>
     <span class="howto">Tap any number to see every innings that finished on it.</span>
   </div>
 </header>
@@ -522,14 +522,14 @@ function renderLegend(){
   const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
   if(state.heat){
     document.getElementById('legend').innerHTML = `<div class="heatkey"><b>Times each total has come up${filtered()?' (with these filters)':''}</b><div class="bands">${HEAT.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` +
-      item(nv,'never',filtered()?'None with these filters':'Scorigami!','No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
+      item(nv,'never',filtered()?'None with these filters':'Scorigami!','No innings has ever ended on this total. Yet…'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
       `<span class="key"><span class="sw" style="background:var(--q4);position:relative"><span class="hd" style="position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--dot)"></span></span><span class="kt"><b>${state.view==='grid'?'Dot':'Dark outline'}: never all out</b><small>Innings have ended on this total, but never with the side bowled out.</small></span></span>`;
     return;
   }
   document.getElementById('legend').innerHTML =
     item('background:var(--out);color:var(--out-ink)','out','Complete – all out','At least one side has been bowled out for exactly this total.') +
     item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)','not','Complete – not out','Innings have ended here, but never all out: declared, chased down, or batting at the close.') +
-    (filtered()? item(nv,'never','None with these filters','No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
+    (filtered()? item(nv,'never','None with these filters','No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet…'));
 }
 
 /* ---------- grid ---------- */
