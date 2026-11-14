@@ -14,7 +14,7 @@
 <meta property="og:url" content="__SITE__">
 <meta property="og:image" content="__SITE__og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Every Test innings total from 0 to 999 as ten small boards: green for totals a side has been bowled out on, cream for totals reached but never all out, pink for totals that have never happened.">
+<meta property="og:image:alt" content="Every men’s Test innings total from 0 up to the all-time record as small boards: green for totals a side has been bowled out on, cream for totals reached but never all out, red for totals that have never happened.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f5e4f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23b3121d'/%3E%3Cpath d='M14 6v20M18 6v20' stroke='%23f6f1e3' stroke-width='1.3'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="icon.png">
@@ -22,8 +22,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: scoreboard header, KPI strip, one control row, the 10×10×10 board (grid / cube / table) beside a detail card for the selected total. */
-:root{
+/* Layout idea: scoreboard header, KPI strip, one control row, the 10×10×10 board (grid / table / rings / dial) beside a detail card for the selected total. */
+:root{--zero:#2b302d;--zero2:#5f6561;
   color-scheme: light;
   --bg:#f4f6f3; --surface:#ffffff; --ink:#131714; --ink-2:#4a524c; --muted:#78807a; --line:#d8ddd7; --accent:#1d5a43;
   --out:#4f806d; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#5c5a50; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#cf4a53; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
@@ -58,8 +58,16 @@ h2{font-size:22px}
 .sub{color:var(--ink-2);max-width:68ch;margin:8px 0 0}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modebar{display:flex;justify-content:flex-start;margin:14px 0 12px}
-.seg-lg button{font-size:15px;padding:9px 16px}
+.modebar{display:flex;justify-content:flex-start;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 12px}
+.modeswitch{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(100%,640px);padding:6px;border-radius:16px;background:var(--surface);border:2px solid var(--accent);box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.modeswitch button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:11px;padding:12px 16px;display:flex;flex-direction:column;gap:3px;color:var(--ink)}
+.modeswitch button b{font:700 19px/1.15 var(--display)}
+.modeswitch button small{font-size:13px;color:var(--ink-2)}
+.modeswitch button:hover{background:var(--bg)}
+.modeswitch button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.modeswitch button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.modeswitch button[aria-pressed="true"] small{color:color-mix(in srgb,var(--surface) 82%,transparent)}
+@media (max-width:700px){ .modeswitch button{padding:10px 12px} .modeswitch button b{font-size:16.5px} .modeswitch button small{font-size:12px} }
 .mhead{font-size:18px;margin:22px 0 8px}
 .sky{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;height:210px;margin-bottom:6px}
 .tower{all:unset;cursor:pointer;display:grid;grid-template-rows:1fr auto;height:100%;border-radius:4px}
@@ -71,16 +79,76 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .tower:hover .tb{filter:brightness(1.08)}
 .mrest{font-size:13px;color:var(--ink-2);margin:4px 0 0}
 .mrest a{color:var(--accent)}
-.mrings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.mrings{display:grid;grid-template-columns:1fr;gap:16px}
+.mrings svg{max-width:620px;margin:0 auto}
 .mrings figure{margin:0}
 .mrings svg{width:100%;height:auto;display:block;touch-action:manipulation}
 .mrcell{cursor:pointer}
+.zoomgrp{display:inline-flex;align-items:center;gap:8px}
+.mbar .zoomgrp{margin-bottom:8px}
+.dshape{margin-bottom:10px}
+#heroRing{touch-action:none;cursor:grab;outline:none;user-select:none;-webkit-user-select:none}
+#heroRing:active{cursor:grabbing}
+#heroRing:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:50%}
+#view-dial.ring .mbarscroll,#mBar.ring .mbarscroll,#mBar.ring .zoomgrp{display:none}
+.dialring{touch-action:none;cursor:grab;outline:none;user-select:none;-webkit-user-select:none;width:min(100%,760px);height:auto;display:block;margin:10px auto 0}
+.dialring:active{cursor:grabbing}
+.dialring[hidden]{display:none}
+#view-dial .ringwrap.hero{margin-top:10px}
+@media (max-width:700px){#mList .c-end .d{display:none} #mList .rank .c-tot{font-size:13.5px;white-space:nowrap}}
+.mrankby{font-size:13px;color:var(--ink-2);margin:0 0 10px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--bg)}
+#mTable td.nv{color:var(--never-ink)}
+#mTable tr[data-n]{cursor:pointer}
+#mTable th.grp{text-align:center;border-bottom:1px solid var(--line);cursor:default;color:var(--ink)}
+#mTable thead tr:first-child th{top:0} #mTable thead tr:nth-child(2) th{top:31px}
+#mTable tr.sel td,#mList tr.sel td{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+tr.flash td{animation:rowflash 1.4s ease-out}
+@keyframes rowflash{0%,30%{background:color-mix(in srgb,var(--accent) 35%,transparent)}}
+#mList tr[data-sel]{cursor:pointer}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
 .mbarscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
-.mbarscroll svg{display:block;width:100%;height:auto;cursor:pointer;touch-action:pan-x}
-.mbar .blab{font:600 14px var(--body);fill:var(--ink)}
-.mbar .btk{font:12px var(--mono);fill:var(--muted)}
-@media (max-width:700px){.mbarscroll svg{min-width:1000px}}
+.mbarscroll svg{display:block;height:auto;cursor:ew-resize;touch-action:pan-y}
+.mbar .blab{font:600 21px var(--body);fill:var(--ink)}
+.mbar .btk{font:17px var(--mono);fill:var(--muted)}
+svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
+.filters:not(.fopen){display:none!important}
+.ftoggle b{color:var(--accent)}
+.controls.viewrow{margin-bottom:4px}
+.hint{margin:4px 0 10px;font-size:13.5px;color:var(--ink-2)}
+.fold{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.fold:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.fold .chev{font-size:.7em;color:var(--muted);transition:transform .15s}
+.fold[aria-expanded="false"] .chev{transform:rotate(-90deg)}
+.shut>:not(.mhead){display:none!important}
+.nofold .fold{pointer-events:none;cursor:default} .nofold .chev{display:none} .nofold #mWk.shut{display:block}
+#mWk.shut{display:none}
+.kindseg{margin-bottom:10px}
+.fhead{display:flex;align-items:center;gap:12px}
+.resetchip{padding:4px 12px;font-weight:600;color:var(--accent);border-color:var(--accent)}
+.pop .opt.short{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:6px}
+.pop .opt.short small{color:var(--muted);font-weight:400}
+.viewrow .glabel{font-size:12.5px;color:var(--ink);font-weight:700}
+.viewrow .seg{border:1.5px solid var(--accent);border-radius:10px;padding:3px;gap:3px;background:var(--surface)}
+.viewrow .seg button{font-size:14.5px;font-weight:600;padding:8px 14px;border:0;border-radius:7px}
+.viewrow .seg button[aria-pressed="true"]{box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.viewrow{margin:6px 0 8px}
+.optrow{display:flex;justify-content:flex-start;margin:4px 0 6px}
 .mbarnote{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.dial{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:10px 0 6px;user-select:none;-webkit-user-select:none}
+.dialread{display:flex;align-items:center;gap:12px;padding:0 14px 8px;height:52px;box-sizing:content-box}
+.dialread .dn{font:700 30px/1 var(--mono);width:3.2ch;flex:none;text-align:right;font-variant-numeric:tabular-nums}
+.dialread .dl{flex:1;min-width:0;font-size:13.5px;color:var(--ink-2);line-height:1.35;height:2.7em}
+.dialread .ln{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dialread .dl b{color:var(--ink)}
+.dialread .nv{color:var(--never-ink);font-weight:600}
+.dialread .dn.nvn{color:var(--never-ink)}
+.dialread button{flex:none}
+.dialwrap{position:relative}
+#dialCv,#tDialCv{display:block;width:100%;height:96px;touch-action:pan-y;cursor:grab;outline:none}
+#dialCv:active,#tDialCv:active{cursor:grabbing}
+#dialCv:focus-visible,#tDialCv:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.dialfine{position:absolute;top:4px;right:10px;font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--surface);padding:3px 7px;border-radius:999px}
+@media (max-width:700px){#mBar .zoomgrp{display:none} .dialread{gap:8px;padding:0 10px 8px} .dialread .dn{font-size:26px;width:3ch} .dialread .dl{font-size:13px} .dialread .chip{padding:4px 9px;font-size:12.5px}}
 .mrcell.sel{stroke:var(--ink)!important;stroke-width:3px!important}
 .mother{font-size:13.5px;color:var(--ink-2);margin:12px 0 0}
 .mother a{color:var(--accent)}
@@ -90,9 +158,17 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .msel span{color:var(--ink-2)}
 .msel select{border:0;background:transparent;font:600 13px var(--body);color:var(--ink);max-width:170px}
 .mfilters .fbar{display:flex;flex-wrap:wrap;gap:6px}
-.mfilters{display:block!important}
+.mfilters .qq{margin-top:8px}
+.mlist .mg{font:600 12.5px var(--mono);color:var(--ink);margin-right:6px}
 .card.wcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
 .mhead:first-of-type{margin-top:4px}
+.msect{font-family:var(--display);font-size:clamp(19px,2.2vw,23px);margin:30px 0 10px;padding-top:16px;border-top:2px solid var(--line)}
+.msect:first-of-type{margin-top:18px}
+.msub{border:1px solid var(--line);border-radius:10px;padding:12px 14px 14px;background:var(--bg)}
+.msub+.msub{margin-top:16px}
+.msub .mhead{margin:0 0 8px}
+.mrings .msub+.msub{margin-top:0}
+@media (max-width:700px){.msub{padding:10px 8px 12px}}
 .wstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
 .wstrip .cell{aspect-ratio:auto;height:54px;flex-direction:column;gap:3px;font-size:11px;line-height:1.1}
 .wstrip .cell b{font-size:16px;font-family:var(--display)}
@@ -107,8 +183,8 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .hero svg{width:min(100%,760px);height:auto;display:block}
 .hero .lab{font:600 24px var(--mono);fill:var(--ink)}
 .hero .cap{font:17px var(--body);fill:var(--ink-2)}
-.hero .ctr{font:700 60px var(--display);fill:var(--ink)}
-.hero .ctr2{font:20px var(--body);fill:var(--ink-2)}
+.hero .ctr,.dialring .ctr{font:700 60px var(--display);fill:var(--ink)}
+.hero .ctr2,.dialring .ctr2{font:22px var(--body);fill:var(--ink-2)}
 .hero .tk{font:15px var(--mono);fill:var(--muted)}
 .hero path.s{cursor:pointer}
 @media (max-width:700px){ .hero .cap{display:none} .hero .lab{font-size:30px} }
@@ -140,7 +216,7 @@ header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-cont
 .tog[aria-pressed="true"]::before{background:radial-gradient(circle at 20px 50%,#fff 5.5px,transparent 6px),var(--accent)}
 .kpinote{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:-8px 0 12px;font-size:13px;color:var(--ink-2)}
 .kpis.filt .kpi{border-style:dashed;border-left-style:solid}
-.ftoggle{display:none}
+.cell.off{visibility:hidden;pointer-events:none}
 .cell.flash{animation:flash 1.4s ease-out}
 @keyframes flash{0%,30%{outline:3px solid var(--accent);outline-offset:3px;transform:scale(1.35);z-index:2}100%{outline-color:transparent;transform:none}}
 .chip.sm{font-size:12px;padding:3px 9px}
@@ -209,7 +285,6 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .cell.sel{outline:2px solid var(--ink);outline-offset:1px;z-index:1}
 .cell{position:relative}
 .cell .hd{position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:var(--dot);pointer-events:none}
-.layer .cell .hd{display:none}
 .cell .mk{position:absolute;top:0;right:1px;font:600 8px/1 var(--body);opacity:.85;pointer-events:none}
 .lead{font-size:17px;max-width:62ch;margin:10px 0 0;color:var(--ink)}
 .lead b{font-weight:600}
@@ -236,9 +311,6 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
   .kpis{grid-template-columns:1fr 1fr;gap:6px} .kpi{padding:7px 10px} .kpi b{font-size:22px} .kpi span{font-size:12px;line-height:1.3;display:block} .kpi small{font-size:11px}
   .lead{font-size:15.5px} .howto{font-size:13px}
   .filters .glabel{min-width:0}
-  .ftoggle{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:7px 12px;font:600 13.5px var(--body);cursor:pointer;margin-bottom:12px}
-  .ftoggle b{color:var(--accent)}
-  .filters:not(.fopen){display:none}
   /* ranked innings as cards */
   .rank thead{display:none}
   .rank,.rank tbody{display:block}
@@ -255,19 +327,6 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
   .kpi:last-child:nth-child(odd){grid-column:1/-1}
   .tablewrap{max-height:none}
 }
-/* cube */
-.cubewrap{display:flex;gap:16px;flex-wrap:wrap}
-.scene{flex:1 1 420px;height:560px;perspective:1500px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;overflow:hidden}
-.scene:active{cursor:grabbing}
-.cube{position:relative;width:230px;height:230px;transform-style:preserve-3d}
-.layer{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);gap:3px;transform-style:preserve-3d;transition:opacity .2s}
-.layer .cell{font-size:0;border-radius:2px}
-.layer .cell.never{opacity:.28}
-.layer.dim{opacity:.07}
-.cubeside{flex:0 0 150px;display:flex;flex-direction:column;gap:6px}
-.cubeside button.lay{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 10px;text-align:left;font:13px var(--body);cursor:pointer;display:flex;justify-content:space-between}
-.cubeside button.lay[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
-.cubeside small{color:var(--muted);font-size:12px}
 input[type=range]{width:100%;accent-color:var(--accent)}
 /* table */
 .tablewrap{max-height:640px;overflow:auto}
@@ -275,7 +334,13 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 th[data-k]:hover{color:var(--accent)}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th{position:sticky;top:0;background:var(--surface);font-weight:600;color:var(--ink-2);cursor:pointer}
+th{position:sticky;top:0;background:var(--surface);font-weight:600;color:var(--ink-2);cursor:pointer;white-space:normal;vertical-align:bottom;line-height:1.2;max-width:5.6em;min-width:2.6em}
+#mTable th.grp{max-width:none}
+#mTable table{width:100%;table-layout:fixed}
+#mTable th,#mTable td{text-align:center;padding:5px 8px;max-width:none}
+#mTable th.grp{text-align:center}
+#mTable .sorthint,#mTable .kindseg{text-align:left}
+#view-table td,#mTable td{padding:5px 6px}
 td:first-child,th:first-child{text-align:left}
 tbody tr{cursor:pointer}
 tbody tr:hover{background:var(--bg)}
@@ -300,6 +365,33 @@ tbody tr:hover{background:var(--bg)}
 #tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:7px 10px;border-radius:6px;max-width:260px;z-index:10;display:none;line-height:1.4}
 #tip b{font-family:var(--mono)}
 footer{margin-top:28px;color:var(--ink-2);font-size:13.5px;max-width:80ch}
+footer .credits{color:var(--muted)}
+.titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.helpbtn{flex:none;margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:999px;padding:7px 14px 7px 8px;font:600 14px var(--body);cursor:pointer}
+.helpbtn span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--surface);font-weight:700}
+.helpbtn:hover{background:var(--accent);color:var(--surface)} .helpbtn:hover span{background:var(--surface);color:var(--accent)}
+#help{border:0;padding:0;border-radius:14px;width:min(760px,94vw);max-width:min(760px,94vw);max-height:88vh;background:var(--surface);color:var(--ink-2);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#help::backdrop{background:rgba(10,20,15,.45)}
+#help .helpin{padding:0 22px 20px;overflow:auto;max-height:88vh;font-size:14px}
+#help .helphead{position:sticky;top:0;background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:16px 0 8px;border-bottom:1px solid var(--line);margin-bottom:6px;z-index:1}
+#help .helphead h2{margin:0;font-size:22px;color:var(--ink)}
+.helpx{border:0;background:var(--bg);color:var(--ink);width:36px;height:36px;border-radius:50%;font-size:22px;cursor:pointer}
+#help .hidx{display:flex;justify-content:flex-end;margin:2px 0 4px}
+#help .hsec{border-top:1px solid var(--line);padding:2px 0}
+#help .hsec>summary{font:700 18px var(--display);color:var(--ink);padding:12px 0;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+#help .hsec>summary::-webkit-details-marker{display:none}
+#help .hsec>summary::after{content:'▾';font-size:14px;color:var(--muted);transition:transform .15s}
+#help .hsec:not([open])>summary::after{transform:rotate(-90deg)}
+#help .hsec[open]{padding-bottom:10px}
+#help .helphead{scroll-margin-top:0} #help .hsec{scroll-margin-top:64px}
+#help h3{font-size:14.5px;color:var(--ink);margin:12px 0 4px}
+#help .heatdemo{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;margin:6px 0 10px;font-size:13px}
+#help .heatdemo .bands{display:flex;flex-wrap:wrap;gap:3px}
+#help .heatdemo .bands span{display:inline-flex;flex-direction:column;align-items:center;gap:2px;font:12px var(--mono)}
+#help .heatdemo .bands i{width:34px;height:18px;border-radius:4px;display:block}
+#help .heatdemo .bands .nv i{background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)}
+#help p{margin:0 0 8px} #help ul{margin:0 0 10px;padding-left:20px} #help li{margin:0 0 5px} #help li ul{margin:5px 0 0} #help a{color:var(--accent)} #help .keylist{list-style:none;padding:0}
+@media (max-width:700px){ .helpbtn{padding:6px 10px 6px 6px;font-size:13px} #help{max-width:100vw;width:100vw;max-height:92vh;margin:auto 0 0;border-radius:16px 16px 0 0} #help .helpin{max-height:92vh} }
 footer h2{font-size:18px;color:var(--ink);margin:14px 0 4px}
 footer p{margin:0 0 8px}
 footer ul{margin:0 0 10px;padding-left:20px}
@@ -307,11 +399,11 @@ footer li{margin:0 0 5px}
 footer li ul{margin:5px 0 0}
 footer a{color:var(--accent)}
 footer .keylist{list-style:none;padding:0}
-footer .keylist li{display:flex;gap:10px;align-items:flex-start}
+footer .keylist li,#help .keylist li{display:flex;gap:10px;align-items:flex-start}
 footer .tip{margin:14px 0 12px}
 footer .tip a{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-weight:600;text-decoration:none}
 footer .tip a:hover{border-color:var(--accent);color:var(--accent)}
-footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
+footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 .sq-never{background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)}
 .cb .sq-never{background:var(--never-cb);box-shadow:none}
 .board{position:relative}
@@ -331,11 +423,10 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 <body>
 <header>
   <div>
-    <h1>Scorigami: Test Cricket (Men’s)</h1>
+    <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button></div>
     <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, the term has since been taken up by fans of other sports. This is the Test cricket version, in two parts: the final run total of every men’s Test innings and how it ended, and the margin every men’s Test has been won by.</p>
-    <div class="modebar"><div class="seg seg-lg" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true">Innings totals</button><button data-m="margins" aria-pressed="false">Winning margins</button></div></div>
-    <h2 class="kicker">Every total a men’s Test innings has finished on, from 0 to 999</h2>
-    <span class="howto">Tap any number to see every innings that finished on it.</span>
+    <div class="modebar"><div class="modeswitch" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true"><b>Innings totals</b><small>Every score a side has finished on</small></button><button data-m="margins" aria-pressed="false"><b>Winning margins</b><small>Every result a Test has been won by</small></button></div></div>
+    <h2 class="kicker">Every total a men’s Test innings has finished on, from 0 up to the all-time record of <span class="hiT"></span></h2>
   </div>
 </header>
 
@@ -343,46 +434,42 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 <section class="kpis" id="kpis" aria-label="Summary"></section>
 <div class="kpinote" id="kpinote" hidden><span>These figures count only the innings that match your filters.</span><button class="linkbtn" id="kpiReset">Show all innings</button></div>
 
-<div class="controls">
+<div class="controls viewrow">
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="viewSeg">
-      <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="cube" aria-pressed="false">3D</button>
+      <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="dial" aria-pressed="false">Dial</button>
     </div></div>
+</div>
+<div class="controls opts">
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="countBtn" aria-pressed="false" title="Shade each total by how often it has come up">Frequency heat map</button>
     <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
   <div class="group"><label for="jump">Go to</label><input id="jump" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
-<button class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Filters &amp; quick questions <b id="fcount"></b> ▾</button>
+<div class="optrow"><button class="chip ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Show filters &amp; quick questions <b id="fcount"></b> ▾</button></div>
 <div class="filters" id="filtersBox" aria-label="Filters">
-  <div class="group"><span class="glabel">Filter</span><div class="fbar" id="fbar"></div><button class="linkbtn" id="resetBtn">Reset all</button></div>
+  <div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="resetBtn">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="fbar"></div></div>
   <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
 </div>
-
+<p class="hint">Click or tap on anything below (a number, a slice, a row) to see the innings behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
 <div class="layout">
   <section class="board" aria-label="Scorigami views">
     <div class="active" id="activeBar" hidden></div>
     <div class="legend" id="legend"></div>
     <div class="void-msg" id="voidMsg" hidden><div role="alert"><b>Never happened</b><p id="voidText">No men’s Test innings matches this combination of filters.</p><button id="voidReset">Reset filters</button></div></div>
     <div id="view-grid" class="panels"></div>
-    <div id="view-cube" class="cubewrap" hidden>
-      <div class="scene" id="scene"><div class="cube" id="cube"></div></div>
-      <div class="cubeside">
-        <span class="glabel">Layer</span>
-        <div id="layerBtns" style="display:flex;flex-direction:column;gap:4px"></div>
-        <label class="glabel" for="spread" style="margin-top:8px">Spread</label>
-        <input type="range" id="spread" min="0" max="70" value="34">
-        <small>Drag the cube to turn it. The bottom layer is 0–99 and the top is 900–999. Within a layer, rows are tens and columns are units.</small>
-      </div>
-    </div>
     <div id="view-rings" hidden>
-      <div class="group" style="justify-content:center;margin-bottom:8px"><div class="seg" id="ringSeg"><button data-r="ten" aria-pressed="true">Ten rings</button><button data-r="one" aria-pressed="false">One ring</button></div></div>
       <p class="ringhelp" id="ringHelp"></p>
       <div class="ringwrap" id="ringTen"><svg id="rings" viewBox="0 0 1000 1000" aria-label="Ten rings, one per hundred, 0–99 in the middle; totals run clockwise from the top"></svg></div>
-      <div class="ringwrap hero" id="ringOne" hidden><svg id="heroRing" viewBox="0 0 1000 1000" role="img" aria-label="All 1,000 totals in one ring, from 0 at the top going clockwise to 999"></svg></div>
     </div>
     <div id="view-table" class="tablewrap" hidden></div>
     <div id="view-list" hidden></div>
+    <div id="view-dial" class="mbar" hidden>
+      <div class="mbarscroll"><svg id="tSvgB" role="img" aria-label="Strip of every total: all-out finishes above the line, not-out finishes below"></svg></div>
+      <div class="dial"><div class="dialread" id="tDialRead" aria-live="polite"></div><div class="dialwrap"><canvas id="tDialCv" tabindex="0" role="slider" aria-label="Innings total dial: drag sideways, or use the arrow keys"></canvas></div></div>
+      <div class="ringwrap hero" id="ringOne" hidden><svg id="heroRing" class="dialring" viewBox="0 0 1000 1000" tabindex="0" role="slider" aria-label="Ring of every total, 0 at the top going clockwise to the all-time record: slide a finger round it to pick a total"></svg></div>
+
+      <p class="mbarnote" id="tBarNote"></p></div>
   </section>
   <aside class="detail" id="detail" aria-live="polite"></aside>
 </div>
@@ -390,33 +477,45 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 
 <div id="marginsMode" hidden>
 <section class="kpis" id="mkpis" aria-label="Margins summary"></section>
-<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="group"><span class="glabel">Filter</span><div class="fbar" id="mfbar"></div><button class="linkbtn" id="mReset">Reset all</button></div></div>
-<section class="card wcard" aria-label="Won by wickets">
-  <h2 class="mhead" style="margin-top:0">Won by wickets</h2>
-  <div class="sky" id="mSky"></div>
-  <p class="mrest" id="mRest"></p>
-</section>
-<div class="controls">
-  <div class="group"><span class="glabel">Show</span>
-    <div class="seg" id="mShowSeg"><button data-ms="r" aria-pressed="false">By runs</button><button data-ms="i" aria-pressed="false">By an innings</button><button data-ms="both" aria-pressed="true">Both</button></div></div>
+<div class="controls viewrow">
   <div class="group"><span class="glabel">View</span>
-    <div class="seg" id="mViewSeg"><button data-mv="grid" aria-pressed="true">Grids</button><button data-mv="rings" aria-pressed="false">Wagon wheel</button><button data-mv="bar" aria-pressed="false">Barcode</button></div></div>
+    <div class="seg" id="mViewSeg"><button data-mv="grid" aria-pressed="true">Grids</button><button data-mv="list" aria-pressed="false">Ranked wins</button><button data-mv="table" aria-pressed="false">Table</button><button data-mv="rings" aria-pressed="false">Wagon wheel</button><button data-mv="bar" aria-pressed="false">Dial</button></div></div>
+</div>
+<div class="controls opts">
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="mHeatBtn" aria-pressed="false" title="Shade each margin by how often it has happened">Frequency heat map</button>
     <button class="chip tog" id="mCbBtn" aria-pressed="false">High-contrast colours</button></div>
   <div class="group"><label for="mjump">Go to</label><input id="mjump" class="jumpbox" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 9"><button class="chip" id="mRandomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
+<div class="optrow"><button class="chip ftoggle" id="mftoggle" aria-expanded="false" aria-controls="mFilters">Show filters &amp; quick questions <b id="mfcount"></b> ▾</button></div>
+<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
+  <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
+<div id="mWkBlock"><h2 class="msect"><button class="fold" data-fold="w" aria-expanded="true">Won by wickets <span class="chev">▾</span></button></h2>
+<section class="card wcard" id="mWk" aria-label="Won by wickets">
+  <div class="sky" id="mSky"></div>
+  <p class="mrest" id="mRest"></p>
+</section>
+</div>
+<h2 class="msect" id="mBoardHead">Won by runs, and by an innings and runs</h2>
+<p class="hint">Click or tap on anything below (a square, a slice, a row) to see the matches behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
 <div class="layout">
   <section class="board" aria-label="Winning margins by runs">
     <div class="legend" id="mlegend"></div>
     <div id="mGrids">
-      <div id="mRunsWrap"><h2 class="mhead">Won by runs</h2><div id="mRuns" class="panels"></div></div>
-      <div id="mInnsWrap"><h2 class="mhead">Won by an innings and runs</h2><div id="mInns" class="panels"></div></div>
+      <div id="mRunsWrap" class="msub"><h3 class="mhead"><button class="fold" data-fold="r" aria-expanded="true">Won by runs <span class="chev">▾</span></button></h3><div id="mRuns" class="panels"></div></div>
+      <div id="mInnsWrap" class="msub"><h3 class="mhead"><button class="fold" data-fold="i" aria-expanded="true">Won by an innings and runs <span class="chev">▾</span></button></h3><div id="mInns" class="panels"></div></div>
     </div>
-    <div id="mBar" class="mbar" hidden><div class="mbarscroll"><svg id="mSvgB" role="img" aria-label="Barcode of winning margins: runs above the line, innings below"></svg></div><p class="mbarnote">Each sliver is one margin, 0 on the left. Runs above the line, an innings and runs below. Tap a sliver to see its Tests; on a phone, swipe sideways along the strip.</p></div>
+    <div id="mList" hidden></div>
+    <div id="mTable" class="tablewrap" hidden></div>
+    <div id="mBar" class="mbar" hidden><div class="mbarscroll"><svg id="mSvgB" role="img" aria-label="Barcode of winning margins: runs above the line, innings below"></svg></div><div class="dial" id="mDial">
+      <div class="dialread" id="dialRead" aria-live="polite"></div>
+      <div class="dialwrap"><canvas id="dialCv" tabindex="0" role="slider" aria-label="Winning margin dial: drag sideways, or use the arrow keys"></canvas></div>
+    </div>
+    <svg id="mRingD" class="dialring" viewBox="0 0 1000 1000" tabindex="0" role="slider" aria-label="Ring of winning margins, 0 at the top going clockwise: slide a finger round it to pick a margin" hidden></svg>
+    <p class="mbarnote" id="mBarNote"></p></div>
     <div id="mRings" class="mrings" hidden>
-      <figure id="mRingR"><figcaption class="mhead">Won by runs</figcaption><svg viewBox="0 0 1000 1000" id="mSvgR"></svg></figure>
-      <figure id="mRingI"><figcaption class="mhead">Won by an innings and runs</figcaption><svg viewBox="0 0 1000 1000" id="mSvgI"></svg></figure>
+      <figure id="mRingR" class="msub"><figcaption class="mhead">Won by runs</figcaption><svg viewBox="0 0 1000 1000" id="mSvgR"></svg></figure>
+      <figure id="mRingI" class="msub"><figcaption class="mhead">Won by an innings and runs</figcaption><svg viewBox="0 0 1000 1000" id="mSvgI"></svg></figure>
     </div>
   </section>
   <aside class="detail" id="mdetail" aria-live="polite"></aside>
@@ -424,20 +523,102 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
 </div>
 
 <footer>
-<div id="notesTotals">
-  <h2>What the colours mean</h2>
-  <p>Each square is a team total from 0 to 999, coloured by how innings on that total have ended.</p>
-  <ul class="keylist">
-    <li><span class="sq" style="background:var(--out)"></span><span><b>Complete – all out.</b> A side has been bowled out for exactly this total at least once.</span></li>
-    <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Complete – not out.</b> Innings have ended on this total, but none of them all out. They were declared, won the match by chasing down a target, or were still batting when the match was drawn.</span></li>
-    <li><span class="sq sq-never"></span><span><b>Scorigami.</b> No men’s Test innings has ever finished on this total.</span></li>
-  </ul>
-  <p>Under <b>Display</b>, the <b>frequency heat map</b> shades every total in blue by how often it has come up (darker means more often; the Grids view also shows the count), with a dot marking totals that have never ended all out. <b>High-contrast colours</b> turn the scorigamis orange. With filters on, every view recolours using only the innings that match.</p>
+  <p><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button></p>
+  <p class="credits">Data: <a href="https://cricsheet.org">Cricsheet</a> (ODC-By), Bhuvanesh Prasad’s <a href="https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023">Test matches dataset</a> on Kaggle (Apache 2.0), checked against <a href="https://www.espncricinfo.com">ESPNcricinfo</a>. Idea: Jon Bois’ scorigami. Full credits are in <button class="linkbtn helpopen">How it works</button>.</p>
+  <p><span id="coverage"></span></p>
+  <p id="srcNote" hidden></p>
+  <p>Comments, corrections and “constructive feedback” welcome on X: <a href="https://x.com/bucklebadger" target="_blank" rel="noopener">@bucklebadger</a></p>
+  <p class="tip"><a href="https://ko-fi.com/bucklebadger" target="_blank" rel="noopener">Enjoying this? Shout me a beer 🍺</a></p>
+  <p id="copy">© <span id="copyYears">2026</span> BuckleBadger. All rights reserved. Match data remains under its sources’ own terms.</p>
+  <p id="updated" style="color:var(--muted)"></p>
+</footer>
+<dialog id="help" aria-labelledby="helpTitle"><div class="helpin">
+  <div class="helphead"><h2 id="helpTitle">How it works</h2><button class="helpx" aria-label="Close">×</button></div>
 
-  <h2>How endings are decided</h2>
+  <h2>The idea</h2>
+  <ul>
+    <li>A <b>scorigami</b> is a score that has never happened. This site applies the idea to men’s Test cricket, in two halves you switch between at the top of the page:
+      <ul>
+        <li><b>Innings totals:</b> every total from 0 up to the all-time record (<span class="hiT"></span>), and whether any innings has finished on it.</li>
+        <li><b>Winning margins:</b> every margin a Test has been won by: by runs, by an innings and runs, or by wickets.</li>
+      </ul></li>
+    <li>Click or tap almost anything (a square, a slice, a bar, a row, a label) to open the full list of innings or matches behind it.</li>
+  </ul>
+
+  <h2>The colours</h2>
+  <h3>Normal colours</h3>
+  <ul class="keylist">
+    <li><span class="sq" style="background:var(--out)"></span><span><b>Green: it has happened.</b> For innings totals, a side has been bowled out for exactly that total at least once. For margins, at least one Test has been won by exactly that margin.</span></li>
+    <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Cream: reached, but never all out</b> (innings totals only). Innings have finished on that total, but every one was declared, won the match by chasing, or was still batting when the match was drawn.</span></li>
+    <li><span class="sq sq-never"></span><span><b>Red: a scorigami.</b> It has never happened.</span></li>
+    <li><span class="sq" style="background:var(--zero)"></span><span><b>Dark grey: the two 0 squares</b> (margins only). <b>TIE</b> holds the two tied Tests. <b>SL</b>, “scores level”, can never be an innings win (see How winning margins work).</span></li>
+  </ul>
+  <h3>Frequency heat map</h3>
+  <ul>
+    <li>Turn it on under <b>Display</b>. Everything that has happened is shaded blue by how often: the darker, the more often. Red still means never.</li>
+    <li>The <b>Grids</b> view prints the count in each square.</li>
+    <li>For innings totals, a dot (or a dark outline on the rings and dial) marks totals that have never finished all out.</li>
+  </ul>
+  <div class="heatdemo"><b>Innings totals</b><div class="bands" id="heatDemoT"></div><b>Winning margins</b><div class="bands" id="heatDemoM"></div></div>
+  <h3>High-contrast colours</h3>
+  <ul><li>Also under <b>Display</b>: turns the scorigamis orange, for anyone who finds red and green hard to tell apart.</li></ul>
+  <h3>With filters on</h3>
+  <ul><li>Everything is recoloured using only the innings or matches that match your filters.</li></ul>
+
+  <h2>The headline numbers</h2>
+  <h3>Innings totals</h3>
+  <ul>
+    <li>How many totals have happened, and how many haven’t, out of every total from 0 to the record.</li>
+    <li>The lowest scorigami, and the most common total.</li>
+    <li><b>Latest scorigami:</b> the most recent total to be reached for the first time.</li>
+    <li><b>Green turner:</b> the most recent total to be bowled out on for the first time, having only ever been reached not out before.</li>
+  </ul>
+  <h3>Winning margins</h3>
+  <ul>
+    <li>How many run margins and innings margins have happened, and the smallest of each that never has.</li>
+    <li>The most common margin, and the latest new one.</li>
+    <li>How many of the ten wicket margins have happened (all of them).</li>
+  </ul>
+  <p>Every number counts only what matches your filters.</p>
+
+  <h2>The views</h2>
+  <h3>Grids</h3>
+  <ul>
+    <li>Boards of 100, one per hundred.</li>
+    <li>For margins, there’s one set of boards for wins by runs and one for innings wins, with the <b>Won by wickets</b> chart above them. Tap any of those three headings to fold that section away.</li>
+  </ul>
+  <h3>Ranked innings and Ranked wins</h3>
+  <ul>
+    <li>A list, biggest or smallest first.</li>
+    <li>Margins are ranked one kind at a time (runs, an innings or wickets, chosen with the buttons at the top), because they aren’t on the same scale.</li>
+  </ul>
+  <h3>Table</h3>
+  <ul>
+    <li>One row per total or margin, with counts and the first and latest year. Click a column heading to sort by it, and again to reverse.</li>
+    <li>For margins, choose runs, an innings or wickets at the top.</li>
+  </ul>
+  <h3>Wagon wheel</h3>
+  <ul>
+    <li>One ring per hundred, 0–99 in the middle, each running clockwise from the top like a clock face.</li>
+    <li>For margins there are two wheels, runs then innings, with the wickets chart underneath.</li>
+  </ul>
+  <h3>Dial</h3>
+  <ul>
+    <li>Every number in a row that you scroll through. The readout above it says what’s at the needle; tap <b>Innings ›</b> or <b>Matches ›</b> for the list.</li>
+    <li><b>On a computer</b>, a strip above the dial maps the whole range, with a box showing where you are. Drag the dial or the box, scroll over it, or click it and use the arrow keys (Shift moves ten).</li>
+    <li><b>On a phone</b>, the strip becomes a ring. Put a finger on it and slide round to the number you want. It stops at 0 and at the record. Then fine-tune with the dial.</li>
+    <li>For innings totals, all-out finishes are above the line and every other finish below; the all-out row stops at the highest all-out total ever (<span class="hiO"></span>). For margins, wins by runs are above and innings wins below (on the ring: outside and inside); each row stops at its record, with the wickets chart underneath.</li>
+  </ul>
+  <h3>Getting around</h3>
+  <ul>
+    <li><b>Go to</b> jumps to a number. <b>Surprise me</b> picks one that has happened.</li>
+    <li><b>Hide filters</b> tucks the filters away, and the site remembers your choice.</li>
+  </ul>
+
+  <h2>How innings endings are decided</h2>
   <ul>
     <li><b>All out:</b> the batting side was bowled out.
-      <ul><li><b>Short-handed:</b> the innings ended with fewer than ten wickets down because a batter was absent hurt, retired hurt or ill and didn’t come back. A few scorecards record a batter who retired hurt as “retired not out”. Those count as retired hurt here and are marked with an asterisk (*), with a note saying where they were recorded that way.</li></ul></li>
+      <ul><li><b>Short-handed:</b> the innings ended with fewer than ten wickets down because a batter was absent hurt, retired hurt or ill and didn’t come back. A few scorecards record a batter who retired hurt as “retired not out”. Those count as retired hurt here, and are marked with an asterisk (*) and a note saying where they were recorded that way.</li></ul></li>
     <li><b>Declared:</b> the batting side closed its innings.
       <ul><li><b>Forfeited*:</b> counted as a declaration on 0. The only men’s Test forfeits came at Centurion in 2000. The Laws of the time didn’t provide for a first-innings forfeit, so England’s was scored as 0/0 declared (shown as 0/0d*); South Africa’s second-innings forfeit is shown as forfeited*.</li></ul></li>
     <li><b>Successful chase:</b> the side batting last reached its target and won.</li>
@@ -445,42 +626,42 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
     <li><b>Other:</b> England’s 298/4 at The Oval in 2006, when the match was awarded to England after Pakistan refused to come back out after tea on the fourth day, in protest at a ball-tampering penalty.</li>
   </ul>
 
-  <h2>Using the filters</h2>
-  <ul>
-    <li>Each filter is a dropdown: tick what to keep, or hover a line and click “only”.</li>
-    <li>The innings filter splits a 3rd innings played following on from an ordinary one.</li>
-    <li>The toss and result filters describe the side that made the total.</li>
-    <li>For 4th innings, the target is shown alongside the total.</li>
-    <li>The quick questions set the filters for you and open <b>Ranked innings</b>.</li>
-  </ul>
-
-</div>
-<div id="notesMargins" hidden>
-  <h2>What the colours mean</h2>
-  <ul class="keylist">
-    <li><span class="sq" style="background:transparent;box-shadow:inset 0 0 0 1px var(--line)"></span><span><b>Two boards.</b> One for wins <b>by runs</b> and one for wins <b>by an innings and runs</b>, each from 0 upwards. Use <b>Show</b> to see one on its own, and <b>View</b> to switch between grids and wagon wheels (one ring per hundred, clockwise from the top).</span></li>
-    <li><span class="sq" style="background:var(--out)"></span><span><b>Happened.</b> At least one Test has been won by exactly that margin.</span></li>
-    <li><span class="sq sq-never"></span><span><b>Scorigami.</b> No Test has ever been won by that margin.</span></li>
-  </ul>
-  <p>The <b>frequency heat map</b> shades each margin in blue by how often it has happened, from 1 up to 10 or more (darker means more often). The wicket skyscrapers don’t need it: they’re drawn to scale, from 10 wickets down to 1, so their height is the count. <b>High-contrast colours</b> turn the scorigamis orange.</p>
-
-  <h2>How margins work</h2>
+  <h2>How winning margins work</h2>
   <ul>
     <li><b>By runs:</b> the side batting last was bowled out short of its target. The margin is how far short.</li>
     <li><b>By an innings and runs:</b> the winners batted only once, and their total was still bigger than both of the other side’s innings put together.</li>
-    <li><b>By wickets:</b> the side batting last reached its target with that many wickets still standing.</li>
-    <li><b>TIE</b> (the 0 square on the runs board): the scores finished level with the side batting last all out. It has happened twice.</li>
-    <li><b>SL</b>, scores level (the 0 square on the innings board): a side bowled out twice for exactly the other side’s one-innings total would leave the scores level, not lost by an innings. The side batting last would still have to bat again and score 1 run to win, so “an innings and 0 runs” can never happen.</li>
-    <li>Draws, ties and the one awarded match (The Oval, 2006) are counted under the skyscrapers.</li>
+    <li><b>By wickets:</b> the side batting last reached its target with that many wickets still standing. The wickets chart is drawn to scale, from 10 wickets down to 1.</li>
+    <li><b>TIE</b> (0 on the runs board): the scores finished level with the side batting last all out. It has happened twice.</li>
+    <li><b>SL</b>, scores level (0 on the innings board): a side bowled out twice for exactly the other side’s one-innings total would leave the scores level, not lost by an innings. The side batting last would still have to bat again and score 1 run to win, so “an innings and 0 runs” can never happen.</li>
+    <li>Draws, ties and the one awarded match (The Oval, 2006) are listed under the wickets chart.</li>
   </ul>
 
-  <h2>Using the filters</h2>
+  <h2>Filters and quick questions</h2>
+  <h3>Using the filters</h3>
+  <ul>
+    <li>Each filter is a dropdown: tick what to keep, or hover a line and click “only”.</li>
+    <li>The “Showing…” line above the data lists what’s on; clear any of them with ×.</li>
+  </ul>
+  <h3>Innings totals</h3>
+  <ul>
+    <li><b>How it ended</b> has a shortcut at the top, <b>Not all out</b>, that ticks or unticks every ending apart from all out in one go.</li>
+    <li>A total can be green and cream at once (bowled out on it once, declared on it another time), so filtering by ending shows exactly which totals have finished that way.</li>
+    <li><b>Innings</b> splits a 3rd innings played following on from an ordinary one.</li>
+    <li><b>Toss</b> and <b>Team’s result</b> describe the side that made the total.</li>
+    <li>For 4th innings, the target is shown alongside the total.</li>
+  </ul>
+  <h3>Winning margins</h3>
   <ul>
     <li><b>Team</b> is the side that won; <b>Against</b> is the side that lost.</li>
     <li><b>Toss</b>, <b>Follow-on</b> and <b>Batted</b> also describe the winners: whether they won the toss, enforced the follow-on or won after following on, and whether they batted first.</li>
     <li>Draws and ties count for either side under Team and Against, and drop out once a toss, follow-on or batting filter is on.</li>
   </ul>
-</div>
+  <h3>Quick questions</h3>
+  <ul>
+    <li>They set the filters for you and show the answer as a ranked list: in Ranked innings for totals, and in the side panel for margins.</li>
+    <li>Change a filter afterwards and the answer updates.</li>
+  </ul>
+
   <h2>Sources and credits</h2>
   <ul>
     <li><b>Scorigami</b> is from Jon Bois’ <a href="https://www.sbnation.com/2014/9/8/6110147/pete-carroll-seahawks-scoragami-weird-nfl-scores" target="_blank" rel="noopener">2014 SB Nation article</a> and his 2016 video <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">“Chart Party: Scorigami”</a> on NFL scores. This site borrows the idea for Test cricket.</li>
@@ -489,13 +670,7 @@ footer .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-top:2px}
     <li><b>Results and innings endings</b> checked against scorecards on <a href="https://www.espncricinfo.com">ESPNcricinfo</a>. Every innings links to its scorecard there.</li>
     <li>Scores and results are facts; the classifications and design are this site’s own. Not affiliated with Jon Bois, SB Nation, Kaggle or the dataset’s author, Cricsheet, ESPNcricinfo or the ICC.</li>
   </ul>
-  <p><span id="coverage"></span></p>
-  <p id="srcNote" hidden></p>
-  <p>Comments, corrections and “constructive feedback” welcome on X: <a href="https://x.com/bucklebadger" target="_blank" rel="noopener">@bucklebadger</a></p>
-  <p class="tip"><a href="https://ko-fi.com/bucklebadger" target="_blank" rel="noopener">Enjoying this? Shout me a beer 🍺</a></p>
-  <p id="copy">© <span id="copyYears">2026</span> BuckleBadger. All rights reserved. Match data remains under its sources’ own terms, as credited above.</p>
-  <p id="updated" style="color:var(--muted)"></p>
-</footer>
+</div></dialog>
 <div id="tip" role="tooltip"></div>
 
 <script>
@@ -520,6 +695,8 @@ const TOSS = ['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','Not r
 const T = DATA.teams, M = DATA.matches;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
+const HI_T = DATA.inn.reduce((m,r)=> r[4]<1000 && r[4]>m ? r[4] : m, 0), NT = HI_T+1;
+const HI_O = DATA.inn.reduce((m,r)=> (r[6]===0||r[6]===1) && r[4]>m ? r[4] : m, 0);   // the highest all-out total ever: the all-out lane stops there   // the record total: nothing above it is shown
 // Target for each 4th innings: the other side's runs minus the batting side's earlier runs, plus one
 (function(){ const byM={}; DATA.inn.forEach(r=>(byM[r[0]]=byM[r[0]]||[]).push(r));
   Object.values(byM).forEach(rs=>{ const f=rs.find(r=>r[3]===4); if(!f) return;
@@ -645,55 +822,24 @@ function renderLegend(){
 const gridEl=document.getElementById('view-grid');
 function buildGrid(){
   let h='';
-  for(let p=0;p<10;p++){
+  for(let p=0;p<=Math.floor(HI_T/100);p++){
     h+=`<div class="panel"><h3>${p?p*100+'s':'0–99'}<small id="pc${p}"></small></h3><div class="pgrid" role="grid" aria-label="Totals ${p*100} to ${p*100+99}"><span></span>`;
     for(let u=0;u<10;u++) h+=`<span class="ax">${u}</span>`;
-    for(let t=0;t<10;t++){ h+=`<span class="ax">${t}</span>`; for(let u=0;u<10;u++){const s=p*100+t*10+u; h+=`<button class="cell" data-s="${s}" aria-label="${s}" style="--dx:${Math.round((Math.random()-.5)*900)}px;--dy:${Math.round((Math.random()-.3)*700)}px;--rot:${Math.round((Math.random()-.5)*540)}deg">${s}</button>`;} }
+    for(let t=0;t<10;t++){ h+=`<span class="ax">${p*100+t*10>HI_T?'':t}</span>`; for(let u=0;u<10;u++){const s=p*100+t*10+u; if(s>HI_T){ h+='<span class="cell off" aria-hidden="true"></span>'; continue; } h+=`<button class="cell" data-s="${s}" aria-label="${s}" style="--dx:${Math.round((Math.random()-.5)*900)}px;--dy:${Math.round((Math.random()-.3)*700)}px;--rot:${Math.round((Math.random()-.5)*540)}deg">${s}</button>`;} }
     h+=`</div></div>`;
   }
   gridEl.innerHTML=h;
 }
 function paintCells(root){
-  root.querySelectorAll('.cell').forEach(el=>{
+  root.querySelectorAll('.cell[data-s]').forEach(el=>{
     const s=+el.dataset.s, o=cache[s]; const [bg,ink,edge]=cellStyle(s); el.style.background=bg; el.style.color=ink; el.style.boxShadow=edge; el.style.fontWeight=o.n?'400':'600';
     el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel);
     if(root!==gridEl && state.heat && o.n && o.status==='not') el.style.boxShadow='inset 0 0 0 2px var(--dot)';
     if(root===gridEl){ const lab = state.heat ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:'') + (state.heat && o.n && o.status==='not' && !state.empty ? '<span class="hd"></span>' : ''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
   });
-  for(let p=0;p<10;p++){ const e=document.getElementById('pc'+p); if(e){ let k=0; for(let s=p*100;s<p*100+100;s++) if(cache[s].n) k++; e.textContent=`${k}/100 reached`; } }
+  for(let p=0;p<10;p++){ const e=document.getElementById('pc'+p); if(e){ let k=0; const e2=Math.min(p*100+100,NT); for(let s=p*100;s<e2;s++) if(cache[s].n) k++; e.textContent=`${k}/${e2-p*100} reached`; } }
 }
 
-/* ---------- cube ---------- */
-const cubeEl=document.getElementById('cube');
-function buildCube(){
-  let h='';
-  for(let p=0;p<10;p++){
-    h+=`<div class="layer" data-p="${p}">`;
-    for(let t=9;t>=0;t--) for(let u=0;u<10;u++){const s=p*100+t*10+u; h+=`<button class="cell" data-s="${s}" aria-label="${s}" tabindex="-1"></button>`;}
-    h+=`</div>`;
-  }
-  cubeEl.innerHTML=h;
-  document.getElementById('layerBtns').innerHTML = `<button class="lay" data-l="-1" aria-pressed="true">All layers</button>` +
-    Array.from({length:10},(_,i)=>9-i).map(p=>`<button class="lay" data-l="${p}" aria-pressed="false"><span>${p?p*100+'s':'0–99'}</span><small class="num" id="lc${p}"></small></button>`).join('');
-}
-function placeCube(){
-  cubeEl.style.transform=`rotateX(${state.rx}deg) rotateY(${state.ry}deg)`;
-  cubeEl.querySelectorAll('.layer').forEach(l=>{
-    const p=+l.dataset.p; const y=(4.5-p)*state.spread;
-    l.style.transform=`translateY(${y}px) rotateX(90deg)`;
-    l.classList.toggle('dim', state.layer>=0 && state.layer!==p);
-  });
-  document.querySelectorAll('#layerBtns .lay').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.l===state.layer)));
-  for(let p=0;p<10;p++){ const e=document.getElementById('lc'+p); if(e){let k=0; for(let s=p*100;s<p*100+100;s++) if(cache[s].n) k++; e.textContent=k;} }
-}
-(function dragRotate(){
-  const sc=document.getElementById('scene'); let d=null;
-  sc.addEventListener('pointerdown',e=>{ if(e.target.classList.contains('cell')) return; d={x:e.clientX,y:e.clientY,rx:state.rx,ry:state.ry}; sc.setPointerCapture(e.pointerId); });
-  sc.addEventListener('pointermove',e=>{ if(!d) return; state.ry=d.ry+(e.clientX-d.x)*0.4; state.rx=Math.max(-89,Math.min(89,d.rx-(e.clientY-d.y)*0.4)); placeCube(); });
-  sc.addEventListener('pointerup',()=>d=null); sc.addEventListener('pointercancel',()=>d=null);
-})();
-document.getElementById('spread').addEventListener('input',e=>{state.spread=+e.target.value; placeCube();});
-document.getElementById('layerBtns').addEventListener('click',e=>{const b=e.target.closest('.lay'); if(!b) return; state.layer=+b.dataset.l; placeCube();});
 
 /* ---------- winning margins ---------- */
 // one record per Test: how it was won, by whom, and the context the filters need
@@ -721,7 +867,7 @@ const MF=[
   {id:'bat', l:'Batted', opts:[['first','Batted first'],['second','Batted second']]},
 ];
 state.mf={}; MF.forEach(f=>state.mf[f.id]='');
-state.mheat=false; state.msel=null; state.mshow='both'; state.mview='grid';
+state.mheat=false; state.msel=null; state.mshow='both'; state.mkind='r'; state.mfold={r:false,i:false,w:false}; state.mview='grid'; state.mbz=1; state.mbig=true; state.mrankN=100; state.msortK='n'; state.msortD=1;
 function mpass(r){ const F=state.mf, won=r.w!==undefined;
   if(F.team && !(won? T[r.w]===F.team : r.teams.some(x=>T[x]===F.team))) return false;
   if(F.opp && !(won? T[r.l]===F.opp : r.teams.some(x=>T[x]===F.opp))) return false;
@@ -739,10 +885,10 @@ const mLabel=(k,n)=> k==='r'?`${n} run${n===1?'':'s'}`: k==='i'?`an innings and 
 const NV=()=>state.cb?'var(--never-cb)':'var(--never)';
 const HEATM=[[1,1,'1'],[2,2,'2'],[3,3,'3'],[4,4,'4'],[5,6,'5–6'],[7,9,'7–9'],[10,1e9,'10+']];   // margins are rarer than totals
 const bandM = n => HEATM.findIndex(([lo,hi])=>n>=lo&&n<=hi)+1;
-function mTie(){ return {bg:'#ffffff', ink:'#131714', edge:'inset 0 0 0 1px var(--line)', L:MG.tie.length}; }
+function mTie(){ return {bg:'var(--zero)', ink:'#ffffff', edge:'', L:MG.tie.length}; }
 const mCount=(k,n)=> k==='r' ? (n===0? MG.tie.length : (MG.r[n]||[]).length) : (MG.i[n]||[]).length;
 function mStyle(k,n){ const L=mCount(k,n);
-  if(k==='i'&&n===0) return {bg:'transparent', ink:'var(--muted)', edge:'inset 0 0 0 1px var(--line)', L, na:true};
+  if(k==='i'&&n===0) return {bg:'var(--zero2)', ink:'#ffffff', edge:'', L, na:true};
   if(k==='r'&&n===0) return mTie();
   if(!L) return {bg:NV(), ink:state.cb?'var(--never-cb-ink)':'var(--never-ink)', edge:state.cb?'':'inset 0 0 0 2px var(--never-edge)', L};
   if(state.mheat){ const b=bandM(L); return {bg:`var(--q${b})`, ink:`var(--qi${b})`, edge:'', L}; }
@@ -750,36 +896,44 @@ function mStyle(k,n){ const L=mCount(k,n);
 const mLab=(k,n,L)=> n===0 ? (k==='r'?'TIE':'SL') : state.mheat ? (L||'') : n;
 function buildMargins(){
   document.getElementById('mfbar').innerHTML = MF.map(f=>`<label class="msel"><span>${f.l}</span><select data-mf="${f.id}"><option value="">All</option>${f.opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></label>`).join('');
-  const grid=(k,top)=>{ let h=''; for(let p=0;p<=top;p++){ h+=`<div class="panel"><h3>${p?p*100+'s':'0–99'}<small id="mpc${k}${p}"></small></h3><div class="pgrid"><span></span>`;
+  const grid=(k,top,mx)=>{ let h=''; for(let p=0;p<=top;p++){ h+=`<div class="panel"><h3>${p?p*100+'s':'0–99'}<small id="mpc${k}${p}"></small></h3><div class="pgrid"><span></span>`;
     for(let u=0;u<10;u++) h+=`<span class="ax">${u}</span>`;
-    for(let t=0;t<10;t++){ h+=`<span class="ax">${t}</span>`; for(let u=0;u<10;u++){ const n=p*100+t*10+u; h+=`<button class="cell mcell msq" data-k="${k}" data-n="${n}"></button>`; } }
+    for(let t=0;t<10;t++){ h+=`<span class="ax">${p*100+t*10>mx?'':t}</span>`; for(let u=0;u<10;u++){ const n=p*100+t*10+u; h+= n>mx ? '<span class="cell off" aria-hidden="true"></span>' : `<button class="cell mcell msq" data-k="${k}" data-n="${n}"></button>`; } }
     h+='</div></div>'; } return h; };
   const maxR=Math.max(...MREC.filter(r=>r.kind==='r').map(r=>r.n)), maxI=Math.max(...MREC.filter(r=>r.kind==='i').map(r=>r.n));
   const topR=Math.floor(maxR/100), topI=Math.floor(maxI/100);
-  document.getElementById('mRuns').innerHTML=grid('r',topR); document.getElementById('mInns').innerHTML=grid('i',topI);
+  document.getElementById('mRuns').innerHTML=grid('r',topR,maxR); document.getElementById('mInns').innerHTML=grid('i',topI,maxI);
   // wagon wheels: one ring per hundred, clockwise from the top, with a gap at 12 o'clock
-  const wheel=(k,rings)=>{ const c=500, r0=500-rings*(rings>6?52:60)-14, rw=rings>6?48:56, gap=2, G=12, step=(360-G)/100; let h='';
+  const wheel=(k,rings,mx)=>{ const c=500, r0=500-rings*(rings>6?52:60)-14, rw=rings>6?48:56, gap=2, G=12, step=(360-G)/100; let h='';
     const R0 = Math.max(110, 486-rings*(rw+gap));
     for(let p=0;p<rings;p++){ const ri=R0+p*(rw+gap), ro=ri+rw;
-      for(let u=0;u<100;u++){ const n=p*100+u, a0=G/2+u*step+0.25, a1=a0+step-0.5; h+=`<path class="mrcell" data-k="${k}" data-n="${n}" d="${arc(c,c,ri,ro,a0,a1)}"/>`; }
+      for(let u=0;u<100;u++){ const n=p*100+u; if(n>mx) break; const a0=G/2+u*step+0.25, a1=a0+step-0.5; h+=`<path class="mrcell" data-k="${k}" data-n="${n}" d="${arc(c,c,ri,ro,a0,a1)}"/>`; }
       h+=`<text class="ringlab" x="${c}" y="${c-ri-rw/2+5}" text-anchor="middle">${p?p*100+'s':'0–99'}</text>`; }
     h+=`<text class="ringctr num" id="mrN${k}" x="${c}" y="${c+10}" text-anchor="middle"></text><text class="ringctr2" x="${c}" y="${c+42}" text-anchor="middle">happened</text>`;
     return h; };
-  document.getElementById('mSvgR').innerHTML=wheel('r',topR+1); document.getElementById('mSvgI').innerHTML=wheel('i',topI+1);
+  document.getElementById('mSvgR').innerHTML=wheel('r',topR+1,maxR); document.getElementById('mSvgI').innerHTML=wheel('i',topI+1,maxI);
 }
+function mFixShow(){ const v=state.mview, hb=document.getElementById('mHeatBtn'), on=v!=='list'&&v!=='table'; hb.disabled=!on; hb.title= on? 'Shade each margin by how often it has happened' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
+const mK=()=> state.mview==='list'||state.mview==='table' ? state.mkind : null;   // the one kind of win Ranked and Table are showing
+const KINDSEG=()=>`<div class="seg kindseg" role="group" aria-label="Kind of win">${[['r','By runs'],['i','By an innings'],['w','By wickets']].map(([k,l])=>`<button data-kind="${k}" aria-pressed="${state.mkind===k}">${l}</button>`).join('')}</div>`;
+function mFolds(){ for(const k of ['r','i','w']){ const shut=state.mfold[k]; document.querySelectorAll(`[data-fold="${k}"]`).forEach(b=>b.setAttribute('aria-expanded',String(!shut)));
+    (k==='w'? [document.getElementById('mWk')] : k==='r'? [document.getElementById('mRunsWrap')] : [document.getElementById('mInnsWrap')]).forEach(el=>el.classList.toggle('shut',shut)); } }
 function paintMargins(){
-  mrecompute();
+  mrecompute(); mFixShow(); document.documentElement.classList.toggle('heatM', !!state.mheat);
   const show=state.mshow, grid=state.mview==='grid';
-  document.getElementById('mGrids').hidden=!grid; document.getElementById('mRings').hidden=state.mview!=='rings'; document.getElementById('mBar').hidden=state.mview!=='bar';
-  if(state.mview==='bar') paintBarcode();
-  document.getElementById('mRunsWrap').hidden = show==='i'; document.getElementById('mInnsWrap').hidden = show==='r';
-  document.getElementById('mRingR').hidden = show==='i'; document.getElementById('mRingI').hidden = show==='r';
+  document.getElementById('mGrids').hidden=!grid; document.getElementById('mRings').hidden=state.mview!=='rings'; document.getElementById('mBar').hidden=state.mview!=='bar'; document.getElementById('mList').hidden=state.mview!=='list'; document.getElementById('mTable').hidden=state.mview!=='table'; document.getElementById('mlegend').hidden= state.mview==='list'||state.mview==='table';
+  if(state.mview==='list') renderMList(); if(state.mview==='table') renderMTable();
+  { const wb=document.getElementById('mWkBlock'), v=state.mview; wb.hidden = v==='list'||v==='table';
+    if(v==='grid') document.getElementById('mBoardHead').before(wb); else if(!wb.hidden) document.querySelector('#marginsMode > .layout').after(wb);
+    wb.classList.toggle('nofold', v!=='grid'); }
+  document.getElementById('mBoardHead').textContent = mK() ? 'Every winning margin, one kind at a time' : 'Won by runs, and by an innings and runs'; mFolds();
+  if(state.mview==='bar'){ if(!isRing()) paintBarcode(); dialBuild(); }
   if(grid) document.querySelectorAll('#mGrids .msq').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
     el.style.background=st.bg; el.style.color=st.ink; el.style.boxShadow=st.edge; el.textContent=mLab(k,n,st.L); el.classList.toggle('sel', state.msel===k+':'+n); });
   else if(state.mview==='rings') document.querySelectorAll('#mRings .mrcell').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
-    const tie=k==='r'&&n===0; el.style.fill = st.na ? 'var(--bg)' : st.bg; el.style.stroke = (st.na||tie) ? 'var(--line)' : (!st.L && !state.cb ? 'var(--never-edge)' : 'none'); el.style.strokeWidth = (!st.L||tie) ? '1.4px':'0';
+    const tie=k==='r'&&n===0; el.style.fill = st.bg; el.style.stroke = (st.na||tie) ? 'none' : (!st.L && !state.cb ? 'var(--never-edge)' : 'none'); el.style.strokeWidth = (!st.L||tie) ? '1.4px':'0';
     el.classList.toggle('sel', state.msel===k+':'+n); });
-  for(const k of ['r','i']){ let all=0; for(let p=0;p<7;p++){ const e=document.getElementById(`mpc${k}${p}`); if(!e) continue; let c=0,tot=0; for(let n=Math.max(1,p*100);n<p*100+100;n++){ tot++; if(mCount(k,n)) c++; } all+=c; e.textContent=`${c}/${tot} happened`; }
+  for(const k of ['r','i']){ let all=0; for(let p=0;p<7;p++){ const e=document.getElementById(`mpc${k}${p}`); if(!e) continue; let c=0,tot=0; for(let n=Math.max(1,p*100);n<Math.min(p*100+100,bcTop(k)+1);n++){ tot++; if(mCount(k,n)) c++; } all+=c; e.textContent=`${c}/${tot} happened`; }
     const t=document.getElementById('mrN'+k); if(t) t.textContent=all; }
   // skyscrapers: 10 wickets down to 1, true to scale, one colour (height already shows the count)
   const W=[...Array(10)].map((_,j)=>(MG.w[10-j]||[]).length), mx=Math.max(1,...W);
@@ -790,7 +944,7 @@ function paintMargins(){
   document.getElementById('mlegend').innerHTML =
     (state.mheat ? `<div class="heatkey"><b>Times each margin has happened</b><div class="bands">${HEATM.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` : key('background:var(--out)','Happened','At least one Test has been won by exactly this margin.')) +
     key(nvs,'Scorigami!','No Test has ever been won by this margin. Yet.') +
-    key('background:#fff;box-shadow:inset 0 0 0 1px var(--line)','TIE and SL','The 0 squares: the two tied Tests sit at 0 runs; “scores level” can’t be an innings win.');
+    key('background:var(--zero);color:#fff','TIE and SL','The 0 squares: the two tied Tests sit at 0 runs; “scores level” can’t be an innings win.');
   renderMKpis();
 }
 function renderMKpis(){
@@ -811,56 +965,265 @@ function renderMKpis(){
     [`${wc}/10`, 'wicket margins have happened', wc?`${wTop} wicket${wTop>1?'s':''} is the most common (${(MG.w[wTop]||[]).length})`:'', 'var(--out)'],
   ].map(([b,l,sm,c])=>`<div class="kpi" style="border-left-color:${c}"><b class="num">${b}</b><span>${l}</span>${sm?`<small>${sm}</small>`:''}</div>`).join('');
 }
-function mItems(L){ return '<ul class="mlist">'+L.slice().sort((a,b)=>b.i-a.i).slice(0,300).map(x=>{ const m=M[x.i]; const who = x.w!==undefined ? `<b>${T[x.w]}</b> beat ${T[x.l]}` : x.teams.map(t=>T[t]).join(' v ')+(m[3]?` · ${m[3]}`:''); return `<li><span class="yr">${m[1]}</span>${who} · ${m[2]||''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</li>`; }).join('')+'</ul>'; }
+const mShort=x=> x.kind==='r'?`${x.n} run${x.n===1?'':'s'}`: x.kind==='i'?`inns &amp; ${x.n}`: x.kind==='w'?`${x.n} wkt${x.n===1?'':'s'}`: '';
+function mItems(L,ranked){ return '<ul class="mlist">'+(ranked?L:L.slice().sort((a,b)=>b.i-a.i)).slice(0,300).map(x=>{ const m=M[x.i]; const who = x.w!==undefined ? `<b>${T[x.w]}</b> beat ${T[x.l]}` : x.teams.map(t=>T[t]).join(' v ')+(m[3]?` · ${m[3]}`:''); return `<li>${ranked?`<span class="mg">${mShort(x)}</span>`:''}<span class="yr">${m[1]}</span>${who} · ${m[2]||''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</li>`; }).join('')+'</ul>'; }
 function mSection(title,L,never){ return `<h3 class="msec">${title} <span class="num">${L.length}</span></h3>`+(L.length? mItems(L) : `<p class="empty">${never}</p>`); }
-const BC={x0:46, bw:2, top:40, h:110, mid:6};
-function bcTop(k){ return Math.floor(Math.max(...MREC.filter(r=>r.kind===k).map(r=>r.n))/100)*100+99; }
+const BC={x0:46, bw:2, top:48, h:110, mid:6};
+const TOSSL=['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','–'], FOL={enf:'Enforced the follow-on',fol:'Won after following on',none:'–'};
+const mMarg=x=> x.kind==='r'?`${x.n} run${x.n===1?'':'s'}`: x.kind==='i'?`An innings and ${x.n}`:`${x.n} wicket${x.n===1?'':'s'}`;
+function renderMList(){
+  const k=state.mkind, all=MREC.filter(r=>mpass(r)&&r.kind===k).sort((a,b)=> (state.mbig? b.n-a.n : a.n-b.n) || b.i-a.i);
+  const rows=all.slice(0,state.mrankN), noun={r:'wins by runs',i:'innings wins',w:'wins by wickets'}[k]; let rank=0, prev=null;
+  let h=`${KINDSEG()}<p class="mrankby"><b>One kind of win at a time.</b> Runs, an innings and wickets aren’t measured on the same scale, so they’re ranked separately.${k==='w'?' Within each margin, sorted by most recent occurrence.':''}</p>`+
+    `<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="mRankSeg"><button data-b="1" aria-pressed="${state.mbig}">Biggest first</button><button data-b="0" aria-pressed="${!state.mbig}">Narrowest first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} ${noun}${mfiltered()?' match the filters':''}.</span></div>`;
+  h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>#</th><th style="text-align:right">Margin</th><th>Match</th><th>Toss</th><th>Batted</th><th>Follow-on</th></tr></thead><tbody>`+
+    rows.map((x,i)=>{ if(prev===null||x.n!==prev){rank=i+1; prev=x.n;} const m=M[x.i], sel= k==='w'? 'w'+x.n : k+':'+x.n;
+      return `<tr data-sel="${sel}"><td class="num c-rank">${rank}</td><td class="num c-tot"><b>${mMarg(x)}</b></td><td class="c-who"><b>${T[x.w]}</b> beat ${T[x.l]}<small>${m[1]} · ${m[2]||''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</small></td>`+
+        `<td class="c-toss">${TOSSL[x.toss??4]}</td><td class="c-inn">${x.bat==='first'?'First':'Second'}</td><td class="c-end"><span class="d">${FOL[x.fo]||'–'}</span><span class="m">${[x.fo&&x.fo!=='none'?FOL[x.fo]:null,'toss: '+TOSSL[x.toss??4].toLowerCase(),'batted '+x.bat].filter(Boolean).join(' · ')}</span></td></tr>`; }).join('')+
+    `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="mMoreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
+  const ml=document.getElementById('mList'), old=ml.querySelector('.tablewrap'), st=old?old.scrollTop:0; ml.innerHTML=h; const nw=ml.querySelector('.tablewrap'); if(nw) nw.scrollTop=st;
+  ml.querySelectorAll('tr[data-sel]').forEach(tr=>tr.classList.toggle('sel', tr.dataset.sel===state.msel));
+}
+function renderMTable(){
+  const show=state.mkind, yr=L=>L&&L.length? L.map(x=>+M[x.i][1]) : null;
+  const top = show==='w' ? 10 : show==='r' ? bcTop('r') : show==='i' ? bcTop('i') : Math.max(bcTop('r'),bcTop('i'));
+  const C=[]; if(show!=='i'&&show!=='w') C.push(['r','Occurrences',n=> n===0? MG.tie.length : (MG.r[n]||[]).length],['rf','First',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.min(...y):null;}],['rl','Latest',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.max(...y):null;}]);
+  if(show==='i'||show==='both') C.push(['i','Occurrences',n=> n===0? null : (MG.i[n]||[]).length],['if','First',n=>{const y=yr(MG.i[n]); return y?Math.min(...y):null;}],['il','Latest',n=>{const y=yr(MG.i[n]); return y?Math.max(...y):null;}]);
+  if(show==='w'||show==='both') C.push(['w','Occurrences',n=> n>=1&&n<=10? (MG.w[n]||[]).length : null]);
+  if(show==='w') C.push(['wf','First',n=>{const y=yr(MG.w[n]); return y?Math.min(...y):null;}],['wl','Latest',n=>{const y=yr(MG.w[n]); return y?Math.max(...y):null;}]);
+  const rows=[]; for(let n=(show==='r'?0:1); n<=top; n++){ const o={n}; C.forEach(([id,,f])=>o[id]=f(n)); rows.push(o); }
+  const K=state.msortK, D=state.msortD, kv=r=> K==='n'? r.n : (r[K]??(D>0?1e9:-1));
+  rows.sort((a,b)=>(kv(a)-kv(b))*D || a.n-b.n);
+  const isCount=id=>id==='r'||id==='i'||id==='w', cell=(id,v)=> v===null? '<td class="num" style="color:var(--muted)">–</td>' : isCount(id)? (v? `<td class="num">${v}</td>` : '<td class="num nv">never</td>') : `<td class="num">${v??''}</td>`;
+  const GRP={r:'Won by runs',i:'Won by an innings and',w:'Won by wickets'}, groups=[]; C.forEach(([id])=>{ const g=id[0]; if(groups.length&&groups.at(-1)[0]===g) groups.at(-1)[1]++; else groups.push([g,1]); });
+  const arrow=k=> state.msortK===k?(state.msortD>0?' ▲':' ▼'):'';
+  document.getElementById('mTable').innerHTML=`${KINDSEG()}<p class="sorthint">One row per margin; “never” is a scorigami.${show==='r'?' Row 0 holds the two ties.':''} Click a column heading to sort by it; click it again to reverse.</p><table class="mtab"><thead><tr><th class="grp" colspan="${C.length+1}" scope="colgroup">${GRP[groups[0][0]]}</th></tr><tr><th data-k="n" scope="col">Margin${arrow('n')}</th>${C.map(([id,l])=>`<th data-k="${id}" scope="col">${l}${arrow(id)}</th>`).join('')}</tr></thead><tbody>`+
+    rows.map(r=>`<tr data-n="${r.n}"${state.msel===(show==='w'?'w'+r.n: (show==='i'?'i:':'r:')+r.n)?' class="sel"':''}><td class="num"><b>${r.n===0&&show!=='i'?'0 (tie)':r.n}</b></td>${C.map(([id])=>cell(id,r[id])).join('')}</tr>`).join('')+'</tbody></table>';
+}
+const MTOP={}; function bcTop(k){ return MTOP[k]??(MTOP[k]=Math.max(...MREC.filter(r=>r.kind===k).map(r=>r.n))); }   // the record margin of each kind
 function paintBarcode(){
-  const show=state.mshow, sides=show==='both'?['r','i']:[show], W=BC.x0+700*BC.bw+44;
-  const axisY = show==='i' ? BC.top : BC.top+BC.h+BC.mid, H = axisY + (show==='both'||show==='i' ? BC.mid+BC.h : 0) + 34;
+  const big=innerWidth<700; BC.h=big?230:110; BC.top=big?120:48;   // on phones the strip is an overview: taller, with bigger labels
+  const bw=BC.bw*(state.mbz||1);
+  const show=state.mshow, sides=show==='both'?['r','i']:[show], END=Math.max(...sides.map(bcTop))+1, W=BC.x0+END*bw+44;
+  const axisY = show==='i' ? BC.top : BC.top+BC.h+BC.mid, H = axisY + (show==='both'||show==='i' ? BC.mid+BC.h : 0) + (big?96:42);
   let h='';
   for(const k of sides){ const up=k==='r', y0 = up ? axisY-BC.mid-BC.h : axisY+BC.mid, top=bcTop(k);
-    h+=`<text class="blab" x="${BC.x0}" y="${up? y0-16 : y0+BC.h+24}">${up?'Won by runs':'Won by an innings and runs'}</text>`;
-    const fills=[]; for(let n=0;n<=top;n++){ const st=mStyle(k,n); fills.push(st.na ? 'var(--line)' : st.bg); }
+    h+=`<text class="blab" x="${BC.x0}" y="${up? y0-(big?34:18) : y0+BC.h+(big?72:30)}">${up?'Won by runs':'Won by an innings and runs'}</text>`;
+    const fills=[]; for(let n=0;n<=top;n++){ const st=mStyle(k,n); fills.push(st.bg); }
     let a=0; while(a<=top){ let z=a; if(a>0) while(z+1<=top && fills[z+1]===fills[a]) z++;   // runs of one colour drawn as one block, so no hairline seams
-      h+=`<rect x="${BC.x0+a*BC.bw}" y="${y0}" width="${(z-a+1)*BC.bw}" height="${BC.h}" fill="${fills[a]}"${k==='r'&&a===0?' stroke="var(--line)" stroke-width="0.8"':''} shape-rendering="crispEdges"/>`; a=z+1; } }
+      h+=`<rect x="${BC.x0+a*bw}" y="${y0}" width="${(z-a+1)*bw}" height="${BC.h}" fill="${fills[a]}" shape-rendering="crispEdges"/>`; a=z+1; } }
   // centre axis with ticks every 100
-  h+=`<line x1="${BC.x0}" y1="${axisY}" x2="${BC.x0+700*BC.bw}" y2="${axisY}" stroke="var(--muted)" stroke-width="1"/>`;
-  for(let t=0;t<=700;t+=100){ const x=BC.x0+t*BC.bw; h+=`<line x1="${x}" y1="${axisY-4}" x2="${x}" y2="${axisY+4}" stroke="var(--muted)"/>`;
+  h+=`<line x1="${BC.x0}" y1="${axisY}" x2="${BC.x0+END*bw}" y2="${axisY}" stroke="var(--muted)" stroke-width="1"/>`;
+  if((state.mbz||1)>=4) for(let t=10;t<END;t+=10) if(t%100){ const x=BC.x0+t*bw; h+=`<line x1="${x}" y1="${axisY-2.5}" x2="${x}" y2="${axisY+2.5}" stroke="var(--muted)" stroke-width="0.8"/>`+((state.mbz||1)>=8||t%50===0?`<text class="btk" x="${x+2}" y="${axisY+4}" dominant-baseline="middle" style="font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:3px">${t}</text>`:''); }
+  for(const t of [...Array(Math.floor((END-1)/100)+1).keys()].map(x=>x*100).concat([END-1])){ if(t!==END-1 && END-1-t<30) continue; const x=BC.x0+t*bw; h+=`<line x1="${x}" y1="${axisY-4}" x2="${x}" y2="${axisY+4}" stroke="var(--muted)"/>`;
     if(show==='both') h+=`<text class="btk" x="${x+3}" y="${axisY+4}" dominant-baseline="middle" style="paint-order:stroke;stroke:var(--surface);stroke-width:3px">${t}</text>`;
     else h+=`<text class="btk" x="${x}" y="${show==='r'? axisY+18 : axisY-8}" text-anchor="middle">${t}</text>`; }
-  if(state.msel && /^[ri]:/.test(state.msel) && sides.includes(state.msel[0])){ const k=state.msel[0], n=+state.msel.slice(2), x=BC.x0+(n+0.5)*BC.bw, up=k==='r', y0 = up ? axisY-BC.mid-BC.h : axisY+BC.mid;
+  if(state.msel && /^[ri]:/.test(state.msel) && sides.includes(state.msel[0])){ const k=state.msel[0], n=+state.msel.slice(2), x=BC.x0+(n+0.5)*bw, up=k==='r', y0 = up ? axisY-BC.mid-BC.h : axisY+BC.mid;
     h+=`<rect x="${x-2.5}" y="${y0-3}" width="5" height="${BC.h+6}" fill="none" stroke="var(--ink)" stroke-width="2" rx="1.5"/>`;
     h+= up ? `<path d="M${x-6} ${y0-12}L${x+6} ${y0-12}L${x} ${y0-5}Z" fill="var(--ink)"/>` : `<path d="M${x-6} ${y0+BC.h+12}L${x+6} ${y0+BC.h+12}L${x} ${y0+BC.h+5}Z" fill="var(--ink)"/>`; }
-  const svg=document.getElementById('mSvgB'); svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML=h; svg.dataset.axis=axisY;
+  const by=show==='i'?axisY-4:BC.top-6, bh=(show==='r'? axisY+4 : axisY+BC.mid+BC.h+6)-by;
+  h+=`<rect class="bcBox" x="0" y="${by}" width="10" height="${bh}" rx="3" fill="color-mix(in srgb,var(--ink) 10%,transparent)" stroke="var(--ink)" stroke-width="${big?10:3}" pointer-events="none"/><rect class="bcNeedle" x="0" y="${by}" width="${Math.max(1.5,bw*0.6)}" height="${bh}" fill="var(--ink)" pointer-events="none"/>`;
+  const svg=document.getElementById('mSvgB'); svg.classList.toggle('big',big); svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML=h; svg.dataset.bw=bw; svg.dataset.axis=axisY;
+  const sc=document.querySelector('#mBar .mbarscroll'), base=sc.clientWidth||800, W1=BC.x0+END*BC.bw+44; svg.style.width=(W*base/W1)+'px';
 }
+/* ---------- dials: swipe to scrub through every number, with a strip above as the map ---------- */
+const haptic=(()=>{ let t0=0; return ()=>{ const t=performance.now(); if(t-t0<26 || !navigator.vibrate) return; t0=t; try{ navigator.vibrate(3); }catch(e){} }; })();   // Android only: iPhone browsers give websites no vibration
+const probe=document.createElement('span'); probe.style.display='none'; document.body.appendChild(probe);
+const cssCol=v=>{ probe.style.color=''; probe.style.color=v; return getComputedStyle(probe).color; };
+const dialPX=()=> innerWidth<700 ? 15 : 12;
+// cfg: ids {cv, readEl, svg}, lanes(), top(), fill(lane,n) -> css colour or null, outline(lane,n), read(n,lanes) -> [line1,line2,isGap], btn, selected() -> n|null, settle(n), open()
+function makeDial(cfg){
+  const D={v:0, lanes:[], fills:{}, top:0, drag:null, vel:0, raf:0, last:null, wheelT:0};
+  const cv=document.getElementById(cfg.cv), rd=document.getElementById(cfg.readEl);
+  D.build=()=>{ D.lanes=cfg.lanes(); D.top=cfg.top(); D.fills={}; D.outl={};
+    for(const k of D.lanes){ const f=[], o=[], memo={}; for(let n=0;n<=D.top;n++){ const c=cfg.fill(k,n); f.push(c? (memo[c]||(memo[c]=cssCol(c))) : null); o.push(cfg.outline? cfg.outline(k,n) : false); } D.fills[k]=f; D.outl[k]=o; }
+    D.ink=cssCol('var(--ink)'); D.muted=cssCol('var(--muted)'); D.bg=cssCol('var(--bg)'); D.bg0=D.bg.replace(/^rgba?\(([^,]+),([^,]+),([^,)]+).*$/,'rgba($1,$2,$3,0)'); D.line=cssCol('var(--line)');
+    const sel=cfg.selected(); if(!D.drag && !D.raf && sel!==null) D.v=Math.min(D.top,sel);
+    D.last=Math.round(D.v); D.draw(); D.read(); };
+  D.draw=()=>{ if(cfg.onMove) cfg.onMove(D.v); if(cv.offsetParent===null) return;
+    const dpr=devicePixelRatio||1, w=cv.clientWidth, h=cv.clientHeight; if(cv.width!==Math.round(w*dpr)){ cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); }
+    const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,w,h);
+    const PX=dialPX(), cx=w/2, v=D.v, L=D.lanes, laneH= L.length===2? 26 : 44, gap=4, y0=8, axisY=y0+laneH*L.length+(L.length-1)*gap+6;
+    const n0=Math.max(0,Math.floor(v-cx/PX)-1), n1=Math.min(D.top,Math.ceil(v+cx/PX)+1);
+    L.forEach((k,li)=>{ const y=y0+li*(laneH+gap), F=D.fills[k];
+      for(let n=n0;n<=n1;n++){ const f=F[n]; if(!f) continue; const x=cx+(n-v)*PX-PX/2; c.fillStyle=f; c.fillRect(x+1,y,PX-2,laneH);
+        if(D.outl[k][n]){ c.strokeStyle=D.line; c.lineWidth=1; c.strokeRect(x+1.5,y+.5,PX-3,laneH-1); } } });
+    c.fillStyle=D.muted; c.textAlign='center'; c.textBaseline='top';
+    for(let n=n0;n<=n1;n++){ const x=cx+(n-v)*PX, big=n%10===0, mid=n%5===0; c.fillRect(Math.round(x)-.5, axisY, 1, big?10:mid?7:4);
+      if(big){ c.font=`${n%100===0?'700 ':''}12px ui-monospace,SFMono-Regular,Menlo,monospace`; c.fillText(String(n), x, axisY+12); } }
+    const g1=c.createLinearGradient(0,0,48,0); g1.addColorStop(0,D.bg); g1.addColorStop(1,D.bg0); c.fillStyle=g1; c.fillRect(0,0,48,h);   // soft fade at the edges, like a wheel turning away
+    const g2=c.createLinearGradient(w-48,0,w,0); g2.addColorStop(0,D.bg0); g2.addColorStop(1,D.bg); c.fillStyle=g2; c.fillRect(w-48,0,48,h);
+    const nx=cx+(Math.round(v)-v)*PX; c.strokeStyle=D.ink; c.lineWidth=2; c.strokeRect(nx-PX/2+.5, y0-4, PX-1, axisY-y0+2);
+    c.fillStyle=D.ink; c.beginPath(); c.moveTo(cx-6,0); c.lineTo(cx+6,0); c.lineTo(cx,6); c.fill();
+    const svg=document.getElementById(cfg.svg), nd=svg&&svg.querySelector('.bcNeedle'), bx=svg&&svg.querySelector('.bcBox');
+    if(nd){ const sbw=+svg.dataset.bw||BC.bw; nd.setAttribute('x', BC.x0+(v+0.5)*sbw-(+nd.getAttribute('width'))/2);
+      const half=w/2/PX; bx.setAttribute('x', BC.x0+Math.max(0,v+0.5-half)*sbw); bx.setAttribute('width', Math.max(6,(Math.min(D.top+1,v+0.5+half)-Math.max(0,v+0.5-half))*sbw)); } };
+  D.read=()=>{ const n=Math.max(0,Math.min(D.top,Math.round(D.v))), [l1,l2,gapN]=cfg.read(n,D.lanes);
+    rd.innerHTML=`<span class="dn${gapN?' nvn':''}">${n}</span><span class="dl"><span class="ln">${l1}</span><span class="ln">${l2}</span></span><button class="chip dopen">${cfg.btn} ›</button>`;
+    cv.setAttribute('aria-valuenow',n); cv.setAttribute('aria-valuetext',rd.querySelector('.dl').textContent); };
+  D.set=(v,tick=true)=>{ v=Math.max(-0.45,Math.min(D.top+0.45,v)); D.v=v; const i=Math.max(0,Math.min(D.top,Math.round(v)));
+    if(i!==D.last){ D.last=i; if(tick) haptic(); D.read(); } D.draw(); };
+  D.settle=()=>cfg.settle(Math.max(0,Math.min(D.top,Math.round(D.v))));
+  D.anim=(to,done)=>{ cancelAnimationFrame(D.raf); const from=D.v, t0=performance.now(), dur=Math.min(420,120+Math.abs(to-from)*6);
+    const step=t=>{ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3); D.set(from+(to-from)*e); if(p<1) D.raf=requestAnimationFrame(step); else { D.raf=0; done&&done(); } }; D.raf=requestAnimationFrame(step); };
+  D.go=(n,settle)=>D.anim(Math.max(0,Math.min(D.top,n)), ()=>{ if(settle) D.settle(); });
+  D.momentum=()=>{ cancelAnimationFrame(D.raf); let t0=performance.now();
+    const step=t=>{ const dt=Math.min(40,t-t0); t0=t; D.vel*=Math.pow(0.9972,dt); D.set(D.v+D.vel*dt);
+      if(D.v<=-0.45||D.v>=D.top+0.45) D.vel=0;
+      if(Math.abs(D.vel)>0.004) D.raf=requestAnimationFrame(step); else { D.raf=0; D.go(Math.round(D.v),true); } };
+    D.raf=requestAnimationFrame(step); };
+  const open=()=>{ D.settle(); cfg.open(); };
+  cv.addEventListener('pointerdown',e=>{ cancelAnimationFrame(D.raf); D.raf=0; D.vel=0; cv.setPointerCapture(e.pointerId); D.drag={x0:e.clientX, v0:D.v, moved:false, s:[[e.clientX,performance.now()]]}; });
+  cv.addEventListener('pointermove',e=>{ const d=D.drag; if(!d) return;
+    if(!d.moved && Math.abs(e.clientX-d.s[0][0])>5) d.moved=true; if(!d.moved) return;
+    D.set(d.v0-(e.clientX-d.x0)/dialPX()); d.s.push([e.clientX,performance.now()]); if(d.s.length>6) d.s.shift(); });
+  const end=e=>{ const d=D.drag; if(!d) return; D.drag=null;
+    if(!d.moved){ const r=cv.getBoundingClientRect(), off=(e.clientX-r.left-r.width/2)/dialPX();
+      if(Math.abs(off)<0.8 && e.type==='pointerup') open(); else D.go(Math.round(D.v+off),true); return; }
+    const a=d.s[0], b=d.s.at(-1), dt=b[1]-a[1]; let vel=(dt>0 && performance.now()-b[1]<90) ? -((b[0]-a[0])/dt)/dialPX() : 0;
+    vel *= 1.6+Math.min(2.4,Math.abs(vel)*1.2);   // harder flicks travel disproportionately further
+    D.vel=Math.max(-8,Math.min(8,vel)); if(Math.abs(D.vel)>0.01) D.momentum(); else D.go(Math.round(D.v),true); };
+  cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+  cv.addEventListener('wheel',e=>{ const dd=Math.abs(e.deltaX)>Math.abs(e.deltaY)? e.deltaX : e.deltaY; if(!dd) return; e.preventDefault(); cancelAnimationFrame(D.raf); D.raf=0;
+    D.set(D.v+dd/dialPX()*(e.deltaMode===1?8:0.6)); clearTimeout(D.wheelT); D.wheelT=setTimeout(()=>D.go(Math.round(D.v),true),180); },{passive:false});
+  cv.addEventListener('keydown',e=>{ const st={ArrowLeft:-1,ArrowRight:1,ArrowDown:-1,ArrowUp:1,PageDown:-10,PageUp:10}[e.key];
+    if(st!==undefined){ e.preventDefault(); D.go(Math.round(D.v)+st*(e.shiftKey?10:1),true); }
+    else if(e.key==='Home'){ e.preventDefault(); D.go(0,true); } else if(e.key==='End'){ e.preventDefault(); D.go(D.top,true); }
+    else if(e.key==='Enter') open(); });
+  rd.addEventListener('click',e=>{ if(e.target.closest('.dopen')) open(); });
+  addEventListener('resize',()=>D.draw());
+  // the strip above: press and slide to drag the box along, or tap to jump there
+  const svg=document.getElementById(cfg.svg); let sd=null;
+  const at=e=>{ const m=svg.getScreenCTM(); if(!m) return null; const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()); return (p.x-BC.x0)/(+svg.dataset.bw||BC.bw)-0.5; };
+  svg.addEventListener('pointerdown',e=>{ const v=at(e); if(v===null) return; cancelAnimationFrame(D.raf); D.raf=0; sd=true; svg.setPointerCapture(e.pointerId); D.set(v,false); });
+  svg.addEventListener('pointermove',e=>{ if(!sd) return; const v=at(e); if(v!==null) D.set(v); });
+  const up=()=>{ if(!sd) return; sd=null; D.go(Math.round(D.v),true); };
+  svg.addEventListener('pointerup',up); svg.addEventListener('pointercancel',up);
+  return D;
+}
+const dialLab=(c,one,many)=> c===null? '<span style="color:var(--muted)">n/a</span>' : c? `<b>${c} ${c===1?one:many}</b>` : '<span class="nv">never</span>';
+const MD=makeDial({cv:'dialCv', readEl:'dialRead', svg:'mSvgB', btn:'Matches', onMove:v=>{ if(isRing()) mRingNeedle(v); },
+  lanes:()=> state.mshow==='both'?['r','i']:[state.mshow], top:()=> Math.max(...(state.mshow==='both'?['r','i']:[state.mshow]).map(bcTop)),
+  fill:(k,n)=>{ if(n>bcTop(k)) return null; const st=mStyle(k,n); return st.bg; }, outline:()=>false,
+  read:(n,L)=>{ const cnt=k=> k==='r'? (n===0? MG.tie.length : (MG.r[n]||[]).length) : (n===0? null : n>bcTop('i')? 0 : (MG.i[n]||[]).length);
+    if(L.length===2){ const a=cnt('r'), b=cnt('i'); return [`${n===0?'Tied':'By runs'}: ${dialLab(a,'match','matches')}`, `By an innings: ${dialLab(b,'match','matches')}`, !a&&!b]; }
+    const k=L[0], c=cnt(k); return [k==='r'? (n===0?'Tied':`By ${n} run${n===1?'':'s'}`) : (n===0?'Scores level':`An innings and ${n}`), `${dialLab(c,'match','matches')}${c===0?' · scorigami':''}`, c===0]; },
+  selected:()=> state.msel && /^[ri]:/.test(state.msel) ? +state.msel.slice(2) : null,
+  settle:n=>{ const k= state.mshow==='both'? 'r' : state.mshow; if(state.msel!==k+':'+n) mSelect(k+':'+n,true); },   // with both lanes, the panel offers the innings margin too
+  open:()=>{ const d=document.getElementById('mdetail'); if(innerWidth<1100) d.classList.add('open'); else d.scrollIntoView({block:'nearest',behavior:'smooth'}); } });
+/* totals: all-out finishes above the line, not-out finishes below; a total is a scorigami where both are empty */
+const tNV=()=> state.cb?'var(--never-cb)':'var(--never)';
+function tFill(k,s){ if(s>HI_T || (k==='o' && s>HI_O)) return null; const o=cache[s], c= state.empty? 0 : k==='o'? o.out : o.not;
+  if(!c) return tNV(); return state.heat ? `var(--q${band(c)})` : k==='o' ? 'var(--out)' : 'var(--not)'; }
+function paintTStrip(){
+  const big=innerWidth<700, bw=BC.bw, bh=big?230:110, mid=6, END=NT, W=BC.x0+END*bw+44, top=big?120:48, axisY=top+bh+mid, H=axisY+mid+bh+(big?96:42);
+  let h='';
+  for(const k of ['o','n']){ const up=k==='o', y0= up? axisY-mid-bh : axisY+mid;
+    h+=`<text class="blab" x="${BC.x0}" y="${up? y0-(big?34:18) : y0+bh+(big?72:30)}">${up?'All out':'Not out (declared, chased, batting at the close…)'}</text>`;
+    const f=[]; for(let s=0;s<END;s++) f.push(tFill(k,s));
+    let a=0; while(a<END){ let z=a; while(z+1<END && f[z+1]===f[a]) z++;
+      if(f[a]===null){ a=z+1; continue; }
+      const cream= f[a]==='var(--not)'; h+=`<rect x="${BC.x0+a*bw}" y="${y0}" width="${(z-a+1)*bw}" height="${bh}" fill="${f[a]}"${cream?' stroke="var(--not-edge)" stroke-width="0.8"':''} shape-rendering="crispEdges"/>`; a=z+1; } }
+  h+=`<line x1="${BC.x0}" y1="${axisY}" x2="${BC.x0+END*bw}" y2="${axisY}" stroke="var(--muted)" stroke-width="1"/>`;
+  for(const t of [...Array(Math.floor(HI_T/100)+1).keys()].map(x=>x*100).concat([HI_T])){ if(t!==HI_T && HI_T-t<30) continue; const x=BC.x0+t*bw;
+    h+=`<line x1="${x}" y1="${axisY-4}" x2="${x}" y2="${axisY+4}" stroke="var(--muted)"/><text class="btk" x="${x+3}" y="${axisY+4}" dominant-baseline="middle" style="paint-order:stroke;stroke:var(--surface);stroke-width:3px">${t}</text>`; }
+  const by=top-6, bH=axisY+mid+bh+6-by;
+  h+=`<rect class="bcBox" x="0" y="${by}" width="10" height="${bH}" rx="3" fill="color-mix(in srgb,var(--ink) 10%,transparent)" stroke="var(--ink)" stroke-width="${big?10:3}" pointer-events="none"/><rect class="bcNeedle" x="0" y="${by}" width="${Math.max(1.5,bw*0.6)}" height="${bH}" fill="var(--ink)" pointer-events="none"/>`;
+  const svg=document.getElementById('tSvgB'); svg.classList.toggle('big',big); svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML=h; svg.dataset.bw=bw;
+  const sc=document.querySelector('#view-dial .mbarscroll'); svg.style.width=(sc.clientWidth||800)+'px';
+}
+const TD=makeDial({cv:'tDialCv', readEl:'tDialRead', svg:'tSvgB', btn:'Innings', onMove:v=>{ if(isRing()) heroNeedle(v); },
+  lanes:()=>['o','n'], top:()=>HI_T, fill:tFill, outline:(k,s)=> k==='n' && !state.heat && !state.empty && cache[s].not>0,
+  read:(s)=>{ const o=cache[s], a=state.empty?0:o.out, b=state.empty?0:o.not;
+    return [`All out: ${dialLab(a,'innings','innings')}`, `Not out: ${dialLab(b,'innings','innings')}${!a&&!b?' · scorigami':''}`, !a&&!b]; },
+  selected:()=> state.sel, settle:s=>{ if(state.sel!==s) select(s,true); },
+  open:()=>{ const d=document.getElementById('detail'); if(innerWidth<1100) d.classList.add('open'); else d.scrollIntoView({block:'nearest',behavior:'smooth'}); } });
+function isRing(){ return innerWidth<700; }   // phones get the ring, computers the strip
+let ringWas=isRing(); addEventListener('resize',()=>{ if(isRing()!==ringWas){ ringWas=isRing(); if(state.view==='dial') paintAll(false); if(state.mview==='bar') paintMargins(); } });
+attachRing(document.getElementById('heroRing'), TD, 14, ()=>NT);   // same 14° gap as the hero ring (HG)
+function tDialBuild(){ TD.build(); if(isRing()){ document.getElementById('tBarNote').textContent = innerWidth<1100 ? 'Put a finger on the ring and slide round to the total you want: 0 is at the top and the record is just before it. Swipe the dial above to fine-tune. Tap a label to jump there, then tap Innings for the list.' : 'Click or drag round the ring to point at a total (0 at the top, the record just before it). Use the dial above, the scroll wheel or the arrow keys to fine-tune. Click a label to jump there.'; return; }
+  document.getElementById('tBarNote').textContent = innerWidth<1100
+    ? 'Swipe the dial to run through every total; flick it to travel further. Above the line: innings bowled out on that total. Below: innings that ended there any other way. Red on both is a scorigami. Slide the box on the strip, or tap it to jump; then tap Innings for the list.'
+    : 'Drag or flick the dial, scroll over it, or click it and use the arrow keys (Shift for tens). Above the line: innings bowled out on that total; below: innings that ended there any other way. Red on both is a scorigami. Drag the box on the strip, or click it to jump.'; }
+const MRG={GAP:14};
+const mEND=()=> Math.max(...(state.mshow==='both'?['r','i']:[state.mshow]).map(bcTop))+1;
+function buildMRing(){
+  const svg=document.getElementById('mRingD'), cx=500, cy=500, END=mEND(), A=x=>MRG.GAP/2+x*(360-MRG.GAP)/END, L=state.mshow==='both'?['r','i']:[state.mshow];
+  const band = L.length===2 ? {r:[372,474], i:[262,364]} : {[L[0]]:[318,474]};
+  let h='';
+  for(const k of L){ const [ri,ro]=band[k], top=bcTop(k), f=[]; for(let n=0;n<=top;n++){ const st=mStyle(k,n); f.push(st.bg); }
+    let a=0; while(a<=top){ let b=a; if(a>0) while(b+1<=top && f[b+1]===f[a]) b++; h+=`<path d="${arc(cx,cy,ri,ro,A(a),A(b+1))}" fill="${f[a]}"/>`; a=b+1; } }
+  const RO=474;
+  for(const t of [...Array(Math.floor((END-1)/100)+1).keys()].map(x=>x*100).concat([END-1])){ if(t!==END-1 && END-1-t<30) continue; const q=(A(t===END-1?END:t)-90)*Math.PI/180;
+    h+=`<line x1="${(cx+RO*Math.cos(q)).toFixed(1)}" y1="${(cy+RO*Math.sin(q)).toFixed(1)}" x2="${(cx+(RO+8)*Math.cos(q)).toFixed(1)}" y2="${(cy+(RO+8)*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="2"/><text x="${(cx+(RO+20)*Math.cos(q)).toFixed(1)}" y="${(cy+(RO+20)*Math.sin(q)+6).toFixed(1)}" text-anchor="middle" style="font:16px var(--mono);fill:var(--muted)">${t}</text>`; }
+  const cnt=k=>{ let c=0; for(let n=1;n<=bcTop(k);n++) if(mCount(k,n)) c++; return c; };
+  if(L.length===2) h+=`<text class="ctr2" x="${cx}" y="${cy-30}" text-anchor="middle">outer ring: by runs</text><text class="ctr num" x="${cx}" y="${cy+14}" text-anchor="middle">${cnt('r')} · ${cnt('i')}</text><text class="ctr2" x="${cx}" y="${cy+50}" text-anchor="middle">inner ring: by an innings</text>`;
+  else h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${cnt(L[0])}/${bcTop(L[0])}</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${L[0]==='r'?'margins by runs':'innings margins'} that have happened</text>`;
+  const ri0=L.length===2?262:318;
+  h+=`<g id="mNeedle" pointer-events="none"><line x1="${cx}" y1="${cy-ri0+10}" x2="${cx}" y2="${cy-RO-6}" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy-RO-12}" r="10" fill="var(--ink)"/><circle cx="${cx}" cy="${cy-RO-12}" r="4" fill="var(--surface)"/></g>`;
+  svg.innerHTML=h; mRingNeedle(MD.v);
+}
+function mRingNeedle(v){ const g=document.getElementById('mNeedle'); if(!g) return; const END=mEND(), a=MRG.GAP/2+(Math.max(0,Math.min(END-1,v))+0.5)*(360-MRG.GAP)/END; g.setAttribute('transform',`rotate(${a.toFixed(2)} 500 500)`); }
+attachRing(document.getElementById('mRingD'), MD, MRG.GAP, mEND);
+function dialBuild(){ const ring=isRing(); document.getElementById('mBar').classList.toggle('ring',ring); document.getElementById('mRingD').toggleAttribute('hidden',!ring);
+  if(ring) buildMRing(); MD.build();
+  if(ring){ document.getElementById('mBarNote').textContent = innerWidth<1100
+    ? 'Put a finger on the ring and slide round to the margin you want: 0 is at the top, the record just before it. Swipe the dial above to fine-tune, then tap Matches for the list.'
+    : 'Click or drag round the ring to point at a margin (0 at the top, the record just before it). Use the dial above, the scroll wheel or the arrow keys to fine-tune.'; return; }
+  document.getElementById('mBarNote').textContent = innerWidth<1100
+    ? 'Swipe the dial to run through the margins; flick it to travel further. The box on the strip above shows where you are: slide it along, or tap to jump. Then tap Matches to see the list.'
+    : 'Drag or flick the dial, scroll over it, or click it and use the arrow keys (Shift for tens). The box on the strip above shows where the dial is: drag it along, or click to jump.'; }
 function bcHit(e){ const svg=document.getElementById('mSvgB'), m=svg.getScreenCTM(); if(!m) return null; const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());
-  const n=Math.floor((p.x-BC.x0)/BC.bw); const k = state.mshow==='both' ? (p.y < +svg.dataset.axis ? 'r':'i') : state.mshow;
+  const n=Math.floor((p.x-BC.x0)/(BC.bw*(state.mbz||1))); const k = state.mshow==='both' ? (p.y < +svg.dataset.axis ? 'r':'i') : state.mshow;
   if(n<0 || n>bcTop(k)) return null; return {k,n}; }
-function bcScroll(n){ const sc=document.querySelector('.mbarscroll'), svg=document.getElementById('mSvgB'); if(!sc||!svg) return; const w=svg.getBoundingClientRect().width, vb=svg.viewBox.baseVal.width||1;
-  sc.scrollTo({left: Math.max(0,(BC.x0+n*BC.bw)*w/vb - sc.clientWidth/2), behavior:'smooth'}); }
+function bcScroll(n){ const sc=document.querySelector('#mBar .mbarscroll'), svg=document.getElementById('mSvgB'); if(!sc||!svg) return; const w=svg.getBoundingClientRect().width, vb=svg.viewBox.baseVal.width||1;
+  sc.scrollTo({left: Math.max(0,(BC.x0+n*BC.bw*(state.mbz||1))*w/vb - sc.clientWidth/2), behavior:'smooth'}); }
+const MQ=[
+  {l:'Narrowest wins by runs', pick:r=>r.kind==='r', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Smallest margins first.'},
+  {l:'Biggest wins by runs', pick:r=>r.kind==='r', sort:(a,b)=>b.n-a.n, n:30},
+  {l:'Biggest innings wins', pick:r=>r.kind==='i', sort:(a,b)=>b.n-a.n, n:30},
+  {l:'One-wicket wins', pick:r=>r.kind==='w'&&r.n===1, sort:(a,b)=>b.i-a.i},
+  {l:'Wins after following on', set:{fo:'fol'}, pick:r=>r.w!==undefined, sort:(a,b)=>b.i-a.i},
+  {l:'Biggest wins after being sent in', set:{toss:'3'}, pick:r=>r.kind==='r'||r.kind==='i', sort:(a,b)=>(b.kind==='i')-(a.kind==='i')||b.n-a.n, n:30, note:'Innings wins first, then wins by runs.'},
+  {l:'Innings wins batting second', set:{bat:'second'}, pick:r=>r.kind==='i', sort:(a,b)=>b.n-a.n, n:30},
+  {l:'Narrowest wins chasing', pick:r=>r.kind==='w', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Fewest wickets left standing first.'},
+];
+state.mq=null;
 function mSelect(sel,quiet){
-  state.msel=sel; paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button>`;
+  state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button>`;
   if(/^[ri]:/.test(sel)){ const k=sel[0], n=+sel.slice(2);
-    if(n===0 && k==='r') h+=`<div class="dhead"><span class="mtitle">Tied</span></div>`+mSection('Tests', MG.tie, 'No tied Tests match these filters.');
+    if(n===0 && k==='r') h+=`<div class="dhead"><span class="mtitle">Tied</span></div>`+mSection('Matches', MG.tie, 'No tied Tests match these filters.');
     else if(n===0) h+=`<div class="dhead"><span class="mtitle">Scores level</span></div><p class="empty">Can’t be an innings win: with the scores level, the side batting last would still have to pad up again and score 1 run to win.</p>`;
-    else { h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel(k,n)}</span></div>`+mSection('Tests', (k==='r'?MG.r:MG.i)[n]||[], `No Test has ever been won by ${mLabel(k,n)}${mfiltered()?' with these filters':''}. <b>Scorigami!</b>`);
+    else { h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel(k,n)}</span></div>`+mSection('Matches', (k==='r'?MG.r:MG.i)[n]||[], `No Test has ever been won by ${mLabel(k,n)}${mfiltered()?' with these filters':''}. <b>Scorigami!</b>`);
       const other=k==='r'?'i':'r', L=(other==='r'?MG.r:MG.i)[n]||[]; h+=`<p class="mother">Also: won by ${mLabel(other,n)}: <a href="#" data-sel="${other}:${n}">${L.length||'never (scorigami)'}</a></p>`; }
-  } else if(sel[0]==='w'){ const n=+sel.slice(1); h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel('w',n)}</span></div>`+mSection('Tests', MG.w[n]||[], 'None with these filters.'); }
-  else { const lab={draw:'Draws',tie:'Ties',award:'Awarded'}[sel]; h+=`<div class="dhead"><span class="mtitle">${lab}</span></div>`+mSection('Tests', MG[sel], 'None with these filters.'); }
+  } else if(sel[0]==='w'){ const n=+sel.slice(1); h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel('w',n)}</span></div>`+mSection('Matches', MG.w[n]||[], 'None with these filters.'); }
+  else if(sel[0]==='q'){ const Q=MQ[+sel.slice(2)], L=MREC.filter(r=>mpass(r)&&Q.pick(r)).sort(Q.sort), top=Q.n? L.slice(0,Q.n) : L;
+    h+=`<div class="dhead"><span class="mtitle">${Q.l}</span></div><h3 class="msec">${Q.n&&L.length>Q.n?`Top ${Q.n} of`:'Matches'} <span class="num">${L.length}</span></h3>`+(Q.note?`<p class="mother" style="margin:0 0 6px">${Q.note}</p>`:'')+(top.length? mItems(top,true) : '<p class="empty">None with these filters.</p>'); }
+  else { const lab={draw:'Draws',tie:'Ties',award:'Awarded'}[sel]; h+=`<div class="dhead"><span class="mtitle">${lab}</span></div>`+mSection('Matches', MG[sel], 'None with these filters.'); }
   d.innerHTML=h; if(!quiet && innerWidth<1100) d.classList.add('open');
 }
 const mm=document.getElementById('marginsMode');
 mm.addEventListener('click',e=>{
   const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower'), o=e.target.closest('[data-o]'), ds=e.target.closest('[data-sel]');
-  const bsv=e.target.closest('#mSvgB'); if(bsv){ const hit=bcHit(e); if(hit) mSelect(hit.k+':'+hit.n); }
   if(sq) mSelect(sq.dataset.k+':'+sq.dataset.n); else if(tw) mSelect('w'+tw.dataset.w); else if(o){ e.preventDefault(); mSelect(o.dataset.o); } else if(ds){ e.preventDefault(); mSelect(ds.dataset.sel); }
-  const vb=e.target.closest('#mViewSeg button'); if(vb){ state.mview=vb.dataset.mv; document.querySelectorAll('#mViewSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b===vb))); paintMargins(); }
+  const rs=e.target.closest('#mRankSeg button'); if(rs){ state.mbig=rs.dataset.b==='1'; state.mrankN=100; renderMList(); return; }
+  if(e.target.closest('#mMoreBtn')){ state.mrankN+=100; renderMList(); return; }
+  const th=e.target.closest('#mTable th[data-k]'); if(th){ const k=th.dataset.k; if(state.msortK===k) state.msortD*=-1; else { state.msortK=k; state.msortD=(k==='n'||/f$/.test(k))?1:-1; } renderMTable(); return; }
+  const kb=e.target.closest('.kindseg button'); if(kb){ state.mkind=kb.dataset.kind; state.mrankN=100; state.msortK='n'; state.msortD=1; paintMargins(); return; }
+  const fb=e.target.closest('.fold'); if(fb){ const k=fb.dataset.fold; state.mfold[k]=!state.mfold[k]; mFolds(); return; }
+  const tr=e.target.closest('#mTable tr[data-n]'); if(tr){ const n=+tr.dataset.n; mSelect(state.mkind==='w'?'w'+n: state.mkind==='i'?'i:'+n : 'r:'+n); return; }
+  const lr=e.target.closest('#mList tr[data-sel]'); if(lr && !e.target.closest('a')){ mSelect(lr.dataset.sel); return; }
+  const vb=e.target.closest('#mViewSeg button'); if(vb){ state.mview=vb.dataset.mv; state.mrankN=100; document.querySelectorAll('#mViewSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b===vb))); paintMargins(); }
   if(e.target.closest('[data-close]')) document.getElementById('mdetail').classList.remove('open');
-  const sb=e.target.closest('#mShowSeg button'); if(sb){ state.mshow=sb.dataset.ms; document.querySelectorAll('#mShowSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b===sb))); paintMargins(); }
 });
-mm.addEventListener('change',e=>{ const s_=e.target.closest('select[data-mf]'); if(!s_) return; state.mf[s_.dataset.mf]=s_.value; s_.parentElement.classList.toggle('on',!!s_.value); if(state.msel!==null) mSelect(state.msel,true); else paintMargins(); });
-document.getElementById('mReset').addEventListener('click',()=>{ MF.forEach(f=>state.mf[f.id]=''); mm.querySelectorAll('select[data-mf]').forEach(x=>{x.value=''; x.parentElement.classList.remove('on');}); if(state.msel!==null) mSelect(state.msel,true); else paintMargins(); });
+mm.addEventListener('change',e=>{ const s_=e.target.closest('select[data-mf]'); if(!s_) return; state.mf[s_.dataset.mf]=s_.value; mSyncF(); if(state.msel!==null) mSelect(state.msel,true); else paintMargins(); });
+document.getElementById('mpresets').innerHTML=MQ.map((q,i)=>`<button class="preset" data-mq="${i}" aria-pressed="false">${q.l}</button>`).join('');
+function mSyncF(){ mm.querySelectorAll('select[data-mf]').forEach(x=>{ x.value=state.mf[x.dataset.mf]; x.parentElement.classList.toggle('on',!!x.value); });
+  const k=MF.filter(f=>state.mf[f.id]).length; document.getElementById('mfcount').textContent=k?`(${k} on)`:'';
+  mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); }
+document.getElementById('mpresets').addEventListener('click',e=>{ const b=e.target.closest('[data-mq]'); if(!b) return; const i=+b.dataset.mq, Q=MQ[i];
+  MF.forEach(f=>state.mf[f.id]=''); Object.assign(state.mf, Q.set||{}); state.mq=i; mSyncF(); mSelect('q:'+i); });
+document.getElementById('mReset').addEventListener('click',()=>{ state.mq=null; MF.forEach(f=>state.mf[f.id]=''); mSyncF(); if(state.msel!==null && state.msel[0]!=='q') mSelect(state.msel,true); else { mrecompute(); let low=1; while(MG.r[low]) low++; mSelect('r:'+low,true); } });
 mm.addEventListener('pointerover',e=>{ if(e.pointerType==='touch') return; const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower');
   if(!sq&&!tw){ if(e.target.closest('#marginsMode')) tip.style.display='none'; return; }
   let h;
@@ -872,13 +1235,15 @@ document.getElementById('mSvgB').addEventListener('pointermove',e=>{ if(e.pointe
 document.getElementById('mSvgB').addEventListener('pointerleave',()=>{ tip.style.display='none'; });
 document.getElementById('mHeatBtn').addEventListener('click',e=>{ state.mheat=!state.mheat; e.currentTarget.setAttribute('aria-pressed',String(state.mheat)); paintMargins(); });
 document.getElementById('mCbBtn').addEventListener('click',()=>document.getElementById('cbBtn').click());
-function mFocus(sel){ mSelect(sel); const k=sel[0], n=+sel.slice(2), rm=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+function mFocus(sel){ mSelect(sel); const k=sel[0], n=k==='w'? +sel.slice(1) : +sel.slice(2), rm=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+  if(state.mview==='table'){ const tr=document.querySelector(`#mTable tr[data-n="${n}"]`); if(tr){ tr.scrollIntoView({block:'center',behavior:rm}); tr.classList.remove('flash'); void tr.offsetWidth; tr.classList.add('flash'); } return; }
+  if(state.mview==='list' || k==='w') return;
   if(state.mview==='bar'){ document.getElementById('mBar').scrollIntoView({block:innerWidth<1100?'start':'center',behavior:rm}); bcScroll(n); return; }
   const el=document.querySelector(state.mview==='grid'?`#mGrids .msq[data-k="${k}"][data-n="${n}"]`:`#mRings .mrcell[data-k="${k}"][data-n="${n}"]`);
   if(el){ (state.mview==='grid'?el:document.getElementById('mRings')).scrollIntoView({block:innerWidth<1100?'start':'center',behavior:rm}); el.classList.remove('flash'); void el.getBoundingClientRect(); el.classList.add('flash'); } }
-document.getElementById('mRandomBtn').addEventListener('click',()=>{ const opts=[]; for(let n=1;n<700;n++){ if(state.mshow!=='i'&&MG.r[n]) opts.push('r:'+n); if(state.mshow!=='r'&&MG.i[n]) opts.push('i:'+n); } if(!opts.length) return; mFocus(opts[Math.floor(Math.random()*opts.length)]); });
+document.getElementById('mRandomBtn').addEventListener('click',()=>{ const opts=[], K=mK(); if(K==='w'){ for(let n=1;n<=10;n++) if(MG.w[n]) opts.push('w'+n); } else for(let n=1;n<=bcTop('r');n++){ if(K!=='i'&&MG.r[n]) opts.push('r:'+n); if(K!=='r'&&MG.i[n]) opts.push('i:'+n); } if(!opts.length) return; mFocus(opts[Math.floor(Math.random()*opts.length)]); });
 const mjump=document.getElementById('mjump');
-function mjumpGo(){ const v=mjump.value; if(v==='') return; if(innerWidth<=1100) mjump.blur(); mFocus((state.mshow==='i'?'i':'r')+':'+Math.min(699,+v)); }
+function mjumpGo(){ const v=mjump.value; if(v==='') return; if(innerWidth<=1100) mjump.blur(); const K=mK(); mFocus(K==='w'? 'w'+Math.max(1,Math.min(10,+v)) : (K==='i'?'i':'r')+':'+Math.min(K==='i'?bcTop('i'):bcTop('r'),+v)); }
 mjump.addEventListener('input',()=>{ const v=mjump.value.replace(/\D/g,'').slice(0,3); if(v!==mjump.value) mjump.value=v; if(v.length===3) mjumpGo(); });
 mjump.addEventListener('keydown',e=>{ if(e.key==='Enter') mjumpGo(); });
 mjump.addEventListener('change',mjumpGo);
@@ -886,13 +1251,28 @@ let mBuilt=false;
 function setMode(m){
   document.querySelectorAll('#modeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));
   document.getElementById('totalsMode').hidden = m!=='totals'; document.getElementById('marginsMode').hidden = m!=='margins';
-  document.getElementById('notesTotals').hidden = m!=='totals'; document.getElementById('notesMargins').hidden = m!=='margins';
-  document.querySelector('.kicker').textContent = m==='totals' ? 'Every total a men’s Test innings has finished on, from 0 to 999' : 'Every margin a men’s Test has been won by';
-  document.querySelector('.howto').textContent = m==='totals' ? 'Tap any number to see every innings that finished on it.' : 'Tap any margin to see every Test won by it.';
+
+  document.querySelector('.kicker').textContent = m==='totals' ? `Every total a men’s Test innings has finished on, from 0 up to the all-time record of ${HI_T}` : 'Every margin a men’s Test has been won by';
   if(m==='margins'){ if(!mBuilt){ buildMargins(); mBuilt=true; mrecompute(); let low=1; while(MG.r[low]) low++; mSelect('r:'+low,true); } else paintMargins(); }
   document.getElementById('mCbBtn').setAttribute('aria-pressed',String(state.cb));
   tip.style.display='none';
 }
+function remembered(key, btns, cls, onTxt, offTxt, dflt){ let hide=dflt; try{ const v=localStorage.getItem(key); if(v) hide= v==='hide'; }catch(e){}
+  const set=h=>{ document.documentElement.classList.toggle(cls,h); btns.forEach(b=>{ b.innerHTML= (h? offTxt : onTxt) + (b.dataset.tail||''); b.setAttribute('aria-pressed',String(!h)); }); try{ localStorage.setItem(key,h?'hide':'show'); }catch(e){} };
+  set(hide); btns.forEach(b=>b.addEventListener('click',()=>set(!document.documentElement.classList.contains(cls)))); }
+(function(){ const dlg=document.getElementById('help');
+  { const box=dlg.querySelector('.helpin'), head=box.querySelector('.helphead'), H=[...box.querySelectorAll(':scope > h2:not(#helpTitle)')];
+    const idx=document.createElement('nav'); idx.className='hidx'; idx.setAttribute('aria-label','Contents');
+    H.forEach((h,i)=>{ const d=document.createElement('details'); d.className='hsec'; d.id='hs'+i; const sm=document.createElement('summary'); sm.innerHTML=h.innerHTML; d.appendChild(sm);
+      let n=h.nextElementSibling; while(n && n.tagName!=='H2'){ const nx=n.nextElementSibling; d.appendChild(n); n=nx; } h.replaceWith(d);
+    });
+    const all=document.createElement('button'); all.className='linkbtn'; all.type='button'; all.textContent='Expand all';
+    all.addEventListener('click',()=>{ const ds=[...box.querySelectorAll('.hsec')], open=!ds.every(d=>d.open); ds.forEach(d=>d.open=open); all.textContent= open?'Collapse all':'Expand all'; }); idx.appendChild(all);
+    head.after(idx); }
+  const demo=(id,H)=>{ document.getElementById(id).innerHTML='<span class="nv"><i></i>never</span>'+H.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join(''); };
+  demo('heatDemoT',HEAT); demo('heatDemoM',HEATM);
+  document.addEventListener('click',e=>{ const ho=e.target.closest('.helpopen'); if(ho){ e.preventDefault(); dlg.showModal(); dlg.querySelector('.helpin').scrollTop=0; if(ho.dataset.h){ const d=document.getElementById(ho.dataset.h); d.open=true; setTimeout(()=>d.scrollIntoView({block:'start'}),30); } } });
+  dlg.addEventListener('click',e=>{ if(e.target===dlg || e.target.closest('.helpx')) dlg.close(); }); })();
 document.getElementById('modeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setMode(b.dataset.m); });
 
 /* ---------- rings ---------- */
@@ -904,8 +1284,9 @@ const RG={c:500, r0:128, rw:33.5, gap:2.2, gapDeg:12};   // 100 slices per ring 
 function buildRings(){
   const g=document.getElementById('rings'); let h='';
   const step=(360-RG.gapDeg)/100;
-  for(let p=0;p<10;p++){ const ri=RG.r0+p*(RG.rw+RG.gap), ro=ri+RG.rw;
+  for(let p=0;p<=Math.floor(HI_T/100);p++){ const ri=RG.r0+p*(RG.rw+RG.gap), ro=ri+RG.rw;
     for(let k=0;k<100;k++){ const a0=RG.gapDeg/2+k*step+0.25, a1=a0+step-0.5, s=p*100+k;
+      if(s>HI_T) continue;
       h+=`<path class="rcell" data-s="${s}" d="${arc(RG.c,RG.c,ri,ro,a0,a1)}"/>`; }
     h+=`<text class="ringlab" x="${RG.c}" y="${RG.c-ri-RG.rw/2+4}" text-anchor="middle">${p?p*100+'s':'0–99'}</text>`; }
   h+=`<text class="ringctr num" id="ringN" x="${RG.c}" y="${RG.c+8}" text-anchor="middle"></text><text class="ringctr2" id="ringN2" x="${RG.c}" y="${RG.c+38}" text-anchor="middle"></text>`;
@@ -919,36 +1300,36 @@ function paintRings(){
     el.style.stroke = never ? (state.cb?'none':'var(--never-edge)') : state.heat ? (o.status==='not'?'var(--dot)':'none') : o.status==='out' ? 'none' : 'var(--not-edge)';
     el.style.strokeWidth = never? '1.2px' : (state.heat && o.status==='not') ? '2.4px' : '1px';
     el.classList.toggle('sel', s===state.sel); el.setAttribute('aria-label',`${s}: ${o.n} innings`); });
-  document.getElementById('ringN').textContent=`${k}/1000`;
+  document.getElementById('ringN').textContent=`${k}/${NT}`;
   document.getElementById('ringN2').textContent= filtered()?'totals reached with these filters':'totals reached';
 }
 
-/* ---------- hero ring: all 1,000 totals in one circle ---------- */
+/* ---------- hero ring: every total up to the record in one circle ---------- */
 function buildHero(){
   const svg=document.getElementById('heroRing'), cx=500, cy=500, ri=318, ro=474;
-  const GAP=14, A=x=>GAP/2+x*(360-GAP)/1000;   // a gap at 12 o'clock: 999 doesn't run on into 0
+  const GAP=14, A=x=>GAP/2+x*(360-GAP)/NT;   // a gap at 12 o'clock: the record doesn't run on into 0
   const st=[], cnt=[], first=[];
-  for(let s=0;s<1000;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
+  for(let s=0;s<NT;s++){ const o=cache[s]; cnt[s]=o.n; st[s]= (state.empty||!o.n)?'never': o.status==='out'?'out':'not'; first[s]= o.first? o.first[0] : -1; }
   const NV=state.cb?'var(--never-cb)':'var(--never)';
   const col={out:'var(--out)',not:'var(--not)',never:NV}; for(let b=1;b<=7;b++) col['q'+b]=`var(--q${b})`;
   const key=st.map((x,s)=> x!=='never' && state.heat ? 'q'+band(cnt[s]) : x);
-  let h=`<path d="${arc(cx,cy,ri,ro,A(0),A(1000))}" fill="${NV}"/>`;
+  let h=`<path d="${arc(cx,cy,ri,ro,A(0),A(NT))}" fill="${NV}"/>`;
   // the gap holds the direction of travel
   { const q=-Math.PI/2, rm=(ri+ro)/2; h+=`<text x="${cx}" y="${cy-rm+6}" text-anchor="middle" style="font:700 30px var(--body);fill:var(--muted);pointer-events:none" aria-hidden="true">…</text>`; }
   // runs of the same status drawn as one arc; reached totals in the sparse zone also get an outward tick
-  let a=0; while(a<1000){ let b=a; while(b+1<1000 && key[b+1]===key[a]) b++;
+  let a=0; while(a<NT){ let b=a; while(b+1<NT && key[b+1]===key[a]) b++;
     if(key[a]!=='never') h+=`<path d="${arc(cx,cy,ri,ro,A(a),A(b+1))}" fill="${col[key[a]]}"/>`;
     a=b+1; }
-  const dense=s=>{ let k=0,n=0; for(let j=s-12;j<=s+12;j++) if(j>=0&&j<1000){ n++; if(st[j]!=='never') k++; } return k/n; };
-  for(let s=400;s<1000;s++) if(st[s]!=='never' && dense(s)<0.45){ const t=A(s+0.5); const P=r=>{const q=(t-90)*Math.PI/180; return [cx+r*Math.cos(q), cy+r*Math.sin(q)];};
+  const dense=s=>{ let k=0,n=0; for(let j=s-12;j<=s+12;j++) if(j>=0&&j<NT){ n++; if(st[j]!=='never') k++; } return k/n; };
+  for(let s=400;s<NT;s++) if(st[s]!=='never' && dense(s)<0.45){ const t=A(s+0.5); const P=r=>{const q=(t-90)*Math.PI/180; return [cx+r*Math.cos(q), cy+r*Math.sin(q)];};
     const [x0,y0]=P(ro+3),[x1,y1]=P(ro+16); h+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${st[s]==='out'?'var(--out)':'var(--ink-2)'}" stroke-width="2.6" stroke-linecap="round"/>`; }
-  for(const k of [0,100,200,300,400,500,600,700,800,900,999]){ const q=(A(k===999?1000:k)-90)*Math.PI/180; h+=`<line x1="${(cx+ro*Math.cos(q)).toFixed(1)}" y1="${(cy+ro*Math.sin(q)).toFixed(1)}" x2="${(cx+(ro+7)*Math.cos(q)).toFixed(1)}" y2="${(cy+(ro+7)*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.5"/><text class="tk" x="${(cx+(ro+17)*Math.cos(q)).toFixed(1)}" y="${(cy+(ro+17)*Math.sin(q)+5).toFixed(1)}" text-anchor="middle">${k}</text>`; }
+  for(const k of [...Array(Math.floor(HI_T/100)+1).keys()].map(x=>x*100).concat(HI_T%100?[HI_T]:[])){ const q=(A(k===HI_T?NT:k)-90)*Math.PI/180; h+=`<line x1="${(cx+ro*Math.cos(q)).toFixed(1)}" y1="${(cy+ro*Math.sin(q)).toFixed(1)}" x2="${(cx+(ro+7)*Math.cos(q)).toFixed(1)}" y2="${(cy+(ro+7)*Math.sin(q)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.5"/><text class="tk" x="${(cx+(ro+17)*Math.cos(q)).toFixed(1)}" y="${(cy+(ro+17)*Math.sin(q)+5).toFixed(1)}" text-anchor="middle">${k}</text>`; }
   // call-outs for the totals that matter
   const reached=st.filter(x=>x!=='never').length, lowGap=st.indexOf('never');
-  let mc=0; for(let s=0;s<1000;s++) if(cnt[s]>cnt[mc]) mc=s;
-  let hi=-1, hiOut=-1, latest=-1; for(let s=0;s<1000;s++){ if(st[s]!=='never') hi=s; if(st[s]==='out') hiOut=s; if(first[s]>=0 && (latest<0 || first[s]>first[latest])) latest=s; }
+  let mc=0; for(let s=0;s<NT;s++) if(cnt[s]>cnt[mc]) mc=s;
+  let hi=-1, hiOut=-1, latest=-1; for(let s=0;s<NT;s++){ if(st[s]!=='never') hi=s; if(st[s]==='out') hiOut=s; if(first[s]>=0 && (latest<0 || first[s]>first[latest])) latest=s; }
   const marks=new Map(); const add=(s,cap)=>{ if(s>=0) marks.set(s, marks.has(s)? marks.get(s)+' · '+cap : cap); };
-  add(lowGap,'lowest scorigami'); if(lowGap===18) add(st.indexOf('never',19),'second-lowest scorigami'); add(mc,'most common'); add(latest,'latest new total'); add(hiOut,'highest all out'); add(hi,'highest total');
+  add(lowGap,'lowest scorigami'); if(lowGap===18) add(st.indexOf('never',19),'second-lowest scorigami'); add(mc,'most common'); add(latest,'latest new total'); add(hiOut,'highest all out'); 
   // place labels on the outside, nudging any that would overlap
   const L=[...marks].map(([s,cap])=>({s,cap,t:A(s+0.5)})).sort((x,y)=>x.t-y.t);
   for(let i=1;i<L.length;i++) if(L[i].t-L[i-1].t<16) L[i].t=L[i-1].t+16;
@@ -963,31 +1344,53 @@ function buildHero(){
     const c=st[m.s]==='never'?'var(--never-edge)':st[m.s]==='out'?'var(--out)':'var(--ink-2)';
     h+=`<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="${c}" stroke-width="1.6"/>`;
     h+=`<text text-anchor="${anchor}" data-go="${m.s}" style="cursor:pointer"><tspan class="lab" x="${lx.toFixed(1)}" y="${y0.toFixed(1)}">${m.s}</tspan>${two?`<tspan class="cap" x="${lx.toFixed(1)}" dy="22">${m.cap}</tspan>`:''}</text>`; }
-  h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${reached}/1000</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${filtered()?'reached with these filters':'totals reached'}</text>`;
-  svg.innerHTML=h;
+  h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${reached}/${NT}</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${filtered()?'reached with these filters':'totals reached'}</text>`;
+  if(state.sel!=null && state.sel>=0 && state.sel<NT) h+=`<path d="${arc(cx,cy,ri-6,ro+6,A(state.sel)-0.15,A(state.sel+1)+0.15)}" fill="none" stroke="var(--ink)" stroke-width="3" pointer-events="none"/>`;
+  h+=`<g id="hNeedle" pointer-events="none"><line x1="${cx}" y1="${cy-ri+10}" x2="${cx}" y2="${cy-ro-6}" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy-ro-12}" r="10" fill="var(--ink)"/><circle cx="${cx}" cy="${cy-ro-12}" r="4" fill="var(--surface)"/></g>`;
+  svg.innerHTML=h; heroNeedle(TD.v);
 }
-document.getElementById('heroRing').addEventListener('click',e=>{ const t=e.target.closest('[data-go]'); if(t) select(+t.dataset.go); });
-state.ring='ten';
+function heroNeedle(v){ const g=document.getElementById('hNeedle'); if(!g) return; const a=HG.GAP/2+(Math.max(0,Math.min(HI_T,v))+0.5)*(360-HG.GAP)/NT; g.setAttribute('transform',`rotate(${a.toFixed(2)} 500 500)`); }
+const HG={cx:500,cy:500,ri:318,ro:474,GAP:14};
+function heroHit(e){ const svg=document.getElementById('heroRing'), m=svg.getScreenCTM(); if(!m) return null; const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());
+  const dx=p.x-HG.cx, dy=p.y-HG.cy, r=Math.hypot(dx,dy); if(r<HG.ri-14 || r>HG.ro+24) return null;
+  let a=Math.atan2(dx,-dy)*180/Math.PI; if(a<0) a+=360; const t=Math.floor((a-HG.GAP/2)*NT/(360-HG.GAP)); return (t>=0&&t<NT)? t : null; }
+// rings you point at: put a finger on the ring and slide round to the number you want; the dial below fine-tunes
+function attachRing(svg, D, GAP, END){
+  let d=null;
+  const pos=e=>{ const m=svg.getScreenCTM(); if(!m) return null; const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()); const dx=p.x-500, dy=p.y-500;
+    let a=Math.atan2(dx,-dy)*180/Math.PI; if(a<0) a+=360; const N=END(); let x=(a-GAP/2)*N/(360-GAP);
+    if(a<GAP/2) x = a<GAP/4 ? N-0.01 : 0; if(x>N) x=N-0.01;      // in the gap at the top: snap to whichever end is nearer
+    return {v:Math.max(0,Math.min(N-1,Math.floor(x))), r:Math.hypot(dx,dy)}; };
+  svg.addEventListener('pointerdown',e=>{ const q=pos(e); if(!q) return; cancelAnimationFrame(D.raf); D.raf=0; D.vel=0; svg.setPointerCapture(e.pointerId);
+    d={x:e.clientX, y:e.clientY, moved:false, tgt:e.target.closest('[data-go]')}; if(!d.tgt && q.r>40) D.set(q.v); });
+  svg.addEventListener('pointermove',e=>{ if(!d) return; if(!d.moved && Math.hypot(e.clientX-d.x,e.clientY-d.y)>4) d.moved=true; if(!d.moved) return; const q=pos(e); if(!q || q.r<=40) return;
+    const N=END(), cur=Math.round(D.v); let v=q.v; if(Math.abs(v-cur)>N/2) v = cur>N/2 ? N-1 : 0;   // hard stops: no slipping past the record back to 0, or below 0 round to the record
+    D.set(v); });
+  const end=e=>{ if(!d) return; const D_=d; d=null; if(D_.tgt && !D_.moved){ D.go(+D_.tgt.dataset.go,true); return; } D.go(Math.round(D.v),true); };
+  svg.addEventListener('pointerup',end); svg.addEventListener('pointercancel',end);
+  svg.addEventListener('wheel',e=>{ const dd=Math.abs(e.deltaX)>Math.abs(e.deltaY)? e.deltaX : e.deltaY; if(!dd) return; e.preventDefault(); cancelAnimationFrame(D.raf); D.raf=0;
+    D.set(D.v+dd*0.05); clearTimeout(svg._wt); svg._wt=setTimeout(()=>D.go(Math.round(D.v),true),180); },{passive:false});
+  svg.addEventListener('keydown',e=>{ const st={ArrowLeft:-1,ArrowRight:1,ArrowDown:-1,ArrowUp:1,PageDown:-10,PageUp:10}[e.key];
+    if(st!==undefined){ e.preventDefault(); D.go(Math.round(D.v)+st*(e.shiftKey?10:1),true); } });
+}
+
+document.getElementById('heroRing').addEventListener('pointermove',e=>{ if(e.pointerType==='touch') return; const s_=heroHit(e); if(s_===null){ tip.style.display='none'; return; } const n=cache[s_].n; tip.innerHTML=`<b>${s_}</b> · ${n? n.toLocaleString()+' innings' : 'scorigami: never happened'}`; tip.style.display='block'; });
+document.getElementById('heroRing').addEventListener('pointerleave',()=>{ tip.style.display='none'; });
 function showRing(){
-  document.querySelectorAll('#ringSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.r===state.ring)));
-  document.getElementById('ringTen').hidden = state.ring!=='ten'; document.getElementById('ringOne').hidden = state.ring!=='one';
-  document.getElementById('ringHelp').textContent = state.ring==='ten'
-    ? 'One ring per hundred, 0–99 in the middle. Each ring runs clockwise from the top, like a clock: 50 is at six o’clock.'
-    : 'All 1,000 totals in a single circle, clockwise from 0 at the top. Labels mark the totals that stand out; ticks outside the ring flag lone totals reached among the scorigamis.';
-  if(state.ring==='one') buildHero(); else paintRings();
+  document.getElementById('ringHelp').textContent = 'One ring per hundred, 0–99 in the middle. Each ring runs clockwise from the top, like a clock: 50 is at six o’clock.';
+  paintRings();
 }
-document.getElementById('ringSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; state.ring=b.dataset.r; showRing(); });
 
 /* ---------- table ---------- */
 let sortKey='s', sortDir=1;
 function renderTable(){
-  const rows=[]; for(let s=0;s<1000;s++){const o=cache[s]; rows.push({s,n:o.n,c:o.c,ii:o.ii,f:o.first?+M[o.first[0]][1]:null,l:o.last?+M[o.last[0]][1]:null});}
-  const COLS=[['c0','All out',c=>c[0]+c[1]],['c1','↳ short-handed',c=>c[1]],['c2','Declared',c=>c[2]+c[6]],['c6','↳ forfeited',c=>c[6]],['c3','Successful chase',c=>c[3]],['c4','Match drawn (batting at the end)',c=>c[4]],['c5','Other',c=>c[5]]];
+  const rows=[]; for(let s=0;s<NT;s++){const o=cache[s]; rows.push({s,n:o.n,c:o.c,ii:o.ii,f:o.first?+M[o.first[0]][1]:null,l:o.last?+M[o.last[0]][1]:null});}
+  const COLS=[['c0','All out',c=>c[0]+c[1],'All out'],['c1','↳ short',c=>c[1],'of which short-handed'],['c2','Declared',c=>c[2]+c[6],'Declared'],['c6','↳ forfeit',c=>c[6],'of which forfeited'],['c3','Chased',c=>c[3],'Successful chase'],['c4','Drawn',c=>c[4],'Match drawn (batting at the end)'],['c5','Other',c=>c[5],'Other']];
   const colOf=k=>COLS.find(x=>x[0]===k);
   const key = r=> sortKey==='s'?r.s: sortKey==='n'?r.n: sortKey==='f'?(r.f??9999): sortKey==='l'?(r.l??-1): sortKey[0]==='i'? r.ii[+sortKey[1]-1] : colOf(sortKey)? colOf(sortKey)[2](r.c) : 0;
   rows.sort((a,b)=>(key(a)-key(b))*sortDir || a.s-b.s);
-  const head=[['s','Total'],['n','Innings'],...COLS.map(([k,l])=>[k,l]),...INN.map((l,i)=>['i'+(i+1),l+' inns']),['f','First'],['l','Latest']];
-  document.getElementById('view-table').innerHTML=`<p class="sorthint">One row per total. Click a column heading to sort by it; click it again to reverse.</p><table><thead><tr>${head.map(([k,l])=>`<th data-k="${k}" scope="col">${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
+  const head=[['s','Total'],['n','Innings'],...COLS.map(([k,l,,t])=>[k,l,t]),...INN.map((l,i)=>['i'+(i+1),(l.replace(' (following on)',' f/o'))+' inns',l+' innings']),['f','First'],['l','Latest']];
+  document.getElementById('view-table').innerHTML=`<p class="sorthint">One row per total. Click a column heading to sort by it; click it again to reverse. “f/o”: following on.</p><table><thead><tr>${head.map(([k,l,t])=>`<th data-k="${k}" scope="col"${t?` title="${t}"`:''}>${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
     rows.map(r=>`<tr data-s="${r.s}"><td class="num"><b>${r.s}</b></td><td class="num">${r.n||'–'}</td>${COLS.map(([,,f])=>`<td class="num">${f(r.c)||''}</td>`).join('')}${r.ii.map(v=>`<td class="num">${v||''}</td>`).join('')}<td class="num">${r.f??''}</td><td class="num">${r.l??''}</td></tr>`).join('')+`</tbody></table>`;
 }
 document.getElementById('view-table').addEventListener('click',e=>{
@@ -1062,16 +1465,16 @@ document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') ret
 document.addEventListener('click',e=>{ if(e.target.closest('.mcell')) return; const c=e.target.closest('.cell,.rcell'); if(c) select(+c.dataset.s);});
 function select(s, quiet){ state.sel=s; paintAll(false); renderDetail(); if(!quiet && innerWidth<1100) document.getElementById('detail').classList.add('open'); }
 document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('#sheetClose')) document.getElementById('detail').classList.remove('open'); });
-(function(){ // swipe the sheet down to dismiss it
-  const d=document.getElementById('detail'); let y0=null, dy=0;
+['detail','mdetail'].forEach(id=>{ // swipe the sheet down to dismiss it
+  const d=document.getElementById(id); let y0=null, dy=0;
   d.addEventListener('touchstart',e=>{ if(innerWidth>1100 || d.scrollTop>0){ y0=null; return; } y0=e.touches[0].clientY; dy=0; },{passive:true});
   d.addEventListener('touchmove',e=>{ if(y0===null) return; dy=e.touches[0].clientY-y0;
     if(dy>0){ d.classList.add('dragging'); d.style.transform=`translateY(${dy}px)`; if(e.cancelable) e.preventDefault(); } },{passive:false});
   d.addEventListener('touchend',()=>{ if(y0===null) return; d.classList.remove('dragging'); d.style.transform='';
     if(dy>80) d.classList.remove('open'); y0=null; dy=0; });
-})();
+});
 function goTo(s){
-  select(s);
+  s=Math.min(+s,HI_T); select(s);
   if(state.view!=='grid') return;
   const c=gridEl.querySelector(`.cell[data-s="${s}"]`); if(!c) return;
   c.scrollIntoView({block: innerWidth<1100?'start':'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
@@ -1088,17 +1491,19 @@ jump.addEventListener('change',jumpGo);
 function leafLabel(f,l){ return l.short || (l.parent? (f.id==='end'? l.l : f.id==='toss'? l.parent.l.replace(' toss','')+', '+l.l.toLowerCase() : l.parent.l+' '+l.l.toLowerCase()) : l.l); }
 function summary(f){
   const S=state.fsel[f.id]; if(S.size===f.leaves.length) return 'All';
+  if(f.id==='end'){ const nn=f.leaves.filter(l=>!END_OUT(l.v)); if(S.size===nn.length && nn.every(l=>S.has(l.v))) return 'Not all out'; }
   for(const o of f.opts) if(o.kids && o.kids.every(k=>S.has(k.v)) && S.size===o.kids.length) return o.l;
   const on=f.leaves.filter(l=>S.has(l.v)); if(on.length<=2) return on.map(l=>leafLabel(f,l)).join(', ');
   return `${on.length} of ${f.leaves.length}`;
 }
+const END_OUT=v=> v==='0' || v[0]==='s';   // all-out leaves of the How it ended filter
 function optRow(f,o,isParent){
   const c=o.c?`style="--c:var(${o.c})"`:'';
   return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}</span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
 }
 function buildFilters(){
   document.getElementById('fbar').innerHTML = FILTERS.map(f=>`<div class="fwrap"><button class="fbtn" id="fb-${f.id}" data-f="${f.id}" aria-expanded="false" aria-haspopup="true"></button>
-    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}">${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
+    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}">${f.id==='end'? `<label class="opt short"><input type="checkbox" data-f="end" data-g="not"><i></i><span><b>Not all out</b> <small>(declared, chased, drawn, other)</small></span><span class="cnt">${f.leaves.filter(l=>!END_OUT(l.v)).reduce((a,l)=>a+(l.n||0),0).toLocaleString()}</span><button class="only" data-f="end" data-g="not" type="button">only</button></label>` : ''}${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
     <div class="popfoot"><button class="linkbtn" data-all="${f.id}" type="button">Select all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
 }
 function syncFilters(){
@@ -1106,10 +1511,11 @@ function syncFilters(){
     const S=state.fsel[f.id], btn=document.getElementById('fb-'+f.id);
     btn.innerHTML=`${f.label}: <b>${summary(f)}</b>`; btn.classList.toggle('on', S.size<f.leaves.length);
     document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>i.checked=S.has(i.dataset.v));
+    document.querySelectorAll(`#pop-${f.id} input[data-g]`).forEach(i=>{ const L=vals(f,i), k=L.filter(v=>S.has(v)).length; i.checked=k===L.length; i.indeterminate=k>0&&!i.checked; });
     document.querySelectorAll(`#pop-${f.id} input[data-p]`).forEach(i=>{ const k=f.opts[+i.dataset.p].kids.filter(x=>S.has(x.v)).length; i.checked=k===f.opts[+i.dataset.p].kids.length; i.indeterminate=k>0&&!i.checked; });
   });
 }
-function vals(f,el){ return el.dataset.p!==undefined ? f.opts[+el.dataset.p].kids.map(k=>k.v) : [el.dataset.v]; }
+function vals(f,el){ if(el.dataset.g) return f.leaves.filter(l=>!END_OUT(l.v)).map(l=>l.v); return el.dataset.p!==undefined ? f.opts[+el.dataset.p].kids.map(k=>k.v) : [el.dataset.v]; }
 function renderActive(){
   const A=document.getElementById('activeBar'); const on=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length);
   if(!on.length){ A.hidden=true; return; }
@@ -1132,7 +1538,7 @@ document.getElementById('fbar').addEventListener('click',e=>{
 });
 document.getElementById('fbar').addEventListener('change',e=>{
   const i=e.target; if(i.type!=='checkbox') return; const F=FILTERS.find(x=>x.id===i.dataset.f); const S=state.fsel[F.id];
-  const vs=vals(F,i); const on = i.dataset.p!==undefined ? !vs.every(v=>S.has(v)) : i.checked;
+  const vs=vals(F,i); const on = (i.dataset.p!==undefined || i.dataset.g) ? !vs.every(v=>S.has(v)) : i.checked;
   vs.forEach(v=> on? S.add(v): S.delete(v));
   if(S.size===0){ vs.forEach(v=>S.add(v)); }   // a filter can't be emptied; use "only" instead
   state.preset=null; syncPresets(); refilter();
@@ -1164,13 +1570,15 @@ document.getElementById('presets').addEventListener('click',e=>{
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
-document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','cube','table','list','rings'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
-function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or 3D'; }
+document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','table','list','rings','dial'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
+function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
 flip('countBtn','heat',true,false); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
 document.getElementById('kpiReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
-document.getElementById('ftoggle').addEventListener('click',e=>{ const f=document.getElementById('filtersBox'); const open=f.classList.toggle('fopen'); e.currentTarget.setAttribute('aria-expanded',String(open)); });
+(function(){ const pairs=[['ftoggle','filtersBox','fcount'],['mftoggle','mFilters','mfcount']]; let open=innerWidth>=1100; try{ const v=localStorage.getItem('scorigami-filters'); if(v) open= v==='show'; }catch(e){}
+  const set=o=>{ open=o; pairs.forEach(([b,f])=>{ const B=document.getElementById(b); document.getElementById(f).classList.toggle('fopen',o); B.setAttribute('aria-expanded',String(o)); B.firstChild.textContent= o? 'Hide filters & quick questions ' : 'Show filters & quick questions '; B.lastChild.textContent= o?' ▴':' ▾'; }); try{ localStorage.setItem('scorigami-filters',o?'show':'hide'); }catch(e){} };
+  set(open); pairs.forEach(([b])=>document.getElementById(b).addEventListener('click',()=>set(!open))); })();
 
 
 function paintAll(re){
@@ -1183,16 +1591,18 @@ function paintAll(re){
     if(!reduce && state.view==='grid'){ gridEl.classList.add('boom'); setTimeout(()=>gridEl.classList.remove('boom'),650); }
     if(!reduce){ board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }
   }
-  document.documentElement.classList.toggle('cb', state.cb);
+  document.documentElement.classList.toggle('cb', state.cb); document.documentElement.classList.toggle('heatT', !!state.heat);
   if(typeof mBuilt!=='undefined' && mBuilt) paintMargins();
   renderKPIs(); renderLegend();
   if(state.view==='grid') paintCells(gridEl);
-  if(state.view==='cube'){ paintCells(cubeEl); placeCube(); }
   if(state.view==='table') renderTable();
   if(state.view==='rings') showRing();
   if(state.view==='list') renderList();
+  if(state.view==='dial'){ const ring=isRing(); document.getElementById('view-dial').classList.toggle('ring',ring); document.getElementById('ringOne').hidden=!ring;
+    if(ring) buildHero(); else paintTStrip(); tDialBuild(); }
 }
-buildGrid(); buildCube(); buildRings(); recompute();
+document.querySelectorAll('.hiT').forEach(e=>e.textContent=HI_T); document.querySelectorAll('.hiO').forEach(e=>e.textContent=HI_O);
+buildGrid(); buildRings(); recompute();
 state.sel = cache.reduce((b,o,s)=>o.n>cache[b].n?s:b,0);
 paintAll(false); renderDetail();
 </script>

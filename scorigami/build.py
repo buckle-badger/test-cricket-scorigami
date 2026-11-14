@@ -482,10 +482,11 @@ def write_outputs(store: Store, counts_src: dict):
     for _, r in recs:
         if r["runs"] < 1000 and status[r["runs"]] != "out":
             status[r["runs"]] = "out" if r["how"] in ("allout", "allout_short") else "not"
+    hi = max(i for i, s in enumerate(status) if s != "never")      # the all-time record: nothing above it counts
     reached = sum(s != "never" for s in status)
-    desc = (f"Every men’s Test innings total from 0 to 999: {reached:,} have happened, "
-            f"{1000 - reached:,} are still waiting. See how each one ended, and which are scorigamis.")
-    make_images(status, reached)
+    desc = (f"Every men’s Test innings total from 0 up to the all-time record of {hi}: {reached:,} have happened, "
+            f"{hi + 1 - reached:,} are still waiting. See how each one ended, and which are scorigamis.")
+    make_images(status, reached, hi)
     tpl = (ROOT / "scorigami" / "template.html").read_text(encoding="utf-8")
     html = (tpl.replace("__SITE__", SITE_URL).replace("__DESC__", desc)
                .replace("__DATA__", json.dumps(page, separators=(",", ":"))))
@@ -507,7 +508,7 @@ def _font(size, bold=False):
     return ImageFont.load_default(size=size)
 
 
-def make_images(status, reached):
+def make_images(status, reached, hi=999):
     """Link-preview card (docs/og.png) and home-screen icon (docs/icon.png). Skipped if Pillow is missing."""
     try:
         from PIL import Image, ImageDraw
@@ -518,7 +519,7 @@ def make_images(status, reached):
     im = Image.new("RGB", (1200, 630), bg); d = ImageDraw.Draw(im)
     TX = (1200 - (5 * (10 * 16 + 9 * 2) + 4 * 24)) // 2
     d.text((TX - 3, 52), "Men’s Test Scorigami", font=_font(64, True), fill=ink)
-    d.text((TX, 136), f"{reached:,} of 1,000 innings totals have happened. {1000 - reached:,} are still waiting.",
+    d.text((TX, 136), f"{reached:,} of {hi + 1:,} innings totals (0 to {hi}) have happened. {hi + 1 - reached:,} are still waiting.",
            font=_font(28), fill=ink2)
     cell, gap, pgap = 16, 2, 24                 # ten 10×10 boards, five across, two down
     pw = 10 * cell + 9 * gap
@@ -528,6 +529,8 @@ def make_images(status, reached):
         for t in range(10):
             for u in range(10):
                 x, y = px + u * (cell + gap), py + t * (cell + gap)
+                if p * 100 + t * 10 + u > hi:
+                    continue
                 d.rounded_rectangle([x, y, x + cell, y + cell], radius=3, fill=col[status[p * 100 + t * 10 + u]])
     im.save(DOCS / "og.png", optimize=True)
 
