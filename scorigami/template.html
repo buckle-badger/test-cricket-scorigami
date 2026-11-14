@@ -120,8 +120,8 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .fold .chev{font-size:.7em;color:var(--muted);transition:transform .15s}
 .fold[aria-expanded="false"] .chev{transform:rotate(-90deg)}
 .shut>:not(.mhead){display:none!important}
-.nofold .fold{pointer-events:none;cursor:default} .nofold .chev{display:none} .nofold #mWk.shut{display:block}
-#mWk.shut{display:none}
+.nofold .fold{pointer-events:none;cursor:default} .nofold .chev{display:none}
+#mWkBlock:not(.nofold) .wklayout.wshut{display:none}
 .kindseg{margin-bottom:10px}
 .fhead{display:flex;align-items:center;gap:12px}
 .resetchip{padding:4px 12px;font-weight:600;color:var(--accent);border-color:var(--accent)}
@@ -346,6 +346,8 @@ tbody tr{cursor:pointer}
 tbody tr:hover{background:var(--bg)}
 /* detail */
 .detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;position:sticky;top:16px}
+@media (min-width:1101px){ .detail{max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain} .wklayout{grid-template-columns:1fr} .wklayout.hasdetail{grid-template-columns:minmax(0,1fr) 360px} .wkslot:empty{display:none} .wkslot .detail{max-height:min(calc(100vh - 32px),480px)} }
+@media (max-width:1100px){ .wkslot{display:contents} }
 .dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .dhead .big{font-family:var(--display);font-size:64px;line-height:.9;font-weight:700}
 .pill{box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
@@ -491,10 +493,10 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
 <div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
   <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
 <div id="mWkBlock"><h2 class="msect"><button class="fold" data-fold="w" aria-expanded="true">Won by wickets <span class="chev">▾</span></button></h2>
-<section class="card wcard" id="mWk" aria-label="Won by wickets">
+<div class="layout wklayout"><section class="card wcard" id="mWk" aria-label="Won by wickets">
   <div class="sky" id="mSky"></div>
   <p class="mrest" id="mRest"></p>
-</section>
+</section><div class="wkslot"></div></div>
 </div>
 <h2 class="msect" id="mBoardHead">Won by runs, and by an innings and runs</h2>
 <p class="hint">Click or tap on anything below (a square, a slice, a row) to see the matches behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
@@ -916,8 +918,8 @@ function buildMargins(){
 function mFixShow(){ const v=state.mview, hb=document.getElementById('mHeatBtn'), on=v!=='list'&&v!=='table'; hb.disabled=!on; hb.title= on? 'Shade each margin by how often it has happened' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
 const mK=()=> state.mview==='list'||state.mview==='table' ? state.mkind : null;   // the one kind of win Ranked and Table are showing
 const KINDSEG=()=>`<div class="seg kindseg" role="group" aria-label="Kind of win">${[['r','By runs'],['i','By an innings'],['w','By wickets']].map(([k,l])=>`<button data-kind="${k}" aria-pressed="${state.mkind===k}">${l}</button>`).join('')}</div>`;
-function mFolds(){ for(const k of ['r','i','w']){ const shut=state.mfold[k]; document.querySelectorAll(`[data-fold="${k}"]`).forEach(b=>b.setAttribute('aria-expanded',String(!shut)));
-    (k==='w'? [document.getElementById('mWk')] : k==='r'? [document.getElementById('mRunsWrap')] : [document.getElementById('mInnsWrap')]).forEach(el=>el.classList.toggle('shut',shut)); } }
+function mFolds(){ for(const k of ['r','i','w']){ const shut=state.mfold[k]; document.querySelectorAll(`[data-fold="${k}"]`).forEach(b=>b.setAttribute('aria-expanded',String(!shut))); if(k==='w') document.querySelector('.wklayout').classList.toggle('wshut',shut);
+    (k==='w'? [] : k==='r'? [document.getElementById('mRunsWrap')] : [document.getElementById('mInnsWrap')]).forEach(el=>el.classList.toggle('shut',shut)); } }
 function paintMargins(){
   mrecompute(); mFixShow(); document.documentElement.classList.toggle('heatM', !!state.mheat);
   const show=state.mshow, grid=state.mview==='grid';
@@ -925,7 +927,7 @@ function paintMargins(){
   if(state.mview==='list') renderMList(); if(state.mview==='table') renderMTable();
   { const wb=document.getElementById('mWkBlock'), v=state.mview; wb.hidden = v==='list'||v==='table';
     if(v==='grid') document.getElementById('mBoardHead').before(wb); else if(!wb.hidden) document.querySelector('#marginsMode > .layout').after(wb);
-    wb.classList.toggle('nofold', v!=='grid'); }
+    wb.classList.toggle('nofold', v!=='grid'); placeMDetail(); }
   document.getElementById('mBoardHead').textContent = mK() ? 'Every winning margin, one kind at a time' : 'Won by runs, and by an innings and runs'; mFolds();
   if(state.mview==='bar'){ if(!isRing()) paintBarcode(); dialBuild(); }
   if(grid) document.querySelectorAll('#mGrids .msq').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
@@ -1189,6 +1191,12 @@ const MQ=[
   {l:'Narrowest wins chasing', pick:r=>r.kind==='w', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Fewest wickets left standing first.'},
 ];
 state.mq=null;
+// on a computer the panel sits beside whatever was clicked: the wickets chart, or the runs and innings boards
+function placeMDetail(){ const md=document.getElementById('mdetail'), wb=document.getElementById('mWkBlock'), slot=wb.querySelector('.wkslot'), lay=document.querySelector('#marginsMode > .layout');
+  const wk = innerWidth>1100 && !wb.hidden && /^(w\d+|draw|tie|award)$/.test(state.msel||'');
+  const target = wk ? slot : lay; if(md.parentElement!==target) target.appendChild(md);
+  wb.querySelector('.wklayout').classList.toggle('hasdetail', wk); }
+addEventListener('resize',()=>{ if(typeof placeMDetail==='function' && document.getElementById('mdetail')) placeMDetail(); });
 function mSelect(sel,quiet){
   state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button>`;
   if(/^[ri]:/.test(sel)){ const k=sel[0], n=+sel.slice(2);
@@ -1200,7 +1208,7 @@ function mSelect(sel,quiet){
   else if(sel[0]==='q'){ const Q=MQ[+sel.slice(2)], L=MREC.filter(r=>mpass(r)&&Q.pick(r)).sort(Q.sort), top=Q.n? L.slice(0,Q.n) : L;
     h+=`<div class="dhead"><span class="mtitle">${Q.l}</span></div><h3 class="msec">${Q.n&&L.length>Q.n?`Top ${Q.n} of`:'Matches'} <span class="num">${L.length}</span></h3>`+(Q.note?`<p class="mother" style="margin:0 0 6px">${Q.note}</p>`:'')+(top.length? mItems(top,true) : '<p class="empty">None with these filters.</p>'); }
   else { const lab={draw:'Draws',tie:'Ties',award:'Awarded'}[sel]; h+=`<div class="dhead"><span class="mtitle">${lab}</span></div>`+mSection('Matches', MG[sel], 'None with these filters.'); }
-  d.innerHTML=h; if(!quiet && innerWidth<1100) d.classList.add('open');
+  d.innerHTML=h; d.scrollTop=0; placeMDetail(); if(!quiet && innerWidth<1100) d.classList.add('open');
 }
 const mm=document.getElementById('marginsMode');
 mm.addEventListener('click',e=>{
