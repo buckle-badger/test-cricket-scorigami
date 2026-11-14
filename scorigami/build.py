@@ -1,11 +1,11 @@
-"""Build the Men's Test scorigami from up to three sources.
+"""Build the Men's Test scorigami.
 
 Sources, applied in this order (later sources overwrite earlier ones for the same innings):
-  1. data/test_matches_kaggle.csv   historical base to March 2024. Declarations are INFERRED.
-  2. Cricsheet tests_male_json.zip  men's Tests from 2001, updated after every match. Exact.
-  3. data/statsguru*.csv            optional manual export from Cricinfo Statsguru. Exact, full history.
-  3b. data/cricinfo_check.json      scorecard check read from Cricinfo in the browser. Exact.
-  4. data/overrides.csv             your own corrections (match_id, innings, ending[, runs, wickets], note).
+  1. data/test_matches_kaggle.csv   historical base to March 2024 (Kaggle, Apache 2.0). Endings inferred.
+  2. data/cricinfo_new.json         Tests after March 2024, checked by hand against scorecards.
+  3. Cricsheet tests_male_json.zip  men's Tests from 2001, updated after every match (ODC-By). Exact.
+  4. data/cricinfo_check.json       innings endings checked by hand against scorecards.
+  5. data/overrides.csv             corrections (match_id, innings, ending[, runs, wickets], note).
 
 Every overwrite that changes runs, wickets or the ending is logged to out/checks.csv,
 which is how the inferred CSV data gets checked against the exact sources.
@@ -295,47 +295,6 @@ def fetch_cricsheet(dest: Path) -> Path:
     return dest
 
 
-# ---------------------------------------------------------------- 3. Statsguru export
-SCORE_RE = re.compile(r"^(\d+)(?:/(\d+))?(d)?$")
-
-
-def load_statsguru(store: Store, path: Path) -> int:
-    n = 0
-    with open(path, newline="", encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            m = re.search(r"/match/(\d+)", row.get("match_link", "")) or re.search(r"(\d{4,})", row.get("match_link", ""))
-            sc = SCORE_RE.match(row.get("Score", "").strip())
-            if not m or not sc or not row.get("Inns", "").strip().isdigit():
-                continue  # DNB, forfeited, abandoned
-            mid, inn = m.group(1), int(row["Inns"])
-            runs = int(sc.group(1))
-            wk = int(sc.group(2)) if sc.group(2) else None
-            res = row.get("Result", "").strip().lower()
-            if sc.group(3): how = "declared"
-            elif sc.group(2) is None: how = "allout" if (wk is None or wk == 10) else "allout_short"
-            elif res == "won": how = "chase"
-            elif res == "draw": how = "draw"
-            else: how = "other"
-            bat, opp = team(row["Team"]), team(row["Opposition"])
-            try:
-                dt = datetime.strptime(row["Start Date"].strip(), "%d %b %Y").date().isoformat()
-            except (KeyError, ValueError):
-                dt = None
-            store.add_match(mid, date=dt, venue=row.get("Ground", ""),
-                            result={"won": f"{bat} won", "lost": f"{opp} won", "draw": "Match drawn",
-                                    "tied": "Match tied"}.get(res, ""))
-            rec = {"bat": bat, "opp": opp, "inn": inn, "runs": runs, "wkts": wk, "how": how}
-            if how == "allout" and wk is None:
-                # Statsguru shows all-outs without a wicket count; take it from an earlier source
-                old = store.inn.get((mid, inn))
-                if old and old.get("wkts") is not None:
-                    rec["wkts"] = old["wkts"]
-                    rec["how"] = "allout" if old["wkts"] >= 10 else "allout_short"
-            store.put(mid, inn, rec, "statsguru")
-            n += 1
-    return n
-
-
 # ---------------------------------------------------------------- 2b. Tests after the CSV, read from Cricinfo
 def load_cricinfo_new(store: Store, path: Path) -> int:
     """{match_id: {test, date, town, state, status, toss, choice (1 bat, 2 bowl), teams,
@@ -593,8 +552,6 @@ def main(argv=None):
     ap.add_argument("--no-download", action="store_true", help="don't fetch Cricsheet; use data/tests_male_json.zip")
     ap.add_argument("--csv", default=DATA / "test_matches_kaggle.csv", type=Path)
     ap.add_argument("--cricsheet", default=DATA / "tests_male_json.zip", type=Path)
-    ap.add_argument("--statsguru", default=str(DATA / "statsguru*.csv"),
-                    help="Statsguru export(s); a glob, so several partial exports can sit side by side")
     a = ap.parse_args(argv)
 
     store = Store()
@@ -610,9 +567,6 @@ def main(argv=None):
             print(f"! Cricsheet download failed: {e}", file=sys.stderr)
     if a.cricsheet.exists():
         seen["cricsheet_matches"] = load_cricsheet(store, a.cricsheet)
-    sg = sorted(Path(a.statsguru).parent.glob(Path(a.statsguru).name))
-    if sg:
-        seen["statsguru_innings"] = sum(load_statsguru(store, p) for p in sg)
     cc = DATA / "cricinfo_check.json"
     if cc.exists():
         seen["cricinfo_checked"] = load_cricinfo_check(store, cc)
