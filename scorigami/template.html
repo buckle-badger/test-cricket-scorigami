@@ -27,7 +27,7 @@
   color-scheme: light;
   --bg:#f4f6f3; --surface:#ffffff; --ink:#131714; --ink-2:#4a524c; --muted:#78807a; --line:#d8ddd7; --accent:#1d5a43;
   --out:#4f806d; --out-ink:#ffffff; --not:#f6f1e3; --not-ink:#2b2a24; --not-edge:#5c5a50; --never:#f2c9ca; --never-ink:#a3111a; --never-edge:#cf4a53; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
-  --e0:#2f5e4f; --e1:#86a89b; --e2:#2a78d6; --e3:#7357d6; --e4:#eda100; --e5:#8a8f8b; --e6:#2a78d6;
+  --e0:#2f5e4f; --e1:#86a89b; --e2:#2a78d6; --e3:#7357d6; --e4:#eda100; --e5:#8a8f8b; --e6:#2a78d6; --e7:#1f9a8a;
   --q1:#cde2fb; --q2:#9ec5f4; --q3:#6da7ec; --q4:#3987e5; --q5:#256abf; --q6:#184f95; --q7:#0d366b; --q0:#eef0ec;
   --qi1:#131714; --qi2:#131714; --qi3:#131714; --qi4:#ffffff; --qi5:#ffffff; --qi6:#ffffff; --qi7:#ffffff; --dot:#131714;
   --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -36,7 +36,7 @@
   color-scheme: dark;
   --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
   --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
-  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
+  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5; --e7:#3bb3a2;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
   --qi1:#ffffff; --qi2:#ffffff; --qi3:#ffffff; --qi4:#ffffff; --qi5:#131714; --qi6:#131714; --qi7:#131714; --dot:#f6f1e3;
 }}
@@ -44,7 +44,7 @@
   color-scheme: dark;
   --bg:#111412; --surface:#1a1e1b; --ink:#eef1ee; --ink-2:#b9c0bb; --muted:#8a928c; --line:#2d332f; --accent:#7fc8a5;
   --out:#4f806d; --out-ink:#ffffff; --not:#ece5d2; --not-ink:#2b2a24; --not-edge:#6b6656; --never:#4a1e21; --never-ink:#ffb4b8; --never-edge:#c2434d; --never-cb:#e69f00; --never-cb-ink:#2a1a00;
-  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5;
+  --e0:#4f8b76; --e1:#8fb3a6; --e2:#3987e5; --e3:#9a85e9; --e4:#c98500; --e5:#7b807c; --e6:#3987e5; --e7:#3bb3a2;
   --q1:#184f95; --q2:#1c5cab; --q3:#256abf; --q4:#3987e5; --q5:#6da7ec; --q6:#9ec5f4; --q7:#cde2fb; --q0:#222724;
   --qi1:#ffffff; --qi2:#ffffff; --qi3:#ffffff; --qi4:#ffffff; --qi5:#131714; --qi6:#131714; --qi7:#131714; --dot:#f6f1e3;
 }
@@ -136,7 +136,7 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .opt .zeronote{display:none;color:var(--muted);font-weight:400} .opt.zero:not(.blocked){opacity:.45} .opt.zero:not(.blocked) .zeronote{display:inline} .opt.blocked{opacity:.5} .opt.blocked .selfnote{display:inline} .opt.blocked .only,.opt.blocked .cnt{visibility:hidden}
 .yrrow{display:flex;align-items:center;gap:8px;padding:6px 6px 2px;font-size:13.5px} .yrrow input{width:5.2em;font:15px var(--mono);padding:5px 6px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)} .yrrow>span:first-child{font-weight:600}
 .yrhint{margin:2px 6px 4px;font-size:12px;color:var(--muted)}
-.pop .opt.short{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:6px}
+@media (min-width:701px){ #pop-end{min-width:330px} }   /* three layers deep: give the labels room */
 .pop .opt.short small{color:var(--muted);font-weight:400}
 .viewrow .glabel{font-size:12.5px;color:var(--ink);font-weight:700}
 .viewrow .seg{border:1.5px solid var(--accent);border-radius:10px;padding:3px;gap:3px;background:var(--surface)}
@@ -523,7 +523,7 @@ html,body{overflow-x:clip}
 @keyframes shake{0%,100%{transform:none}20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-4px)}60%{transform:translate(-5px,2px)}80%{transform:translate(3px,-1px)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.boom .cell{transform:none;opacity:1}}
 
-/* time travel */
+/* timeline */
 :root{--fresh:#d39b00} .cb .cell.fresh{outline-color:var(--ink)!important}
 .ttbar{display:flex;flex-direction:column;gap:6px;padding:10px 12px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ttbar.on{border-color:var(--fresh);box-shadow:inset 3px 0 0 var(--fresh)}
@@ -531,7 +531,6 @@ html,body{overflow-x:clip}
 .ttrow{flex-wrap:nowrap}
 .ttseg button{padding:5px 12px;font-size:13px}
 .ttbtn{flex:none;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);width:32px;height:32px;border-radius:50%;font:700 14px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
-.ttbtn.ttplay{background:var(--accent);color:var(--surface)}
 .ttbtn:hover{filter:brightness(1.1)}
 .ttnow{margin-left:auto}
 .ttend{display:inline-flex;align-items:center;gap:3px;flex:none}
@@ -556,10 +555,6 @@ html,body{overflow-x:clip}
 /* on a computer the time-travel block sits inline in the filters box, not as a pop-up */
 @media (min-width:701px){ .ttpop{position:static!important;display:block!important;min-width:0;padding:0;border:0;box-shadow:none;background:none;z-index:auto} .ttpop>.pophead,.ttpop>.popfoot{display:none} }
 @media (max-width:700px){ .ttpop .ttbar{border:0;box-shadow:none;background:none;padding:4px 0} .ttpop .tttop .glabel{display:none} .ttpop{max-height:none} .tttick.minor{display:none} .ttend input{width:2.9em;font-size:18px} .ttarr{width:24px} .phonebar{grid-template-columns:1fr 1fr 1fr!important} .pbtn{font-size:13px!important;padding:10px 8px!important;gap:5px!important} .ttsub{display:none} }
-.ttmini{position:fixed;right:18px;bottom:18px;z-index:65;display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1.5px solid var(--accent);border-radius:999px;background:var(--surface);box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.ttmini[hidden]{display:none}
-.ttmini b{font:700 20px/1 var(--display);color:var(--ink)}
-@media (max-width:700px){ .ttmini{right:auto;left:50%;transform:translateX(-50%);bottom:14px} }
 .ctip{margin-left:auto;align-self:center;font-size:13.5px;color:var(--ink-2)}
 .ctip .linkbtn{font-size:13.5px}
 .sechead{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;margin:30px 0 10px;padding-top:16px;border-top:2px solid var(--line)}
@@ -570,7 +565,8 @@ html,body{overflow-x:clip}
 .controls.opts.inboard{margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 @media (min-width:701px){ .controls.opts.inboard{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 22px} .controls.opts.inboard .group>.chip{flex:0 0 auto;white-space:nowrap} .controls.opts.inboard #jump,.controls.opts.inboard #mjump{flex:0 0 auto;width:90px} }
 .latestlink{border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:999px;padding:7px 14px;font:600 14px var(--body);cursor:pointer}
-.latestlink:hover{background:var(--accent);color:var(--surface)}
+.latestlink:hover:not(:disabled){background:var(--accent);color:var(--surface)}
+.latestlink:disabled{opacity:.4;cursor:default}
 @media (max-width:700px){ .sechead .latestlink{flex:1 1 100%} }
 @media (max-width:700px){ .ctip{margin:2px 0 0;flex-basis:100%} }
 .kpi[data-ka]{cursor:pointer;position:relative;transition:transform .12s, box-shadow .12s}
@@ -630,7 +626,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div>
     <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><div class="hbtns"><button class="helpbtn sharebtn" id="shareBtn" type="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true">↗</span> Share</button><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button><div class="sharepop" id="sharePop" hidden role="menu"></div></div></div>
     <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, the term has since been taken up by fans of other sports. This is the Test cricket version, in two parts: the final run total of every men’s Test innings and how it ended, and the margin every men’s Test has been won by.</p>
-    <p class="lead invite">Dig in: almost everything below is clickable. Pick any total or margin to see the innings or matches behind it, or wind the clock back with time travel. New here? <button class="linkbtn helpopen" type="button">See how it works</button></p>
+    <p class="lead invite">Dig in: almost everything below is clickable. Pick any total or margin to see the innings or matches behind it, or use the timeline to look at any year or span of years. New here? <button class="linkbtn helpopen" type="button">See how it works</button></p>
     <div class="modebar"><div class="modeswitch" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true"><b>Innings totals</b><small>Every score a side has finished on</small></button><button data-m="margins" aria-pressed="false"><b>Winning margins</b><small>Every result a Test has been won by</small></button></div></div>
     <h2 class="kicker">Every single total a men’s Test innings has ended on.</h2>
   </div>
@@ -646,11 +642,11 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
       <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="dial" aria-pressed="false">Dial</button>
     </div></div>
 </div>
-<div class="phonebar"><button class="pbtn" id="fb-hubt" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountt"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqt" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttt" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Time travel</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactt"></div>
-<div class="optrow"><button class="ftoggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filtersBox"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, time travel, and quick questions</small><b id="fcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
+<div class="phonebar"><button class="pbtn" id="fb-hubt" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountt"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqt" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttt" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Timeline</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactt"></div>
+<div class="optrow"><button class="ftoggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filtersBox"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, timeline, and quick questions</small><b id="fcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
 <div class="filters" id="filtersBox" aria-label="Filters"><div class="pop hub" id="pop-hubt" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowst"></div><div class="popfoot"><button class="linkbtn" data-hubreset="t" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqt" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistt"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
   <div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="resetBtn">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="fbar"></div></div>
-  <div class="pop hub ttpop" id="pop-ttt" hidden role="dialog" aria-label="Time travel"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Time travel</b></div><div class="ttbar" data-tt="t"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
+  <div class="pop hub ttpop" id="pop-ttt" hidden role="dialog" aria-label="Timeline"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Timeline</b></div><div class="ttbar" data-tt="t"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
   <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
 </div>
 <div class="sechead"><h2 class="msect" id="tBoardHead">Every innings total</h2><button class="latestlink" type="button"><span aria-hidden="true">☰</span> Latest scorigamis <span aria-hidden="true">›</span></button></div>
@@ -689,10 +685,10 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="mViewSeg"><button data-mv="grid" aria-pressed="true">Grids</button><button data-mv="list" aria-pressed="false">Ranked wins</button><button data-mv="table" aria-pressed="false">Table</button><button data-mv="rings" aria-pressed="false">Wagon wheel</button><button data-mv="bar" aria-pressed="false">Dial</button></div></div>
 </div>
-<div class="phonebar"><button class="pbtn" id="fb-hubm" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountm"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqm" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttm" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Time travel</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactm"></div>
-<div class="optrow"><button class="ftoggle" id="mftoggle" type="button" aria-expanded="false" aria-controls="mFilters"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, time travel, and quick questions</small><b id="mfcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
+<div class="phonebar"><button class="pbtn" id="fb-hubm" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountm"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqm" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttm" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Timeline</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactm"></div>
+<div class="optrow"><button class="ftoggle" id="mftoggle" type="button" aria-expanded="false" aria-controls="mFilters"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, timeline, and quick questions</small><b id="mfcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
 <div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="pop hub" id="pop-hubm" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowsm"></div><div class="popfoot"><button class="linkbtn" data-hubreset="m" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqm" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistm"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
-  <div class="pop hub ttpop" id="pop-ttm" hidden role="dialog" aria-label="Time travel"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Time travel</b></div><div class="ttbar" data-tt="m"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
+  <div class="pop hub ttpop" id="pop-ttm" hidden role="dialog" aria-label="Timeline"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Timeline</b></div><div class="ttbar" data-tt="m"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
   <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
 <div class="sechead"><h2 class="msect" id="mBoardHead">Every winning margin</h2><button class="latestlink" type="button"><span aria-hidden="true">☰</span> Latest scorigamis <span aria-hidden="true">›</span></button></div>
 <div class="layout">
@@ -738,7 +734,6 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <p id="copy">© <span id="copyYears">2026</span> BuckleBadger. All rights reserved. Match data remains under its sources’ own terms.</p>
   <p id="updated" style="color:var(--muted)"></p>
 </footer>
-<div class="ttmini" id="ttMini" hidden><button class="ttbtn ttplay" type="button" data-mini aria-label="Pause"></button><b class="num" id="ttMiniY"></b></div>
 <div id="fnote" class="fnote" role="dialog" aria-live="polite" aria-labelledby="fnoteT" hidden><b id="fnoteT">Your filters have changed:</b><ul></ul><div class="fnbtns"><button class="linkbtn" id="fnClear" type="button">Clear all filters</button><button class="chip" id="fnOk" type="button">OK</button></div></div>
 <dialog id="help" aria-labelledby="helpTitle"><div class="helpin">
   <div class="helphead"><h2 id="helpTitle">How it works</h2><button class="helpx" aria-label="Close">×</button></div>
@@ -762,7 +757,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <p>Shades everything that has happened in blue by how often; the Grids view also prints the count. On totals, a dot (or a dark outline on the wheel and dial) marks totals never finished all out.</p>
   <div class="heatdemo"><b>Totals</b><div class="bands" id="heatDemoT"></div><b>Margins</b><div class="bands" id="heatDemoM"></div></div>
   <h3>High-contrast colours</h3>
-  <p>Turns the scorigamis orange, for anyone who finds red and green hard to tell apart. Both switches are under <b>Display</b>, at the top of the board.</p>
+  <p>Turns the scorigamis orange, for anyone who finds red and green hard to tell apart. Both switches are under <b>Display</b>, just above the colour key, and work on Grids, Wagon wheel and Dial.</p>
 
   <h2>Finding your way around</h2>
   <h3>The views</h3>
@@ -786,19 +781,18 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <p>Choose one from the list, a tile, <b>Go to</b> or <b>Surprise me</b>, and the board points to it in whatever view you’re in: a square flashes, a slice pulses, the dial spins round, a row lights up. It only scrolls if it needs to, and never changes your view.</p>
   <h3>Options and sharing</h3>
   <ul>
-    <li><b>Show options</b> opens the filters, time travel and quick questions. They start closed, and the site remembers your choice.</li>
+    <li><b>Show options</b> opens the filters, timeline and quick questions. They start closed, and the site remembers your choice. On a phone, each has its own button.</li>
     <li><b>Share</b> opens your device’s share menu, or offers <b>Copy link</b> and <b>Email it</b>.</li>
   </ul>
 
-  <h2>Time travel</h2>
-  <p class="hlead">Wind the clock back: everything then counts only what happened in the years you pick.</p>
+  <h2>Timeline</h2>
+  <p class="hlead">Pick a year or a span of years, and everything counts only what happened then.</p>
   <dl class="hdl">
     <dt>One year</dt><dd>A single handle: drag it, use ‹ ›, or type a year</dd>
     <dt>Range</dt><dd>Two handles, each with its own year box and ‹ › at its own end</dd>
-    <dt>▶ Play</dt><dd>One year walks along; a range grows a year at a time from its left end, so leave that at 1877 to watch everything build up. A small player follows you down the page while it plays</dd>
   </dl>
   <ul>
-    <li><b>Gold outlines</b> mark anything that happened for the first time ever in your years. With the left end at the start, it’s just the last year’s, tagged <b>new</b> in the list.</li>
+    <li><b>Gold outlines</b> mark anything that happened for the first time ever in your years. If they start at the very beginning (when everything would be a first), only the last year’s are outlined, and tagged <b>new</b> in the list.</li>
     <li>Click the bar to move the nearer handle; arrow keys move a year, Page Up/Down ten. <b>All years</b> resets.</li>
     <li>It’s the same as the years under <b>Era</b>, and works with your filters.</li>
   </ul>
@@ -809,7 +803,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
     <li><b>Teams:</b> one side for all its matches, or two or more for only the matches between them (e.g. Australia v West Indies).</li>
     <li><b>Batting side</b> / <b>Bowling side</b> (totals) and <b>Winner</b> / <b>Loser</b> (margins) can’t be the same side, so one greys out the other.</li>
     <li><b>Host country</b> is where it was played (Caribbean grounds count as West Indies, Cardiff as England, Belfast and Dublin as Ireland). <b>Home or away</b> follows the batting side for totals and the winner for margins; <i>neutral</i> means neither side’s country.</li>
-    <li><b>How it ended</b> has a <b>Not all out</b> shortcut. A total can be green and cream at once, so this shows exactly which totals ended which way.</li>
+    <li><b>How it ended</b> goes in layers: <b>All out</b> (all ten wickets, or short-handed and why) and <b>Not all out</b> (declared; or the match ended: a chase, a draw, or the match awarded). Tick a layer to tick everything under it. A green total may also have been reached not out, so this is how to see every way a total has ended.</li>
     <li><b>Innings</b> separates a 3rd innings following on. <b>Toss</b> and <b>Result</b> are from the batting side’s point of view (for margins, the winner’s). Draws and ties drop out of margins once Winner, Loser, Toss, Follow-on or Batted is set.</li>
     <li><b>Switching halves:</b> Teams, Era, Host, Home or away, Toss and the sides carry across (batting and bowling side become winner and loser). The rest wait in their own half. A note says what’s on.</li>
     <li><b>Quick questions</b> set the filters for you and show the answer as a ranked list.</li>
@@ -819,10 +813,10 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <h3>How innings ended</h3>
   <dl class="hdl">
     <dt>All out</dt><dd>Bowled out. <b>Short-handed</b> means fewer than ten wickets fell because a batter was absent, ill or retired hurt. A few scorecards say “retired not out” for this; those are marked *</dd>
-    <dt>Declared</dt><dd>Closed by the batting side. The only men’s Test forfeits (Centurion, 2000) count as declarations on 0: England’s as 0/0d*, South Africa’s as forfeited*</dd>
+    <dt>Declared</dt><dd>Closed by the batting side. The only innings ever forfeited in a men’s Test (both at Centurion, 2000) count as declarations on 0: England’s, scored as 0/0d*, and South Africa’s*</dd>
     <dt>Chased</dt><dd>The side batting last reached its target</dd>
     <dt>Drawn</dt><dd>Still batting at the end of a drawn match, including the 1939 “timeless” Test in Durban, abandoned with England 42 short because they had a boat to catch</dd>
-    <dt>Other</dt><dd>England’s 298/4 at The Oval in 2006, when the match was awarded after Pakistan refused to take the field</dd>
+    <dt>Match awarded</dt><dd>England’s 298/4 at The Oval in 2006. Pakistan refused to take the field after tea on day four, so the umpires awarded England the match (now Law 16.3). The only Test decided this way, and not the same as forfeiting an <i>innings</i>.</dd>
   </dl>
   <h3>How margins work</h3>
   <dl class="hdl">
@@ -838,7 +832,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <ul>
     <li><b>Scorigami</b> comes from Jon Bois: his <a href="https://www.sbnation.com/2014/9/8/6110147/pete-carroll-seahawks-scoragami-weird-nfl-scores" target="_blank" rel="noopener">2014 SB Nation article</a> and the 2016 video <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">“Chart Party: Scorigami”</a>.</li>
     <li><b>Match data</b> to March 2024: Bhuvanesh Prasad’s <a href="https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023">Test Cricket Matches Dataset</a> on Kaggle (<a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>). Since 2001 and every new Test: <a href="https://cricsheet.org">Cricsheet</a> (<a href="https://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution</a>).</li>
-    <li><b>Checked against</b> <a href="https://www.espncricinfo.com">ESPNcricinfo</a> scorecards; every innings links to its scorecard.</li>
+    <li><b>Checked against</b> <a href="https://www.espncricinfo.com">ESPNcricinfo</a> scorecards, which also fill any gaps; every innings links to its scorecard.</li>
     <li>Scores and results are facts; the classifications and design are this site’s own. Not affiliated with Jon Bois, SB Nation, Kaggle, Cricsheet, ESPNcricinfo or the ICC.</li>
   </ul>
 </div></dialog>
@@ -852,8 +846,9 @@ const HOW = [
   {k:'declared', label:'Declared', short:'declared', v:'--e2'},
   {k:'chase', label:'Successful chase', short:'successful chase', v:'--e3'},
   {k:'draw', label:'Match drawn (batting at the end)', short:'still batting when the match was drawn', v:'--e4'},
-  {k:'other', label:'Other', short:'other', v:'--e5'},
-  {k:'forfeit', label:'Forfeited (0/0d)', short:'forfeited', v:'--e2'}
+  {k:'other', label:'Other', short:'other', v:'--e5'},   // only appears if a curveball ending ever turns up
+  {k:'forfeit', label:'Forfeited (0/0d)', short:'forfeited', v:'--e2'},
+  {k:'awarded', label:'Match awarded', short:'match awarded', v:'--e7'}
 ];
 const WHY = ['Absent hurt','Retired hurt','Ill','Other reason','Several reasons','Not recorded'];
 const note = r => (DATA.notes||{})[r[0]+'-'+r[3]];
@@ -936,17 +931,18 @@ const FILTERS = [   // who, when, then the match as it unfolds
   {id:'inn', label:'Innings', key:r=>String(ix(r)), opts:[
     {v:'0',l:'1st'},{v:'1',l:'2nd'},{l:'3rd',kids:[{v:'2',l:'Normal'},{v:'3',l:'Following on',short:'3rd (following on)'}]},{v:'4',l:'4th'}]},
   {id:'end', label:'How it ended', key:r=> r[6]===1?'s'+why(r):String(r[6]), opts:[
-    {l:'All out',c:'--e0',kids:[{v:'0',l:'All ten wickets'},...WHY.map((w,i)=>({v:'s'+i,l:'Short-handed: '+w.toLowerCase()}))]},
-    {l:'Declared',c:'--e2',kids:[{v:'2',l:'Declared'},{v:'6',l:'Forfeited (0/0d)'}]},{v:'3',l:'Successful chase',c:'--e3'},{v:'4',l:'Match drawn (batting at the end)',c:'--e4'},{v:'5',l:'Other',c:'--e5'}]},
+    {l:'All out',c:'--e0',kids:[{v:'0',l:'All ten wickets'},{l:'Short-handed',kids:WHY.map((w,i)=>({v:'s'+i,l:w,short:'Short-handed: '+w.toLowerCase()}))}]},
+    {l:'Not all out',kids:[{l:'Declared',c:'--e2',kids:[{v:'2',l:'Declared'},{v:'6',l:'Forfeited (0/0d)'}]},
+      {l:'Match ended',kids:[{v:'3',l:'Successful chase',c:'--e3'},{v:'4',l:'Batting at the close (drawn)',c:'--e4',short:'Match drawn'},{v:'7',l:'Match awarded',c:'--e7'}]},{v:'5',l:'Other',c:'--e5'}]}]},   // awarded: the other side refused to play (Law 16.3); 'Other' is pruned away unless something lands there
   {id:'fo', label:'Follow-on', key:r=>String(fo(r)), opts:[{v:'0',l:'Match with follow-on'},{v:'1',l:'No follow-on'}]},
   {id:'res', label:'Result', key:r=>String(r[9]), opts:['Batting side won','Bowling side won','Drawn','Tied'].map((l,i)=>({v:String(i),l}))},
 ];
 // count every leaf, drop leaves that never occur, then drop parents left empty
 FILTERS.forEach(f=>{
   const cnt={}; DATA.inn.forEach(r=>{ (f.keys? f.keys(r) : [f.key(r)]).forEach(k=>cnt[k]=(cnt[k]||0)+1); });
-  const prune=o=>{ if(o.kids){ o.kids=o.kids.filter(k=>cnt[k.v]); o.n=o.kids.reduce((a,k)=>a+cnt[k.v],0); o.kids.forEach(k=>k.n=cnt[k.v]); return o.kids.length>0; } o.n=cnt[o.v]||0; return o.n>0; };
+  const prune=o=>{ if(o.kids){ o.kids=o.kids.filter(prune); o.n=o.kids.reduce((a,k)=>a+k.n,0); return o.kids.length>0; } o.n=cnt[o.v]||0; return o.n>0; };
   f.opts=f.opts.filter(prune);
-  f.leaves=f.opts.flatMap(o=>o.kids?o.kids.map(k=>({...k,parent:o})):[o]);
+  f.leaves=[]; const flat=(o,par)=>{ if(o.kids){ f.groups.push(o); o.kids.forEach(k=>flat(k,o)); } else f.leaves.push({...o,parent:par}); }; f.groups=[]; f.opts.forEach(o=>flat(o,null));
   state.fsel[f.id]=new Set(f.leaves.map(l=>l.v));
 });
 const fOk=(f,r)=> f.test ? f.test(r,state.fsel[f.id],f) : state.fsel[f.id].has(f.key(r));
@@ -959,7 +955,7 @@ function liveCounts(){ const C={}; FILTERS.forEach(f=>C[f.id]={});
     if(n===0) FILTERS.forEach(add); else if(n===1) add(bad); }
   return C; }
 function info(s){
-  let star=false, starN=false; const c=[0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null, firstOut=null;
+  let star=false, starN=false; const c=[0,0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null, firstOut=null;
   for(const r of byScore[s]){ if(!pass(r)) continue; c[r[6]]++; n++; if(r[6]===6) star=true; else if(note(r)) starN=true; ii[ix(r)]++; rr[r[9]]++; if(r[6]===1) w[why(r)]++; if(first===null||r[0]<first[0]) first=r; if(last===null||r[0]>last[0]) last=r; if(r[6]<=1 && (firstOut===null||r[0]<firstOut[0])) firstOut=r; }
   const out=c[0]+c[1];
   return {star,starN,c,w,ii,rr,n,out,not:n-out,status: out?'out': n?'not':'never', first,last,firstOut};
@@ -1150,7 +1146,8 @@ function buildMargins(){
     return h; };
   document.getElementById('mSvgR').innerHTML=wheel('r',topR+1,maxR); document.getElementById('mSvgI').innerHTML=wheel('i',topI+1,maxI);
 }
-function mFixShow(){ const v=state.mview, hb=document.getElementById('mHeatBtn'), on=v!=='list'&&v!=='table'; hb.disabled=!on; hb.title= on? 'Shade each margin by how often it has happened' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
+function mFixShow(){ const v=state.mview, hb=document.getElementById('mHeatBtn'), on=v!=='list'&&v!=='table'; hb.disabled=!on; hb.title= on? 'Shade each margin by how often it has happened' : 'Colours only: try it on Grids, Wagon wheel or Dial';
+  const cb=document.getElementById('mCbBtn'); cb.disabled=!on; cb.title= !on? 'Colours only: try it on Grids, Wagon wheel or Dial' : 'Makes the scorigamis easier to tell apart if you see some colours differently'; }
 const mK=()=> state.mview==='list'||state.mview==='table' ? state.mkind : null;   // the one kind of win Ranked and Table are showing
 const KINDSEG=()=>`<div class="seg kindseg" role="group" aria-label="Kind of win">${[['r','By runs'],['i','By an innings'],['w','By wickets']].map(([k,l])=>`<button data-kind="${k}" aria-pressed="${state.mkind===k}">${l}</button>`).join('')}</div>`;
 function mFolds(){ for(const k of ['r','i','w']){ const shut=state.mfold[k]; document.querySelectorAll(`[data-fold="${k}"]`).forEach(b=>b.setAttribute('aria-expanded',String(!shut)));
@@ -1237,7 +1234,7 @@ function renderMTable(){
   const GRP={r:'Won by runs',i:'Won by an innings and',w:'Won by wickets'}, groups=[]; C.forEach(([id])=>{ const g=id[0]; if(groups.length&&groups.at(-1)[0]===g) groups.at(-1)[1]++; else groups.push([g,1]); });
   const arrow=k=> state.msortK===k?(state.msortD>0?' ▲':' ▼'):'';
   document.getElementById('mTable').innerHTML=`${KINDSEG()}<p class="sorthint">One row per margin; “never” is a scorigami.${show==='r'?' Row 0 holds the two ties.':''} Click a column heading to sort by it; click it again to reverse.</p><table class="mtab"><thead><tr><th class="grp" colspan="${C.length+1}" scope="colgroup">${GRP[groups[0][0]]}</th></tr><tr><th data-k="n" scope="col">Margin${arrow('n')}</th>${C.map(([id,l])=>`<th data-k="${id}" scope="col">${l}${arrow(id)}</th>`).join('')}</tr></thead><tbody>`+
-    rows.map(r=>`<tr data-n="${r.n}"${state.msel===(show==='w'?'w'+r.n: (show==='i'?'i:':'r:')+r.n)?' class="sel"':''}><td class="num"><b>${r.n===0&&show!=='i'?'0 (tie)':r.n}</b></td>${C.map(([id])=>cell(id,r[id])).join('')}</tr>`).join('')+'</tbody></table>';
+    rows.map(r=>`<tr data-n="${r.n}"${state.msel===(show==='w'?'w'+r.n: (show==='i'?'i:':'r:')+r.n)?' class="sel"':''}><td class="num"><b>${r.n===0&&show!=='i'?'0 (tie)':r.n===0?'SL':r.n}</b></td>${C.map(([id])=>cell(id,r[id])).join('')}</tr>`).join('')+'</tbody></table>';
 }
 const MTOP={}; function bcTop(k){ return MTOP[k]??(MTOP[k]=Math.max(...MREC.filter(r=>r.kind===k).map(r=>r.n))); }   // the record margin of each kind
 function paintBarcode(){
@@ -1446,7 +1443,7 @@ const mm=document.getElementById('marginsMode');
 mm.addEventListener('click',e=>{
   if(e.target.closest('[data-mrecent]')){ mSelect(null,true); document.getElementById('mdetail').scrollTop=0; return; }
   if(e.target.closest('#mRecMore')){ state.mRecN+=25; mSelect(null,true); return; }
-  const mrk=e.target.closest('[data-mrk]'); if(mrk){ state.mRecKind=mrk.dataset.mrk||null; state.mRecN=25; mSelect(null,true); return; }
+  const mrk=e.target.closest('[data-mrk]'); if(mrk){ const k=mrk.dataset.mrk||null; state.mRecKind= k===state.mRecKind? null : k; state.mRecN=25; mSelect(null,true); return; }
   const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower'), o=e.target.closest('[data-o]'), ds=e.target.closest('[data-sel]');
   if(sq) mSelect(sq.dataset.k+':'+sq.dataset.n); else if(tw) mSelect('w'+tw.dataset.w); else if(o){ e.preventDefault(); mSelect(o.dataset.o); } else if(ds){ e.preventDefault(); if(ds.closest('#mdetail')) mFocus(ds.dataset.sel); else mSelect(ds.dataset.sel); }
   const rs=e.target.closest('#mRankSeg button'); if(rs){ state.mbig=rs.dataset.b==='1'; state.mrankN=100; renderMList(); return; }
@@ -1688,7 +1685,7 @@ function showRing(){
 let sortKey='s', sortDir=1;
 function renderTable(){
   const rows=[]; for(let s=0;s<NT;s++){const o=cache[s]; rows.push({s,n:o.n,c:o.c,ii:o.ii,f:o.first?+M[o.first[0]][1]:null,l:o.last?+M[o.last[0]][1]:null});}
-  const COLS=[['c0','All out',c=>c[0]+c[1],'All out'],['c1','↳ short',c=>c[1],'of which short-handed'],['c2','Declared',c=>c[2]+c[6],'Declared'],['c6','↳ forfeit',c=>c[6],'of which forfeited'],['c3','Chased',c=>c[3],'Successful chase'],['c4','Drawn',c=>c[4],'Match drawn (batting at the end)'],['c5','Other',c=>c[5],'Other']];
+  const COLS=[['c0','All out',c=>c[0]+c[1],'All out'],['c1','↳ short',c=>c[1],'of which short-handed'],['c2','Declared',c=>c[2]+c[6],'Declared'],['c6','↳ forfeit',c=>c[6],'of which forfeited'],['c3','Chased',c=>c[3],'Successful chase'],['c4','Drawn',c=>c[4],'Match drawn (batting at the end)'],['c7','Awarded',c=>c[7],'Match awarded: the other side refused to play'],['c5','Other',c=>c[5],'Any other ending']].filter(([k,,f])=> k!=='c5' || cache.some(o=>o.c[5]));
   const colOf=k=>COLS.find(x=>x[0]===k);
   const key = r=> sortKey==='s'?r.s: sortKey==='n'?r.n: sortKey==='f'?(r.f??9999): sortKey==='l'?(r.l??-1): sortKey[0]==='i'? r.ii[+sortKey[1]-1] : colOf(sortKey)? colOf(sortKey)[2](r.c) : 0;
   rows.sort((a,b)=>(key(a)-key(b))*sortDir || a.s-b.s);
@@ -1759,7 +1756,7 @@ function renderDetail(){
   D.innerHTML=h;
 }
 document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('[data-recent]')){ state.sel=null; state.recNever=false; paintAll(false); renderDetail(); document.getElementById('detail').scrollTop=0; return; } if(e.target.closest('#recMore')){ state.recN+=25; renderDetail(); return; }
-  const rk=e.target.closest('[data-rk]'); if(rk){ state.recKind=rk.dataset.rk||null; state.recN=25; renderDetail(); return; } const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); goTo(+a.dataset.go);}});
+  const rk=e.target.closest('[data-rk]'); if(rk){ const k=rk.dataset.rk||null; state.recKind= k===state.recKind? null : k; state.recN=25; renderDetail(); return; } const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); goTo(+a.dataset.go);}});
 
 /* ---------- tooltip & selection ---------- */
 const tip=document.getElementById('tip');
@@ -1817,22 +1814,22 @@ jump.addEventListener('change',jumpGo);
 
 /* ---------- controls ---------- */
 /* ---------- filter dropdowns ---------- */
+const leavesOf=o=> o.kids? o.kids.flatMap(leavesOf) : [o];   // every leaf under a group, however deep
 function leafLabel(f,l){ return l.short || (l.parent? (f.id==='end'? l.l : f.id==='toss'? l.parent.l.replace(' toss','')+', '+l.l.toLowerCase() : l.parent.l+' '+l.l.toLowerCase()) : l.l); }
 function summary(f){
   const S=state.fsel[f.id]; if(S.size===f.leaves.length) return 'All'; if(S.size===0) return 'None';
-  if(f.id==='end'){ const nn=f.leaves.filter(l=>!END_OUT(l.v)); if(S.size===nn.length && nn.every(l=>S.has(l.v))) return 'Not all out'; }
-  for(const o of f.opts) if(o.kids && o.kids.every(k=>S.has(k.v)) && S.size===o.kids.length) return o.l;
+  for(const o of f.groups){ const L=leavesOf(o); if(S.size===L.length && L.every(k=>S.has(k.v))) return o.l; }
   const on=f.leaves.filter(l=>S.has(l.v)); if(on.length<=2) return on.map(l=>leafLabel(f,l)).join(', ');
   return `${on.length} of ${f.leaves.length}`;
 }
 const END_OUT=v=> v==='0' || v[0]==='s';   // all-out leaves of the How it ended filter
 function optRow(f,o,isParent){
   const c=o.c?`style="--c:var(${o.c})"`:'';
-  return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}<small class="selfnote"> · can’t play themselves</small><small class="zeronote"> · no data</small></span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
+  return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.groups.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}<small class="selfnote"> · can’t play themselves</small><small class="zeronote"> · no data</small></span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.groups.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
 }
 function buildFilters(){
   document.getElementById('fbar').innerHTML = FILTERS.map(f=>`<div class="fwrap"><button class="fbtn" id="fb-${f.id}" data-f="${f.id}" aria-expanded="false" aria-haspopup="true"></button>
-    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}"><div class="pophead"><span class="grab" aria-hidden="true"></span><button class="popback" data-back="hubt" type="button"><span aria-hidden="true">‹</span> All filters</button><b>${f.label}</b></div>${f.id==='era'? '<div class="yrrow"><span>Years</span><input type="number" inputmode="numeric" data-yr="0" placeholder="from" min="1877" max="2100"><span>–</span><input type="number" inputmode="numeric" data-yr="1" placeholder="to" min="1877" max="2100"><button class="linkbtn" type="button" data-yrclear>clear</button></div><p class="yrhint">Or pick decades:</p>' : ''}${f.id==='end'? `<label class="opt short"><input type="checkbox" data-f="end" data-g="not"><i></i><span><b>Not all out</b> <small>(declared, chased, drawn, other)</small></span><span class="cnt">${f.leaves.filter(l=>!END_OUT(l.v)).reduce((a,l)=>a+(l.n||0),0).toLocaleString()}</span><button class="only" data-f="end" data-g="not" type="button">only</button></label>` : ''}${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
+    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}"><div class="pophead"><span class="grab" aria-hidden="true"></span><button class="popback" data-back="hubt" type="button"><span aria-hidden="true">‹</span> All filters</button><b>${f.label}</b></div>${f.id==='era'? '<div class="yrrow"><span>Years</span><input type="number" inputmode="numeric" data-yr="0" placeholder="from" min="1877" max="2100"><span>–</span><input type="number" inputmode="numeric" data-yr="1" placeholder="to" min="1877" max="2100"><button class="linkbtn" type="button" data-yrclear>clear</button></div><p class="yrhint">Or pick decades:</p>' : ''}${(()=>{ const row=o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(row).join('')}</div>` : optRow(f,o,false); return f.opts.map(row).join(''); })()}
     <div class="popfoot"><button class="linkbtn" data-all="${f.id}" type="button">Select all</button><button class="linkbtn" data-none="${f.id}" type="button">Deselect all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
 }
 let LIVE={};
@@ -1846,10 +1843,10 @@ function syncFilters(){
     if(f.id==='team'||f.id==='opp'){ const O=state.fsel[f.id==='team'?'opp':'team']; document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>{ const bl=O.size===1&&O.has(i.dataset.v); i.disabled=bl; i.closest('.opt').classList.toggle('blocked',bl); }); }
     document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>i.checked=S.has(i.dataset.v));
     document.querySelectorAll(`#pop-${f.id} input[data-g]`).forEach(i=>{ const L=vals(f,i), k=L.filter(v=>S.has(v)).length; i.checked=k===L.length; i.indeterminate=k>0&&!i.checked; });
-    document.querySelectorAll(`#pop-${f.id} input[data-p]`).forEach(i=>{ const k=f.opts[+i.dataset.p].kids.filter(x=>S.has(x.v)).length; i.checked=k===f.opts[+i.dataset.p].kids.length; i.indeterminate=k>0&&!i.checked; });
+    document.querySelectorAll(`#pop-${f.id} input[data-p]`).forEach(i=>{ const L=leavesOf(f.groups[+i.dataset.p]), k=L.filter(x=>S.has(x.v)).length; i.checked=k===L.length; i.indeterminate=k>0&&!i.checked; });
   });
 }
-function vals(f,el){ if(el.dataset.g) return f.leaves.filter(l=>!END_OUT(l.v)).map(l=>l.v); return el.dataset.p!==undefined ? f.opts[+el.dataset.p].kids.map(k=>k.v) : [el.dataset.v]; }
+function vals(f,el){ return el.dataset.p!==undefined ? leavesOf(f.groups[+el.dataset.p]).map(k=>k.v) : [el.dataset.v]; }
 function renderActive(){
   const A=document.getElementById('activeBar'); const on=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length);
   if(!on.length){ A.hidden=true; return; }
@@ -1943,7 +1940,8 @@ document.getElementById('voidReset').addEventListener('click',()=>document.getEl
 document.getElementById('mVoidBtn').addEventListener('click',()=>document.getElementById('mReset').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ state.yr=[null,null]; syncYears(); resetSel(); state.preset=null; syncPresets(); refilter(); });
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','table','list','rings','dial'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
-function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
+function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or Dial';
+  const cb=document.getElementById('cbBtn'); cb.disabled=!on; cb.title= !on? 'Colours only: try it on Grids, Wagon wheel or Dial' : 'Makes the three kinds of cell easier to tell apart if you see some colours differently'; }
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
 flip('countBtn','heat',true,false); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
@@ -1986,7 +1984,7 @@ function listHead(noun, n, nw, filt){ const [a,b]=state.yr, m=winMode(), wf=filt
     : (n? `<b>${n}</b> ${noun?'margin':'total'}${n===1?'':'s'} happened for the first time ever ${yrPhrase()}${wf}, outlined on the grid. Newest first.` : (M.some((m,i)=>yrOk(i))? `Nothing happened for the first time ${yrPhrase()}${wf}.` : `No men’s Tests were played ${yrPhrase()}.`));
   return [t,sub]; }
 state.recKind=null;   // null = show all; 'out' / 'not' = only the all-out or not-out ones
-const HOWWORD=['all out','all out, short-handed','declared','chased down','batting when it was drawn','other','forfeited'];
+const HOWWORD=['all out','all out, short-handed','declared','chased down','batting when it was drawn','other ending','forfeited','batting when the match was awarded'];
 const RESWORD=['won','lost','drew','tied'];
 function renderRecent(D){
   if(state.recNever){ renderNever(D); return; }
@@ -2035,12 +2033,12 @@ function kpiGo(el, mode){ const a=el.dataset.ka;
   K.addEventListener('click',e=>{ const g=e.target.closest('.kgo'); if(g){ e.preventDefault(); e.stopPropagation(); const v=g.dataset.kgo; if(m==='t') goTo(+v); else mFocus(v); return; } const t=e.target.closest('[data-ka]'); if(t) kpiGo(t,m); });
   K.addEventListener('keydown',e=>{ const t=e.target.closest('[data-ka]'); if(t && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); kpiGo(t,m); } }); });
 
-/* ---------- time travel: one year, or a range ---------- */
+/* ---------- timeline: one year, or a range ---------- */
 // One year: a single handle that walks along. Range: two handles, each with its own box and arrows at its own end;
 // play and the right-hand arrows grow the range year by year, so it builds up from wherever the left end sits.
 const TICKS=[1900,1925,1950,1975,2000,2025].filter(y=>y>Y0&&y<Y1);
 const ttEnd=(h)=>`<span class="ttend" data-end="${h}"><button class="ttarr" type="button" data-arr="${h}" data-d="-1" aria-label="${['From','To'][h]} year: back one">‹</button><input type="number" inputmode="numeric" data-ttin="${h}" placeholder="${h?Y1:Y0}" min="${Y0}" max="${Y1}" aria-label="${['From','To'][h]} year" enterkeyhint="go"><button class="ttarr" type="button" data-arr="${h}" data-d="1" aria-label="${['From','To'][h]} year: forward one">›</button></span>`;
-document.querySelectorAll('[data-tt]').forEach(b=>{ b.innerHTML=`<div class="tttop"><span class="glabel">Time travel</span><div class="seg ttseg" role="group" aria-label="Time travel mode"><button type="button" data-ttm="one" aria-pressed="false">One year</button><button type="button" data-ttm="range" aria-pressed="true">Range</button></div><button class="ttbtn ttplay" type="button" aria-label="Play through the years"></button><button class="linkbtn ttnow" type="button">All years</button></div>
+document.querySelectorAll('[data-tt]').forEach(b=>{ b.innerHTML=`<div class="tttop"><span class="glabel">Timeline</span><div class="seg ttseg" role="group" aria-label="Timeline mode"><button type="button" data-ttm="one" aria-pressed="false">One year</button><button type="button" data-ttm="range" aria-pressed="true">Range</button></div><button class="linkbtn ttnow" type="button">All years</button></div>
   <div class="ttrow">${ttEnd(0)}<div class="ttsl"><div class="tttrack"><div class="ttfill"></div></div>${TICKS.map(y=>`<span class="tttick${y%50?' minor':''}" style="left:${(y-Y0)/(Y1-Y0)*100}%">${y}</span>`).join('')}<button class="ttthumb" data-h="0" type="button" role="slider" aria-label="From year" aria-valuemin="${Y0}" aria-valuemax="${Y1}"></button><button class="ttthumb" data-h="1" type="button" role="slider" aria-label="To year" aria-valuemin="${Y0}" aria-valuemax="${Y1}"></button></div>${ttEnd(1)}</div>
   <small class="ttsub"></small>`; });
 var ttTimer=null, ttRaf=0, ttDrag=null, ttMode='range';
@@ -2056,16 +2054,9 @@ function syncTT(){ if(ttMode==='one' && !(state.yr[0]!==null && state.yr[0]===st
     B.querySelector('[data-end="0"]').hidden=one;
     B.querySelectorAll('[data-ttin]').forEach(i=>{ const h=+i.dataset.ttin, v= one? b : (h? state.yr[1] : state.yr[0]); if(document.activeElement!==i) i.value= v===null? '' : v; i.setAttribute('aria-label', one? 'Year' : ['From','To'][h]+' year'); });
     B.querySelector('.ttnow').hidden=!on;
-    const p=B.querySelector('.ttplay'); p.textContent= ttTimer? '❚❚' : '▶'; p.setAttribute('aria-label', ttTimer? 'Pause':'Play through the years');
-    const m=winMode(); B.querySelector('.ttsub').textContent = one? `Showing only ${b}. Anything that happened for the first time ever that year is outlined.` : m==='all'? 'Drag either end, use its arrows or type a year. Play builds everything up year by year.' : m==='upto'? `Showing everything up to the end of ${b}. That year’s new scorigamis are outlined.` : a===b? `Showing only ${a}. Anything that happened for the first time ever that year is outlined.` : `Showing ${a}–${b}. Anything that happened for the first time ever in those years is outlined.`; });
+    const m=winMode(); B.querySelector('.ttsub').textContent = one? `Showing only ${b}. Anything that happened for the first time ever that year is outlined.` : m==='all'? 'Drag either end, use its arrows or type a year.' : m==='upto'? `Showing everything up to the end of ${b}. That year’s new scorigamis are outlined.` : a===b? `Showing only ${a}. Anything that happened for the first time ever that year is outlined.` : `Showing ${a}–${b}. Anything that happened for the first time ever in those years is outlined.`; });
   document.querySelectorAll('.ttcount').forEach(c=>c.textContent= on? ttLabel() : '');
-  const mini=document.getElementById('ttMini'); document.getElementById('ttMiniY').textContent=ttLabel(); mini.querySelector('.ttplay').textContent= ttTimer? '❚❚' : '▶'; mini.querySelector('.ttplay').setAttribute('aria-label', ttTimer?'Pause':'Play');
-  ttMiniCheck(); }
-// the mini player: only while playing, and only once the full controls are out of sight
-function ttMiniCheck(){ const mini=document.getElementById('ttMini'); if(!mini) return; if(!ttTimer){ mini.hidden=true; return; }
-  const B=document.querySelector(`[data-tt="${state.mode==='margins'?'m':'t'}"]`), r=B.getBoundingClientRect(), seen = B.offsetParent!==null && r.bottom>0 && r.top<innerHeight;
-  mini.hidden=seen; }
-addEventListener('scroll',()=>{ if(ttTimer) ttMiniCheck(); },{passive:true});
+}
 function applyYR(nx){ if(nx[0]===state.yr[0] && nx[1]===state.yr[1]) return;
   state.yr=nx; state.recN=25; state.mRecN=25;
   if(state.mode==='margins'){ state.msel=null; syncYears(); mRefilter(); } else { state.sel=null; syncYears(); refilter(); } }
@@ -2081,19 +2072,18 @@ function ttSetMode(m){ if(m===ttMode) return; const [a,b]=ttVals(); ttMode=m;
 function ttStep(){ const [a,b]=ttVals(); if(ttMode==='one') setOne(b+1); else setEnd(1,b+1); }
 function ttHalt(){ if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } }
 function ttStop(){ ttHalt(); syncTT(); }
-function ttPlay(){ if(ttTimer){ ttStop(); return; }
-  const [a,b]=ttVals();
-  if(ttMode==='one'){ if(!yrOn() || b>=Y1) setOne(Y0); }
-  else if(b>=Y1) applyYR(state.yr[0]===null? [null,Y0] : [a,a]);   // start again from the left end
-  ttTimer=setInterval(()=>{ if(ttVals()[1]>=Y1){ ttStop(); return; } ttStep(); if(ttVals()[1]>=Y1) ttStop(); else ttMiniCheck(); }, matchMedia('(prefers-reduced-motion: reduce)').matches? 600 : 280);
-  syncTT(); }
 document.addEventListener('click',e=>{
-  if(e.target.closest('#ttMini .ttplay')){ ttPlay(); return; }
   const b=e.target.closest('[data-tt] button'); if(!b || b.classList.contains('ttthumb')) return;
-  if(b.classList.contains('ttplay')) ttPlay();
-  else if(b.dataset.ttm){ ttHalt(); ttSetMode(b.dataset.ttm); }
+  if(b.dataset.ttm){ ttHalt(); ttSetMode(b.dataset.ttm); }
   else if(b.dataset.arr!==undefined){ ttHalt(); const h=+b.dataset.arr, d=+b.dataset.d, [a,c]=ttVals(); if(ttMode==='one') setOne(c+d); else setEnd(h,(h?c:a)+d); syncTT(); }
   else if(b.classList.contains('ttnow')){ ttHalt(); if(ttMode==='one') ttMode='range'; applyYR([null,null]); syncTT(); } });
+// On a computer the list sits beside the board, so the button greys out while the latest list is already showing there
+function syncLatest(){ [['tBoardHead','detail',()=>state.sel===null && !state.recNever],['mBoardHead','mdetail',()=>state.msel===null]].forEach(([h,d,isLatest])=>{
+  const b=document.getElementById(h).parentElement.querySelector('.latestlink'), side=getComputedStyle(document.getElementById(d)).position!=='fixed', off=side && isLatest();
+  b.disabled=off; b.title= off? 'Already showing, beside the board' : ''; }); }
+{ const rd=renderDetail; renderDetail=function(){ const r=rd.apply(this,arguments); syncLatest(); return r; };
+  const ms=mSelect; mSelect=function(){ const r=ms.apply(this,arguments); syncLatest(); return r; }; }
+addEventListener('resize',()=>syncLatest()); syncLatest();
 document.querySelectorAll('.latestlink').forEach(b=>b.addEventListener('click',()=>{ if(state.mode==='margins') mSelect(null); else { state.sel=null; state.recNever=false; paintAll(false); renderDetail(); document.getElementById('detail').classList.add('open'); } }));
 ['t','m'].forEach(m=>document.getElementById('fb-tt'+m).addEventListener('click',e=>{ e.stopPropagation(); openSheet('tt'+m); }));
 document.querySelectorAll('.ttpop [data-close]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); closePops(); }));   // Done on the phone sheet
@@ -2118,7 +2108,6 @@ document.addEventListener('pointermove',e=>{ if(!ttDrag||e.pointerId!==ttDrag.id
 const ttUp=e=>{ if(ttDrag && e.pointerId===ttDrag.id){ ttDrag=null; syncTT(); } };
 document.addEventListener('pointerup',ttUp); document.addEventListener('pointercancel',ttUp);
 document.addEventListener('keydown',e=>{ const t=e.target.closest('.ttthumb'); if(!t) return; const h=+t.dataset.h, [a,b]=ttVals(), d={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1,PageDown:-10,PageUp:10}[e.key];
-  if(e.key===' '){ e.preventDefault(); ttPlay(); return; }
   const v = d!==undefined? (h?b:a)+d : e.key==='Home'? Y0 : e.key==='End'? Y1 : null; if(v===null) return; e.preventDefault(); ttHalt();
   if(ttMode==='one') setOne(v); else setEnd(h,v); syncTT(); });
 syncTT();

@@ -37,9 +37,16 @@ OUT = ROOT / "out"
 DOCS = ROOT / "docs"
 CRICSHEET_URL = "https://cricsheet.org/downloads/tests_male_json.zip"
 
-HOW = ["allout", "allout_short", "declared", "chase", "draw", "other", "forfeit"]
+HOW = ["allout", "allout_short", "declared", "chase", "draw", "other", "forfeit", "awarded"]
+# "other" is kept up our sleeve for any curveball ending we can't classify; the site only shows it if something lands there
 # Why a side was all out with fewer than 10 wickets down
 WHY = ["absent_hurt", "retired_hurt", "ill", "other", "several", "unknown"]
+
+
+def how_final(how: str, result: str) -> str:
+    """An unclassified not-out ending in a match the umpires awarded (Law 16.3: the other side refused to play,
+    e.g. The Oval 2006) is 'awarded'; anything else unexplained stays 'other'."""
+    return "awarded" if how == "other" and "awarded" in (result or "").lower() else how
 
 
 def why_from_text(note: str) -> str:
@@ -410,6 +417,7 @@ def write_outputs(store: Store, counts_src: dict):
                    key=lambda m: (m["date"] or f"{m['year'] or '0000'}-00-00", m["test"] or 0))
     midx = {m["mid"]: i for i, m in enumerate(mlist)}
     recs = sorted(store.inn.items(), key=lambda kv: (midx[kv[0][0]], kv[0][1]))
+    for (mid, _), r in recs: r["how"] = how_final(r["how"], store.matches[mid]["result"])   # the Oval 2006 innings is "awarded"
 
     # Follow-on: the same side batting 2nd and 3rd. Its 3rd innings is the one played following on.
     bat_by = defaultdict(dict)
