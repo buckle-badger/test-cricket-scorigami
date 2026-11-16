@@ -51,7 +51,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding:24px clamp(16px,3vw,40px) 48px}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding:24px clamp(16px,3vw,40px) 48px;max-width:1440px;margin:0 auto;box-sizing:border-box}
 h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;margin:0;text-wrap:balance}
 h1{font-size:clamp(34px,5vw,52px);line-height:1}
 h2{font-size:22px}
@@ -112,7 +112,15 @@ tr.flash td{animation:rowflash 1.4s ease-out}
 .mbar .btk{font:17px var(--mono);fill:var(--muted)}
 svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .filters:not(.fopen){display:none!important}
-.ftoggle b{color:var(--accent)}
+.ftoggle{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 16px;border:1.5px solid var(--accent);border-radius:10px;background:var(--accent);color:var(--surface);cursor:pointer;font:700 15px var(--body);box-shadow:0 4px 14px rgba(0,0,0,.10)}
+.ftoggle small{font:500 13px var(--body);opacity:.85}
+.ftoggle b{background:var(--surface);color:var(--accent);border-radius:999px;padding:0 9px;font-size:13px;line-height:22px}
+.ftoggle b:empty{display:none}
+.ftoggle .ftico{font-size:16px}
+.ftoggle:hover{filter:brightness(1.1)}
+.ftoggle:focus-visible{outline:3px solid var(--fresh);outline-offset:2px}
+.ftoggle[aria-expanded="true"]{background:var(--surface);color:var(--accent);box-shadow:none;border-bottom-left-radius:4px;border-bottom-right-radius:4px}
+.ftoggle[aria-expanded="true"] b{background:var(--accent);color:var(--surface)}
 .controls.viewrow{margin-bottom:4px}
 .hint{margin:4px 0 10px;font-size:13.5px;color:var(--ink-2)}
 .fold{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
@@ -133,9 +141,15 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .viewrow .glabel{font-size:12.5px;color:var(--ink);font-weight:700}
 .viewrow .seg{border:1.5px solid var(--accent);border-radius:10px;padding:3px;gap:3px;background:var(--surface)}
 .viewrow .seg button{font-size:14.5px;font-weight:600;padding:8px 14px;border:0;border-radius:7px}
-.viewrow .seg button[aria-pressed="true"]{box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.viewrow .seg{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.viewrow .seg button{position:relative;z-index:1;background:none!important;transition:color .15s}
+.viewrow .seg button[aria-pressed="true"]{color:var(--surface)}
+@media (max-width:700px){ .viewrow .seg{display:flex;width:100%;box-sizing:border-box} .viewrow .seg button{flex:1 1 0;min-width:0;padding:8px 2px;font-size:13px;line-height:1.2} .controls.viewrow{display:block} .controls.viewrow .glabel{display:block;margin-bottom:4px} .ttcount{display:none!important} }
+.segthumb{position:absolute;z-index:0;border-radius:7px;background:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.18);transition:left .22s cubic-bezier(.2,.8,.3,1),width .22s,top .22s,height .22s;pointer-events:none}
+.seg.dragging{cursor:grabbing} .seg.dragging .segthumb{transition:none}
+.seg.dragging button[aria-pressed="true"]{color:var(--ink-2)} .seg.dragging button.under{color:var(--surface)}
 .viewrow{margin:6px 0 8px}
-.optrow{display:flex;justify-content:flex-start;margin:4px 0 6px}
+.optrow{display:flex;justify-content:flex-start;margin:6px 0 10px}
 .mbarnote{font-size:12.5px;color:var(--muted);margin:6px 0 0}
 .dial{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:10px 0 6px;user-select:none;-webkit-user-select:none}
 .dialread{display:flex;align-items:center;gap:12px;padding:0 14px 8px;height:52px;box-sizing:content-box}
@@ -241,7 +255,7 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .fbtn b{font-weight:600}
 .fbtn.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .fbtn::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);margin-left:2px;opacity:.6}
-.pop{position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:270px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.16);padding:8px}
+.pop{position:absolute;top:calc(100% + 6px);left:0;z-index:30;min-width:270px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.16);padding:8px}
 .opt{display:grid;grid-template-columns:18px 12px 1fr auto auto;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;font-size:13.5px;cursor:pointer}
 @media (hover:hover){ .opt:hover{background:var(--bg)} .opt:hover .only{visibility:visible} }
 .opt input{margin:0;accent-color:var(--accent)}
@@ -353,11 +367,17 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .cell .hd{position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:var(--dot);pointer-events:none}
 .cell .mk{position:absolute;top:0;right:1px;font:600 8px/1 var(--body);opacity:.85;pointer-events:none}
 .lead{font-size:17px;max-width:62ch;margin:10px 0 0;color:var(--ink)}
+@media (min-width:701px){ .kicker{text-wrap:wrap} .kpis{grid-template-columns:repeat(3,1fr)} .controls.opts .chip{padding:8px 12px} header>div{flex:1 1 100%} .lead{max-width:none} .modeswitch{width:100%} .modeswitch button{align-items:center;text-align:center}
+  .controls.viewrow{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center} .controls.viewrow>.group{display:contents} .viewrow .seg{display:flex} .viewrow .seg button{flex:1}
+  .viewrow .ctip{grid-column:1/-1;justify-self:center;margin:0}
+  .controls.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px} .controls.opts .group{flex-wrap:nowrap} .controls.opts .group>.chip{flex:1;justify-content:center} .controls.opts .group>.chip.tog{justify-content:center} .controls.opts #jump,.controls.opts #mjump{flex:1;width:auto;min-width:0} }
 .lead b{font-weight:600}
+.lead.invite{font-size:15.5px;color:var(--ink-2);margin-top:6px} .lead.invite .linkbtn{font-size:15.5px;font-weight:600}
 .lead a{color:var(--accent)}
 .kicker{margin:4px 0 2px;font-family:var(--display);font-size:clamp(19px,2.4vw,24px);font-weight:600;color:var(--ink-2);letter-spacing:.01em}
 .howto{display:inline-block;margin-top:8px;font-size:14px;color:var(--ink-2)}
 .kpi small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.kpi b small.kunit{display:inline;margin:0 0 0 2px;font:600 16px var(--body);color:var(--ink-2)}   /* 'runs' sits beside the number, not under it */
 .active{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px;font-size:13px;color:var(--ink-2)}
 .active button.x{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:2px 6px 2px 10px;font:500 12.5px var(--body);cursor:pointer}
 .active button.x::after{content:"×";margin-left:6px;color:var(--muted)}
@@ -396,6 +416,8 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 input[type=range]{width:100%;accent-color:var(--accent)}
 /* table */
 .tablewrap{max-height:640px;overflow:auto}
+.swipehint{display:none;font-size:12.5px;color:var(--muted);margin:0 0 6px}
+@media (max-width:700px){ .swipehint{display:block} }
 .sorthint{margin:0 0 8px;font-size:13px;color:var(--ink-2);position:sticky;left:0}
 th[data-k]:hover{color:var(--accent)}
 table{border-collapse:collapse;width:100%;font-size:13px}
@@ -412,7 +434,7 @@ tbody tr{cursor:pointer}
 tbody tr:hover{background:var(--bg)}
 /* detail */
 .detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;position:sticky;top:16px}
-@media (min-width:1101px){ .detail{top:104px;max-height:calc(100vh - 120px);overflow-y:auto;overscroll-behavior:contain} }
+@media (min-width:1101px){ .kpis{grid-template-columns:repeat(6,1fr)} .detail{max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}  }
 .dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .dhead .big{font-family:var(--display);font-size:64px;line-height:.9;font-weight:700}
 .pill{box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
@@ -490,20 +512,64 @@ html,body{overflow-x:clip}
 
 /* time travel */
 :root{--fresh:#d39b00} .cb .cell.fresh{outline-color:var(--ink)!important}
-.ttbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin:4px 0 14px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.ttbar{position:sticky;top:0;z-index:25;box-shadow:0 4px 14px rgba(0,0,0,.06)}
-@media (max-width:700px){ .ttbar{padding:8px 10px;gap:6px 8px} .ttbar small.ttsub{display:none} .ttbar .glabel{order:6} .ttbr{display:block!important;order:5;flex-basis:100%;height:0} .ttyear{order:7;font-size:21px;min-width:0} .ttnow{order:8} .ttlist{order:9;margin-left:auto} .ttbar .ttrange{flex:1 1 0;min-width:0} .ttbar .ttnow{font-size:13px} }
-.ttbr{display:none}
+.ttbar{display:flex;flex-direction:column;gap:6px;padding:10px 12px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ttbar.on{border-color:var(--fresh);box-shadow:inset 3px 0 0 var(--fresh)}
-.ttbar .glabel{margin-right:2px}
-.ttbtn{flex:none;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);width:36px;height:36px;border-radius:50%;font:700 15px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
+.tttop,.ttrow{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap}
+.ttrow{flex-wrap:nowrap}
+.ttseg button{padding:5px 12px;font-size:13px}
+.ttbtn{flex:none;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);width:32px;height:32px;border-radius:50%;font:700 14px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
 .ttbtn.ttplay{background:var(--accent);color:var(--surface)}
 .ttbtn:hover{filter:brightness(1.1)}
-.ttrange{flex:1 1 220px;min-width:140px;accent-color:var(--accent);height:28px;cursor:pointer}
-.ttyear{font:700 24px/1 var(--display);min-width:4.2ch;text-align:center;color:var(--ink)}
-.ttbar small.ttsub{flex-basis:100%;color:var(--ink-2);font-size:13px;margin-top:-2px}
-.ttlist{display:none}
-@media (max-width:1100px){ .ttlist{display:inline} }
+.ttnow{margin-left:auto}
+.ttend{display:inline-flex;align-items:center;gap:3px;flex:none}
+.ttend[hidden]{display:none}
+.ttarr{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:26px;height:30px;border-radius:6px;font:700 15px var(--body);cursor:pointer;padding:0}
+.ttarr:hover{border-color:var(--accent);color:var(--accent)}
+.ttend input{width:3.2em;font:700 20px/1 var(--display);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 2px;text-align:center;-moz-appearance:textfield}
+.ttend input::-webkit-outer-spin-button,.ttend input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.ttend input::placeholder{color:var(--muted);opacity:.8}
+.ttend input:focus{outline:2px solid var(--accent)}
+.ttsl{position:relative;flex:1 1 auto;min-width:0;height:40px;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+.tttrack{position:absolute;left:0;right:0;top:13px;height:6px;border-radius:3px;background:var(--line)}
+.ttfill{position:absolute;top:0;bottom:0;border-radius:3px;background:var(--accent)}
+.ttthumb{position:absolute;top:6px;width:20px;height:20px;margin-left:-10px;border-radius:50%;border:2.5px solid var(--accent);background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:grab;padding:0;z-index:2}
+.ttthumb[hidden]{display:none}
+.ttthumb[data-h="1"]{z-index:3} .ttthumb.top{z-index:4}
+.ttthumb:focus-visible{outline:3px solid var(--fresh);outline-offset:2px}
+.ttthumb:active{cursor:grabbing;transform:scale(1.15)}
+.tttick{position:absolute;top:24px;transform:translateX(-50%);font:11px var(--mono);color:var(--muted);pointer-events:none}
+.tttick::before{content:'';position:absolute;left:50%;top:-6px;width:1px;height:4px;background:var(--muted)}
+.ttsub{color:var(--ink-2);font-size:12.5px}
+/* on a computer the time-travel block sits inline in the filters box, not as a pop-up */
+@media (min-width:701px){ .ttpop{position:static!important;display:block!important;min-width:0;padding:0;border:0;box-shadow:none;background:none;z-index:auto} .ttpop>.pophead,.ttpop>.popfoot{display:none} }
+@media (max-width:700px){ .ttpop .ttbar{border:0;box-shadow:none;background:none;padding:4px 0} .ttpop .tttop .glabel{display:none} .ttpop{max-height:none} .tttick.minor{display:none} .ttend input{width:2.9em;font-size:18px} .ttarr{width:24px} .phonebar{grid-template-columns:1fr 1fr 1fr!important} .pbtn{font-size:13px!important;padding:10px 8px!important;gap:5px!important} .ttsub{display:none} }
+.ttmini{position:fixed;right:18px;bottom:18px;z-index:65;display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1.5px solid var(--accent);border-radius:999px;background:var(--surface);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.ttmini[hidden]{display:none}
+.ttmini b{font:700 20px/1 var(--display);color:var(--ink)}
+@media (max-width:700px){ .ttmini{right:auto;left:50%;transform:translateX(-50%);bottom:14px} }
+.ctip{margin-left:auto;align-self:center;font-size:13.5px;color:var(--ink-2)}
+.ctip .linkbtn{font-size:13.5px}
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;margin:30px 0 10px;padding-top:16px;border-top:2px solid var(--line)}
+.sechead .msect{margin:0;padding:0;border:0}
+.mvoid{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 14px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:var(--surface)}
+.mvoid[hidden]{display:none}
+.mvoid b{font:700 20px var(--display)} .mvoid span{color:var(--ink-2);flex:1 1 220px}
+.controls.opts.inboard{margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+@media (min-width:701px){ .controls.opts.inboard{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 22px} .controls.opts.inboard .group>.chip{flex:0 0 auto;white-space:nowrap} .controls.opts.inboard #jump,.controls.opts.inboard #mjump{flex:0 0 auto;width:90px} }
+.latestlink{border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:999px;padding:7px 14px;font:600 14px var(--body);cursor:pointer}
+.latestlink:hover{background:var(--accent);color:var(--surface)}
+@media (max-width:700px){ .sechead .latestlink{flex:1 1 100%} }
+@media (max-width:700px){ .ctip{margin:2px 0 0;flex-basis:100%} }
+.kpi[data-ka]{cursor:pointer;position:relative;transition:transform .12s, box-shadow .12s}
+.kpi[data-ka]:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.kpi[data-ka]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kpi[data-ka]::after{content:'›';position:absolute;right:10px;bottom:6px;color:var(--muted);font-size:18px}   /* bottom corner, so long numbers like 'inns & 31 runs' have room */
+.kpi a.kgo{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px}
+.kpi a.kgo:hover{color:var(--accent)}
+.nevergrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.nevergrid button{all:unset;cursor:pointer;font:600 13px var(--mono);padding:4px 7px;border-radius:5px;background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 1.5px var(--never-edge)}
+.cb .nevergrid button{background:var(--never-cb);color:var(--never-cb-ink);box-shadow:none}
+.nevergrid button:hover{filter:brightness(.95)}
 .cell.fresh,.msq.fresh{outline:3px solid var(--fresh)!important;outline-offset:-1px;z-index:2;animation:fresh .9s ease-out}
 @keyframes fresh{0%{transform:scale(1.35)}100%{transform:none}}
 .newtag{display:inline-block;padding:0 6px;border-radius:999px;background:var(--fresh);color:#1d1600;font:700 11px/17px var(--body);vertical-align:1px;margin-left:4px;text-transform:uppercase;letter-spacing:.04em}
@@ -535,6 +601,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div>
     <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><div class="hbtns"><button class="helpbtn sharebtn" id="shareBtn" type="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true">↗</span> Share</button><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button><div class="sharepop" id="sharePop" hidden role="menu"></div></div></div>
     <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, the term has since been taken up by fans of other sports. This is the Test cricket version, in two parts: the final run total of every men’s Test innings and how it ended, and the margin every men’s Test has been won by.</p>
+    <p class="lead invite">Dig in: almost everything below is clickable. Pick any total or margin to see the innings or matches behind it, or wind the clock back with time travel. New here? <button class="linkbtn helpopen" type="button">How it works</button></p>
     <div class="modebar"><div class="modeswitch" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true"><b>Innings totals</b><small>Every score a side has finished on</small></button><button data-m="margins" aria-pressed="false"><b>Winning margins</b><small>Every result a Test has been won by</small></button></div></div>
     <h2 class="kicker">Every total a men’s Test innings has finished on, from 0 up to the all-time record of <span class="hiT"></span></h2>
   </div>
@@ -550,23 +617,23 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
       <button data-v="grid" aria-pressed="true">Grids</button><button data-v="list" aria-pressed="false">Ranked innings</button><button data-v="table" aria-pressed="false">Table</button><button data-v="rings" aria-pressed="false">Wagon wheel</button><button data-v="dial" aria-pressed="false">Dial</button>
     </div></div>
 </div>
-<div class="controls opts">
+<div class="phonebar"><button class="pbtn" id="fb-hubt" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountt"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqt" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttt" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Time travel</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactt"></div>
+<div class="optrow"><button class="ftoggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filtersBox"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, time travel, and quick questions</small><b id="fcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
+<div class="filters" id="filtersBox" aria-label="Filters"><div class="pop hub" id="pop-hubt" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowst"></div><div class="popfoot"><button class="linkbtn" data-hubreset="t" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqt" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistt"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
+  <div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="resetBtn">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="fbar"></div></div>
+  <div class="pop hub ttpop" id="pop-ttt" hidden role="dialog" aria-label="Time travel"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Time travel</b></div><div class="ttbar" data-tt="t"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
+  <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
+</div>
+<div class="sechead"><h2 class="msect" id="tBoardHead">Every innings total</h2><button class="latestlink" type="button"><span aria-hidden="true">☰</span> Latest scorigamis <span aria-hidden="true">›</span></button></div>
+<div class="layout">
+  <section class="board" aria-label="Scorigami views">
+    <div class="active" id="activeBar" hidden></div>
+<div class="controls opts inboard">
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="countBtn" aria-pressed="false" title="Shade each total by how often it has come up">Frequency heat map</button>
     <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
   <div class="group"><label for="jump">Go to</label><input id="jump" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
-<div class="phonebar"><button class="pbtn" id="fb-hubt" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountt"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqt" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactt"></div>
-<div class="optrow"><button class="chip ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Show filters &amp; quick questions <b id="fcount"></b> ▾</button></div>
-<div class="filters" id="filtersBox" aria-label="Filters"><div class="pop hub" id="pop-hubt" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowst"></div><div class="popfoot"><button class="linkbtn" data-hubreset="t" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqt" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistt"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
-  <div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="resetBtn">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="fbar"></div></div>
-  <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
-</div>
-<p class="hint">Click or tap on anything below (a number, a slice, a row) to see the innings behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
-<div class="ttbar" data-tt="t"></div>
-<div class="layout">
-  <section class="board" aria-label="Scorigami views">
-    <div class="active" id="activeBar" hidden></div>
     <div class="legend" id="legend"></div>
     <div class="void-msg" id="voidMsg" hidden><div role="alert"><b>Never happened</b><p id="voidText">No men’s Test innings matches this combination of filters.</p><button id="voidReset">Reset filters</button></div></div>
     <div id="view-grid" class="panels"></div>
@@ -593,21 +660,21 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div class="group"><span class="glabel">View</span>
     <div class="seg" id="mViewSeg"><button data-mv="grid" aria-pressed="true">Grids</button><button data-mv="list" aria-pressed="false">Ranked wins</button><button data-mv="table" aria-pressed="false">Table</button><button data-mv="rings" aria-pressed="false">Wagon wheel</button><button data-mv="bar" aria-pressed="false">Dial</button></div></div>
 </div>
-<div class="controls opts">
+<div class="phonebar"><button class="pbtn" id="fb-hubm" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountm"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqm" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-ttm" type="button"><span class="pic" aria-hidden="true">⏱</span><span>Time travel</span><b class="pcount ttcount"></b><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactm"></div>
+<div class="optrow"><button class="ftoggle" id="mftoggle" type="button" aria-expanded="false" aria-controls="mFilters"><span class="ftico" aria-hidden="true">⚙</span><span class="ftlab">Show options</span><small>Filters, time travel, and quick questions</small><b id="mfcount"></b><span class="ftchev" aria-hidden="true">▾</span></button></div>
+<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="pop hub" id="pop-hubm" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowsm"></div><div class="popfoot"><button class="linkbtn" data-hubreset="m" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqm" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistm"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
+  <div class="pop hub ttpop" id="pop-ttm" hidden role="dialog" aria-label="Time travel"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Time travel</b></div><div class="ttbar" data-tt="m"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
+  <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
+<div class="sechead"><h2 class="msect" id="mBoardHead">Every winning margin</h2><button class="latestlink" type="button"><span aria-hidden="true">☰</span> Latest scorigamis <span aria-hidden="true">›</span></button></div>
+<div class="layout">
+  <section class="board" aria-label="Winning margins by runs">
+<div class="controls opts inboard">
   <div class="group"><span class="glabel">Display</span>
     <button class="chip tog" id="mHeatBtn" aria-pressed="false" title="Shade each margin by how often it has happened">Frequency heat map</button>
     <button class="chip tog" id="mCbBtn" aria-pressed="false">High-contrast colours</button></div>
   <div class="group"><label for="mjump">Go to</label><input id="mjump" class="jumpbox" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 9"><button class="chip" id="mRandomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
-<div class="phonebar"><button class="pbtn" id="fb-hubm" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountm"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqm" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactm"></div>
-<div class="optrow"><button class="chip ftoggle" id="mftoggle" aria-expanded="false" aria-controls="mFilters">Show filters &amp; quick questions <b id="mfcount"></b> ▾</button></div>
-<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="pop hub" id="pop-hubm" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowsm"></div><div class="popfoot"><button class="linkbtn" data-hubreset="m" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqm" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistm"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
-  <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
-<h2 class="msect" id="mBoardHead">Every winning margin</h2>
-<p class="hint">Click or tap on anything below (a square, a slice, a row) to see the matches behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
-<div class="ttbar" data-tt="m"></div>
-<div class="layout">
-  <section class="board" aria-label="Winning margins by runs">
+    <div class="mvoid" id="mVoid" hidden role="alert"><b id="mVoidT"></b><span id="mVoidP"></span><button class="chip" id="mVoidBtn" type="button"></button></div>
     <div class="legend" id="mlegend"></div>
     <div id="mWkBlock" class="msub"><h3 class="mhead"><button class="fold" data-fold="w" aria-expanded="true">Won by wickets <span class="chev">▾</span></button></h3>
       <div id="mWk" aria-label="Won by wickets"><div class="sky" id="mSky"></div><p class="mrest" id="mRest"></p></div></div>
@@ -642,6 +709,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <p id="copy">© <span id="copyYears">2026</span> BuckleBadger. All rights reserved. Match data remains under its sources’ own terms.</p>
   <p id="updated" style="color:var(--muted)"></p>
 </footer>
+<div class="ttmini" id="ttMini" hidden><button class="ttbtn ttplay" type="button" data-mini aria-label="Pause"></button><b class="num" id="ttMiniY"></b></div>
 <div id="fnote" class="fnote" role="dialog" aria-live="polite" aria-labelledby="fnoteT" hidden><b id="fnoteT">Your filters have changed:</b><ul></ul><div class="fnbtns"><button class="linkbtn" id="fnClear" type="button">Clear all filters</button><button class="chip" id="fnOk" type="button">OK</button></div></div>
 <dialog id="help" aria-labelledby="helpTitle"><div class="helpin">
   <div class="helphead"><h2 id="helpTitle">How it works</h2><button class="helpx" aria-label="Close">×</button></div>
@@ -691,6 +759,9 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
     <li>How many of the ten wicket margins have happened (all of them).</li>
   </ul>
   <p>Every number counts only what matches your filters.</p>
+  <ul>
+    <li>The tiles at the top are buttons. <b>Totals have happened</b> opens the Table; <b>totals yet to happen</b> lists every total that has never happened; the others jump straight to that total or margin. The smaller numbers inside a tile (“then 2, 3, 4”, “before that…”) are links too.</li>
+  </ul>
 
   <h2>The views</h2>
   <h3>Grids</h3>
@@ -720,23 +791,30 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
     <li><b>On a phone</b>, the strip becomes a ring. Put a finger on it and slide round to the number you want. It stops at 0 and at the record. Then fine-tune with the dial.</li>
     <li>For innings totals, all-out finishes are above the line and every other finish below; the all-out row stops at the highest all-out total ever (<span class="hiO"></span>). For margins, wins by runs are above and innings wins below (on the ring: outside and inside); each row stops at its record, with the wickets chart underneath.</li>
   </ul>
-  <h3>Time travel</h3>
-  <ul>
-    <li>The <b>Time travel</b> bar above the views winds the clock back. Drag the slider, step a year at a time with ‹ and ›, or press ▶ to watch the scorigamis fill in year by year. <b>Back to today</b> puts everything back.</li>
-    <li>Everything (the views, the headline numbers and the list) then counts only what had happened by the end of that year. That year’s new scorigamis are outlined in gold on the grids and marked <b>new</b> in the list.</li>
-    <li>It works with your filters, and it’s the same as setting the “to” year under <b>Era</b>, so the two always agree.</li>
-  </ul>
   <h3>The list beside the views</h3>
   <ul>
-    <li>Until you pick something, the panel beside the views lists the latest scorigamis, newest first: each total or margin and the match where it first happened. Tap one for the full story, and <b>‹ Latest scorigamis</b> to come back. On a phone, open it from the Time travel bar.</li>
+    <li>Until you pick something, the panel beside the views lists the latest scorigamis (totals or margins, depending on which half you’re in), newest first: each total or margin and the match where it first happened. Tap one for the full story, and <b>‹ Latest scorigamis</b> to come back. Wherever you are, you can always get back to it with <b>Latest scorigamis ›</b> beside the heading above the board.</li>
   </ul>
   <h3>Getting around</h3>
   <ul>
     <li><b>Share</b>, at the top of the page and at the bottom, opens your device’s own share menu, on a phone or a computer. If your browser doesn’t have one, you get <b>Copy link</b> and <b>Email it</b> instead.</li>
     <li><b>Go to</b> jumps to a number. <b>Surprise me</b> picks one that has happened.</li>
-    <li><b>Hide filters</b> tucks the filters away, and the site remembers your choice.</li>
+    <li><b>Show options</b> opens the filters, time travel and quick questions; <b>Hide options</b> tucks them away again. They start closed, and the site remembers your choice.</li>
   </ul>
 
+  <h2>Time travel</h2>
+  <ul>
+    <li>Time travel sits with the filters and quick questions (on a phone, it’s the <b>Time travel</b> button next to them). It has two modes:
+      <ul>
+        <li><b>One year:</b> a single handle. Drag it, use ‹ › or type a year, and everything shows only that year.</li>
+        <li><b>Range:</b> two handles, each with its own year box and ‹ › at its own end of the bar. The left-hand arrows only move the left end, and the right-hand arrows only the right.</li>
+      </ul></li>
+    <li>Click anywhere on the bar and the nearer handle jumps there. The arrow keys move a handle one year (Page Up and Page Down move ten).</li>
+    <li><b>▶</b> plays through the years. In One year mode the year walks along. In Range mode the right-hand end moves on a year at a time, so everything builds up from wherever the left end sits (from 1877 if you leave it there). While it plays, a small player with pause and the years follows you down the page.</li>
+    <li>Switching from One year to Range keeps your year as the right-hand end, so “just 1948” becomes “everything up to 1948”. <b>All years</b> puts everything back.</li>
+    <li>Everything (the views, the headline numbers and the list) then counts only what happened in those years. <b>Outlined in gold</b> on the grids: anything that happened for the first time ever in those years. If the left end is still at the start, it’s just the last year’s new ones, marked <b>new</b> in the list.</li>
+    <li>It works with your filters, and it’s the same as the years under <b>Era</b>, so the two always agree.</li>
+  </ul>
   <h2>How innings endings are decided</h2>
   <ul>
     <li><b>All out:</b> the batting side was bowled out.
@@ -844,11 +922,19 @@ const yrOn=()=> state.yr[0]!==null || state.yr[1]!==null;
 const Y0=+M[0][1], Y1=Math.max(...M.map(m=>+m[1]));
 const TT=()=>state.yr[1];   // the time-travel year (the 'to' year), if any
 const yOf=i=>+M[i][1];
-const tOnly=()=> state.yr[1]!==null && state.yr[0]===null && FILTERS.every(f=>state.fsel[f.id].size===f.leaves.length);   // only time travel is narrowing things
-const mOnly=()=> state.yr[1]!==null && state.yr[0]===null && !MF.some(f=>mOn(f.id));
-const WF=()=> tOnly()? `by the end of ${TT()}` : 'with these filters', WFm=()=> mOnly()? `by the end of ${TT()}` : 'with these filters';
+const tOnly=()=> yrOn() && FILTERS.every(f=>state.fsel[f.id].size===f.leaves.length);   // only the years are narrowing things
+const mOnly=()=> yrOn() && !MF.some(f=>mOn(f.id));
+// the year window in words: 'by the end of 1930', 'in 1948', 'in 1990–2000', 'since 1990'
+const yrPhrase=()=>{ const [a,b]=state.yr; if(a===null&&b===null) return ''; if(a===null) return `by the end of ${b}`; if(b===null) return `since ${a}`; return a===b? `in ${a}` : `in ${a}–${b}`; };
+const WF=()=> tOnly()? yrPhrase() : 'with these filters', WFm=()=> mOnly()? yrPhrase() : 'with these filters';
+const winMode=()=> state.yr[0]!==null ? 'range' : state.yr[1]!==null ? 'upto' : 'all';
+// was a scorigami born in this year 'new' for the current window? (up-to mode: just the final year; a range: anything inside it)
+const isNew=y=>{ const m=winMode(); return m==='range'? (y>=state.yr[0] && y<=(state.yr[1]??Y1)) : m==='upto'? y===state.yr[1] : false; };
+const inWin=y=> (state.yr[0]===null||y>=state.yr[0]) && (state.yr[1]===null||y<=state.yr[1]);
+const listName=()=> winMode()==='all'? 'Latest scorigamis' : 'Back to the list';
 const monY=m=>{ const d=m[5]||''; return d.length>=7? new Date(d.slice(0,7)+'-01T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : m[1]; };
-const yrOk=i=>{ const y=+M[i][1]; return (state.yr[0]===null||y>=state.yr[0]) && (state.yr[1]===null||y<=state.yr[1]); };
+var IGNY=false;   // set while working out when something first happened, regardless of the year range
+const yrOk=i=>{ if(IGNY) return true; const y=+M[i][1]; return (state.yr[0]===null||y>=state.yr[0]) && (state.yr[1]===null||y<=state.yr[1]); };
 const yrLabel=()=> state.yr[0]!==null && state.yr[1]!==null ? (state.yr[0]===state.yr[1]? `${state.yr[0]}` : `${state.yr[0]}–${state.yr[1]}`) : state.yr[0]!==null ? `${state.yr[0]} on` : `to ${state.yr[1]}`;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
@@ -919,7 +1005,9 @@ function info(s){
   return {star,starN,c,w,ii,rr,n,out,not:n-out,status: out?'out': n?'not':'never', first,last,firstOut};
 }
 let cache=[];
-function recompute(){ cache = Array.from({length:1000},(_,s)=>info(s)); }
+let FA=[], FAO=[];   // the first innings ever on each total, and the first all-out (other filters on, years ignored)
+function recompute(){ cache = Array.from({length:1000},(_,s)=>info(s));
+  IGNY=true; FAO=[]; FA=Array.from({length:1000},(_,s)=>{ let f=null, o=null; for(const r of byScore[s]) if(pass(r)){ const lt=x=>x===null||r[0]<x[0]||(r[0]===x[0]&&r[3]<x[3]); if(lt(f)) f=r; if(r[6]<=1 && lt(o)) o=r; } FAO[s]=o; return f; }); IGNY=false; }
 const ICON={
   out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 21h16"/><path d="M8 21V9"/><path d="M12 21V9"/><path d="M15.5 21l3.2-11.4"/><path d="M6.6 5.6l3.6-.9"/><path d="M13.6 3.6l3.4 1.6"/></svg>',
   not:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(35 12 12)"><path d="M10.9 1.6h2.2v6.6h-2.2z" fill="currentColor"/><path d="M8.4 9.4c0-.9.6-1.4 1.4-1.4h4.4c.8 0 1.4.5 1.4 1.4V19c0 2.1-1.6 3.4-3.6 3.4S8.4 21.1 8.4 19z"/><path d="M12 11v8.5" stroke-width="1.1"/></g></svg>',
@@ -946,29 +1034,30 @@ function fmtInn(r){
 function ord(n){return n+(['th','st','nd','rd'][n]||'th')}
 
 /* ---------- KPIs ---------- */
+const KG=n=>`<a href="#" class="kgo" data-kgo="${n}">${n}</a>`;
 function renderKPIs(){
   const K=document.getElementById('kpis');
   if(state.empty){ document.getElementById('kpinote').hidden=false; K.innerHTML=['totals have happened','totals have yet to happen','lowest never reached','most common','latest scorigami','green turner: newest all-out score'].map(t=>`<div class="kpi"><b class="num">—</b><span>${t}</span></div>`).join(''); return; }
   let reached=0, top=0, topS=0, hi=0; const gaps=[];
   for(let s=0;s<1000;s++){ const o=cache[s]; if(o.n){ reached++; hi=s; if(o.n>top){top=o.n; topS=s;} } else gaps.push(s); }
   // latest scorigami = the total whose first matching innings came most recently
-  let latest=null; for(let s=0;s<1000;s++){ const f=cache[s].first; if(f && (!latest || f[0]>latest[0])) latest=f; }
+  let latest=null; for(let s=0;s<1000;s++){ const f=FA[s]; if(f && inWin(yOf(f[0])) && (!latest || f[0]>latest[0])) latest=f; }
   const lm = latest? M[latest[0]] : null;
   const mon = m => { const d=m[5]||''; if(d.length>=7){ const dt=new Date(d.slice(0,7)+'-01T00:00:00'); return dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'}); } return m[1]; };
   // first all-out on a total that had already been reached not out: cream turning green
-  const flips=[]; for(let s=0;s<1000;s++){ const o=cache[s]; if(o.firstOut && o.first && o.first!==o.firstOut && o.first[0]<o.firstOut[0]) flips.push(o.firstOut); }
+  const flips=[]; for(let s=0;s<1000;s++){ const f=FA[s], o=FAO[s]; if(o && f && f!==o && f[0]<o[0] && inWin(yOf(o[0]))) flips.push(o); }
   flips.sort((a,b)=>b[0]-a[0]);
   const f0=flips[0], fm=f0?M[f0[0]]:null;
-  K.classList.toggle('filt', filtered()); { const kn=document.getElementById('kpinote'); kn.hidden=!filtered(); kn.firstChild.textContent= tOnly()? `These figures count only what had happened by the end of ${TT()}.` : 'These figures count only the innings that match your filters.'; document.getElementById('kpiReset').textContent= tOnly()? 'Back to today' : 'Show all innings'; }
+  K.classList.toggle('filt', filtered()); { const kn=document.getElementById('kpinote'); kn.hidden=!filtered(); kn.firstChild.textContent= tOnly()? `These figures count only what happened ${yrPhrase()}.` : 'These figures count only the innings that match your filters.'; document.getElementById('kpiReset').textContent= tOnly()? 'Back to all years' : 'Show all innings'; }
   const rangeTxt = `from 0 to ${hi} (the highest ${filtered()?WF():'score to date'})`;
   K.innerHTML = [
-    [reached.toLocaleString(), 'totals have happened', rangeTxt, 'var(--out)'],
-    [(hi+1-reached).toLocaleString(), 'totals have yet to happen', rangeTxt, 'var(--never)'],
-    [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).join(', ') : '', 'var(--never)'],
-    [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)'],
-    [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${mon(lm)}` : '', 'var(--accent)'],
-    [f0? f0[4] : '—', 'green turner: newest all-out score', f0? `${T[f0[1]]} v ${T[f0[2]]}, ${mon(fm)}${flips.length>1?'<br>before that: '+flips.slice(1,3).map(r=>`${r[4]} (${mon(M[r[0]])})`).join(', '):''}` : '', 'var(--out)']
-  ].map(([b,t,sub,k])=>`<div class="kpi" style="--k:${k}"><b class="num">${b}</b><span>${t}</span>${sub?`<small>${sub}</small>`:''}</div>`).join('');
+    [reached.toLocaleString(), 'totals have happened', rangeTxt, 'var(--out)', 'table'],
+    [(hi+1-reached).toLocaleString(), 'totals have yet to happen', rangeTxt, 'var(--never)', 'never'],
+    [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).map(KG).join(', ') : '', 'var(--never)', gaps.length? 'go:'+gaps[0] : ''],
+    [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)', 'go:'+topS],
+    [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${mon(lm)}` : '', 'var(--accent)', latest? 'go:'+latest[4] : ''],
+    [f0? f0[4] : '—', 'green turner: newest all-out score', f0? `${T[f0[1]]} v ${T[f0[2]]}, ${mon(fm)}${flips.length>1?'<br>before that: '+flips.slice(1,3).map(r=>`${KG(r[4])} (${mon(M[r[0]])})`).join(', '):''}` : '', 'var(--out)', f0? 'go:'+f0[4] : '']
+  ].map(([b,t,sub,k,ka])=>`<div class="kpi" style="--k:${k}"${ka?` data-ka="${ka}" role="button" tabindex="0"`:''}><b class="num">${b}</b><span>${t}</span>${sub?`<small>${sub}</small>`:''}</div>`).join('');
 }
 
 /* ---------- legend ---------- */
@@ -977,14 +1066,14 @@ function renderLegend(){
   const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
   if(state.heat){
     document.getElementById('legend').innerHTML = `<div class="heatkey"><b>Times each total has come up${filtered()?` (${WF()})`:''}</b><div class="bands">${HEAT.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` +
-      item(nv,'never',filtered()?'None '+WF():'Scorigami!', tOnly()? `No innings had ended on this total by the end of ${TT()}.` : 'No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
+      item(nv,'never',filtered()?'None '+WF():'Scorigami!', tOnly()? `No innings ended on this total ${yrPhrase()}.` : 'No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
       `<span class="key"><span class="sw" style="background:var(--q4);position:relative"><span class="hd" style="position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--dot)"></span></span><span class="kt"><b>${state.view==='grid'?'Dot':'Dark outline'}: never all out</b><small>Innings have ended on this total, but never with the side bowled out.</small></span></span>`;
     return;
   }
   document.getElementById('legend').innerHTML =
     item('background:var(--out);color:var(--out-ink)','out','Complete – all out','At least one side has been bowled out for exactly this total.') +
     item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)','not','Complete – not out','Innings have ended here, but never all out: declared, chased down, or batting at the close.') +
-    (filtered()? item(nv,'never','None '+WF(), tOnly()? `No innings had ended on this total by the end of ${TT()}.` : 'No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
+    (filtered()? item(nv,'never','None '+WF(), tOnly()? `No innings ended on this total ${yrPhrase()}.` : 'No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
 }
 
 /* ---------- grid ---------- */
@@ -1002,7 +1091,7 @@ function buildGrid(){
 function paintCells(root){
   root.querySelectorAll('.cell[data-s]').forEach(el=>{
     const s=+el.dataset.s, o=cache[s]; const [bg,ink,edge]=cellStyle(s); el.style.background=bg; el.style.color=ink; el.style.boxShadow=edge; el.style.fontWeight=o.n?'400':'600';
-    el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel); if(root===gridEl) el.classList.toggle('fresh', TT()!==null && !!o.first && yOf(o.first[0])===TT());
+    el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel); if(root===gridEl) el.classList.toggle('fresh', !!FA[s] && isNew(yOf(FA[s][0])));
     if(root!==gridEl && state.heat && o.n && o.status==='not') el.style.boxShadow='inset 0 0 0 2px var(--dot)';
     if(root===gridEl){ const lab = state.heat ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:'') + (state.heat && o.n && o.status==='not' && !state.empty ? '<span class="hd"></span>' : ''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
   });
@@ -1063,7 +1152,9 @@ function mLiveCounts(){ const C={}; MF.forEach(f=>C[f.id]={}); MON={}; MF.forEac
   for(const r of MREC) for(const f of MF){ const keep=MON[f.id]; MON[f.id]=false; const ok=mpass(r); MON[f.id]=keep; if(ok) mVals(r,f.id).forEach(v=>C[f.id][v]=(C[f.id][v]||0)+1); }
   return C; }
 let MG={};
+let MFA={};
 function mrecompute(){ MON={}; MF.forEach(f=>MON[f.id]=mOn(f.id)); MG={r:{},i:{},w:{},tie:[],draw:[],award:[]};
+  IGNY=true; MFA={}; for(const r of MREC){ if(!mpass(r)) continue; const key= r.kind==='r'||r.kind==='i'? r.kind+':'+r.n : r.kind==='w'? 'w'+r.n : r.kind==='tie'? 'r:0' : null; if(key && !MFA[key]) MFA[key]=r; } IGNY=false;
   MREC.forEach(r=>{ if(!mpass(r)) return; if(r.kind==='r'||r.kind==='i'||r.kind==='w') (MG[r.kind][r.n]=MG[r.kind][r.n]||[]).push(r); else MG[r.kind].push(r); }); }
 const mfiltered=()=>yrOn() || MF.some(f=>mOn(f.id));
 const mLabel=(k,n)=> k==='r'?`${n} run${n===1?'':'s'}`: k==='i'?`an innings and ${n} run${n===1?'':'s'}`: `${n} wicket${n===1?'':'s'}`;
@@ -1105,7 +1196,9 @@ const KINDSEG=()=>`<div class="seg kindseg" role="group" aria-label="Kind of win
 function mFolds(){ for(const k of ['r','i','w']){ const shut=state.mfold[k]; document.querySelectorAll(`[data-fold="${k}"]`).forEach(b=>b.setAttribute('aria-expanded',String(!shut)));
     (k==='w'? [document.getElementById('mWkBlock')] : k==='r'? [document.getElementById('mRunsWrap')] : [document.getElementById('mInnsWrap')]).forEach(el=>el.classList.toggle('shut',shut)); } }
 function paintMargins(){
-  mrecompute(); mFixShow(); document.documentElement.classList.toggle('heatM', !!state.mheat);
+  mrecompute();
+  { const any=MREC.some(mpass), noTests=!M.some((m,i)=>yrOk(i)), V=document.getElementById('mVoid'); V.hidden=any;   // nothing to show: say why
+    if(!any){ document.getElementById('mVoidT').textContent= noTests? 'No Tests' : 'Never happened'; document.getElementById('mVoidP').textContent= noTests? `No men’s Tests were played ${yrPhrase()}.` : 'No men’s Test matches this combination of filters.'; document.getElementById('mVoidBtn').textContent= mOnly()? 'Back to all years' : 'Reset filters'; } } mFixShow(); document.documentElement.classList.toggle('heatM', !!state.mheat);
   const show=state.mshow, grid=state.mview==='grid';
   document.getElementById('mGrids').hidden=!grid; document.getElementById('mRings').hidden=state.mview!=='rings'; document.getElementById('mBar').hidden=state.mview!=='bar'; document.getElementById('mList').hidden=state.mview!=='list'; document.getElementById('mTable').hidden=state.mview!=='table'; document.getElementById('mlegend').hidden= state.mview==='list'||state.mview==='table';
   if(state.mview==='list') renderMList(); if(state.mview==='table') renderMTable();
@@ -1114,7 +1207,7 @@ function paintMargins(){
   document.getElementById('mBoardHead').textContent = mK() ? 'Every winning margin, one kind at a time' : 'Every winning margin'; mFolds();
   if(state.mview==='bar'){ if(!isRing()) paintBarcode(); dialBuild(); }
   if(grid) document.querySelectorAll('#mGrids .msq').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
-    el.style.background=st.bg; el.style.color=st.ink; el.style.boxShadow=st.edge; el.textContent=mLab(k,n,st.L); el.classList.toggle('sel', state.msel===k+':'+n); const L0= n===0? (k==='r'?MG.tie:[]) : (MG[k][n]||[]); el.classList.toggle('fresh', TT()!==null && L0.length>0 && yOf(L0[0].i)===TT()); });
+    el.style.background=st.bg; el.style.color=st.ink; el.style.boxShadow=st.edge; el.textContent=mLab(k,n,st.L); el.classList.toggle('sel', state.msel===k+':'+n); const F0=MFA[k+':'+n]; el.classList.toggle('fresh', !!F0 && !(k==='i'&&n===0) && isNew(yOf(F0.i))); });
   else if(state.mview==='rings') document.querySelectorAll('#mRings .mrcell').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
     const tie=k==='r'&&n===0; el.style.fill = st.bg; el.style.stroke = (st.na||tie) ? 'none' : (!st.L && !state.cb ? 'var(--never-edge)' : 'none'); el.style.strokeWidth = (!st.L||tie) ? '1.4px':'0';
     el.classList.toggle('sel', state.msel===k+':'+n); });
@@ -1136,19 +1229,19 @@ function renderMKpis(){
   const st=src=>{ const ks=Object.keys(src).map(Number); if(!ks.length) return null; const mx=Math.max(...ks); let c=0; for(let n=1;n<=mx;n++) if(src[n]) c++; let low=1; while(src[low]) low++; return {mx,c,low}; };
   const R=st(MG.r), I=st(MG.i);
   let mc=null; for(const k of ['r','i']) for(const n in MG[k]) if(!mc||MG[k][n].length>mc[2]) mc=[k,+n,MG[k][n].length];
-  let latest=null; for(const k of ['r','i']) for(const n in MG[k]){ const f=MG[k][n].reduce((a,b)=>a.i<b.i?a:b); if(!latest||f.i>latest.f.i) latest={k,n:+n,f}; }
+  let latest=null; for(const [key,f] of Object.entries(MFA)){ const k=key[0]; if((k==='r'||k==='i') && key!=='r:0' && inWin(yOf(f.i)) && (!latest||f.i>latest.f.i)) latest={k,n:+key.slice(2),f}; }
   const mon=m=>{ const d=m[5]||''; return d.length>=7? new Date(d.slice(0,7)+'-01T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : m[1]; };
   let wc=0, wTop=1; for(let n=1;n<=10;n++){ if(MG.w[n]) wc++; if((MG.w[n]||[]).length>(MG.w[wTop]||[]).length) wTop=n; }
-  const fm=(k,n)=> k==='r'? `${n} <small style="font-size:.55em">runs</small>` : `inns &amp; ${n}`;
+  const fm=(k,n)=> k==='r'? `${n} <small class="kunit">run${n===1?'':'s'}</small>` : `inns &amp; ${n} <small class="kunit">run${n===1?'':'s'}</small>`;
   const K=document.getElementById('mkpis'); K.classList.toggle('filt', mfiltered());
   K.innerHTML=[
-    [R?R.c:'—', 'run margins have happened', R?`from 1 to ${R.mx} (the biggest win by runs${mfiltered()?' '+WFm():''})`:'', 'var(--out)'],
-    [I?I.c:'—', 'innings margins have happened', I?`from an innings and 1 to an innings and ${I.mx}`:'', 'var(--out)'],
-    [R?`${R.low} <small style="font-size:.55em">runs</small>`:'—', 'smallest run margin never seen', I?`and an innings and ${I.low} for innings wins`:'', 'var(--never)'],
-    [mc?fm(mc[0],mc[1]):'—', 'most common margin', mc?`${mc[2]} wins by exactly that`:'', 'var(--out)'],
-    [latest?fm(latest.k,latest.n):'—', 'latest margin scorigami', latest?`${T[latest.f.w]} beat ${T[latest.f.l]}, ${mon(M[latest.f.i])}`:'', 'var(--accent)'],
-    [`${wc}/10`, 'wicket margins have happened', wc?`${wTop} wicket${wTop>1?'s':''} is the most common (${(MG.w[wTop]||[]).length})`:'', 'var(--out)'],
-  ].map(([b,l,sm,c])=>`<div class="kpi" style="border-left-color:${c}"><b class="num">${b}</b><span>${l}</span>${sm?`<small>${sm}</small>`:''}</div>`).join('');
+    [R?R.c:'—', 'run margins have happened', R?`from 1 to ${R.mx} (the biggest win by runs${mfiltered()?' '+WFm():''})`:'', 'var(--out)', R?'mtable:r':''],
+    [I?I.c:'—', 'innings margins have happened', I?`from an innings and 1 to an innings and ${I.mx}`:'', 'var(--out)', I?'mtable:i':''],
+    [R?`${R.low} <small class="kunit">run${R.low===1?'':'s'}</small>`:'—', 'smallest run margin never seen', I?`and <a href="#" class="kgo" data-kgo="i:${I.low}">an innings and ${I.low}</a> for innings wins`:'', 'var(--never)', R?'msel:r:'+R.low:''],
+    [mc?fm(mc[0],mc[1]):'—', 'most common margin', mc?`${mc[2]} wins by exactly that`:'', 'var(--out)', mc?`msel:${mc[0]}:${mc[1]}`:''],
+    [latest?fm(latest.k,latest.n):'—', 'latest margin scorigami', latest?`${T[latest.f.w]} beat ${T[latest.f.l]}, ${mon(M[latest.f.i])}`:'', 'var(--accent)', latest?`msel:${latest.k}:${latest.n}`:''],
+    [`${wc}/10`, 'wicket margins have happened', wc?`${wTop} wicket${wTop>1?'s':''} is the most common (${(MG.w[wTop]||[]).length})`:'', 'var(--out)', wc?'msel:w'+wTop:''],
+  ].map(([b,l,sm,c,ka])=>`<div class="kpi" style="border-left-color:${c}"${ka?` data-ka="${ka}" role="button" tabindex="0"`:''}><b class="num">${b}</b><span>${l}</span>${sm?`<small>${sm}</small>`:''}</div>`).join('');
 }
 const mShort=x=> x.kind==='r'?`${x.n} run${x.n===1?'':'s'}`: x.kind==='i'?`inns &amp; ${x.n}`: x.kind==='w'?`${x.n} wkt${x.n===1?'':'s'}`: '';
 function mItems(L,ranked){ return '<ul class="mlist">'+(ranked?L:L.slice().sort((a,b)=>b.i-a.i)).slice(0,300).map(x=>{ const m=M[x.i]; const who = x.w!==undefined ? `<b>${T[x.w]}</b> beat ${T[x.l]}` : x.teams.map(t=>T[t]).join(' v ')+(m[3]?` · ${m[3]}`:''); return `<li>${ranked?`<span class="mg">${mShort(x)}</span>`:''}<span class="yr">${m[1]}</span>${who} · ${m[2]||''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</li>`; }).join('')+'</ul>'; }
@@ -1172,9 +1265,9 @@ function renderMList(){
 function renderMTable(){
   const show=state.mkind, yr=L=>L&&L.length? L.map(x=>+M[x.i][1]) : null;
   const top = show==='w' ? 10 : show==='r' ? bcTop('r') : show==='i' ? bcTop('i') : Math.max(bcTop('r'),bcTop('i'));
-  const C=[]; if(show!=='i'&&show!=='w') C.push(['r','Occurrences',n=> n===0? MG.tie.length : (MG.r[n]||[]).length],['rf','First',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.min(...y):null;}],['rl','Latest',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.max(...y):null;}]);
-  if(show==='i'||show==='both') C.push(['i','Occurrences',n=> n===0? null : (MG.i[n]||[]).length],['if','First',n=>{const y=yr(MG.i[n]); return y?Math.min(...y):null;}],['il','Latest',n=>{const y=yr(MG.i[n]); return y?Math.max(...y):null;}]);
-  if(show==='w'||show==='both') C.push(['w','Occurrences',n=> n>=1&&n<=10? (MG.w[n]||[]).length : null]);
+  const C=[]; if(show!=='i'&&show!=='w') C.push(['r','Times',n=> n===0? MG.tie.length : (MG.r[n]||[]).length],['rf','First',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.min(...y):null;}],['rl','Latest',n=>{const y=yr(n?MG.r[n]:MG.tie); return y?Math.max(...y):null;}]);
+  if(show==='i'||show==='both') C.push(['i','Times',n=> n===0? null : (MG.i[n]||[]).length],['if','First',n=>{const y=yr(MG.i[n]); return y?Math.min(...y):null;}],['il','Latest',n=>{const y=yr(MG.i[n]); return y?Math.max(...y):null;}]);
+  if(show==='w'||show==='both') C.push(['w','Times',n=> n>=1&&n<=10? (MG.w[n]||[]).length : null]);
   if(show==='w') C.push(['wf','First',n=>{const y=yr(MG.w[n]); return y?Math.min(...y):null;}],['wl','Latest',n=>{const y=yr(MG.w[n]); return y?Math.max(...y):null;}]);
   const rows=[]; for(let n=(show==='r'?0:1); n<=top; n++){ const o={n}; C.forEach(([id,,f])=>o[id]=f(n)); rows.push(o); }
   const K=state.msortK, D=state.msortD, kv=r=> K==='n'? r.n : (r[K]??(D>0?1e9:-1));
@@ -1376,7 +1469,7 @@ const MQ=[
 state.mq=null;
 function mSelect(sel,quiet){
   if(sel===null){ state.msel=null; state.mq=null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed','false')); paintMargins(); const d=document.getElementById('mdetail'); d.innerHTML=mRecentHTML(); if(!quiet && innerWidth<1100) d.classList.add('open'); return; }
-  state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button><button class="linkbtn backrec" data-mrecent type="button">‹ ${TT()===null?'Latest margin scorigamis':'Margin scorigamis to '+TT()}</button>`;
+  state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button><button class="linkbtn backrec" data-mrecent type="button">‹ ${listName()}</button>`;
   if(/^[ri]:/.test(sel)){ const k=sel[0], n=+sel.slice(2);
     if(n===0 && k==='r') h+=`<div class="dhead"><span class="mtitle">Tied</span></div>`+mSection('Matches', MG.tie, 'No tied Tests match these filters.');
     else if(n===0) h+=`<div class="dhead"><span class="mtitle">Scores level</span></div><p class="empty">Can’t be an innings win: with the scores level, the side batting last would still have to pad up again and score 1 run to win.</p>`;
@@ -1423,7 +1516,7 @@ function mSyncF(){ const LC=mLiveCounts(); MF.forEach(f=>{ document.querySelecto
     if(f.id==='era' && yrOn()){ b.innerHTML=`${f.l}: <b>${yrLabel()}${sel.length<live.length?' · '+sum:''}</b>`; b.classList.add('on'); }
     document.querySelectorAll(`#pop-m${f.id} input[data-mv]`).forEach(i=>{ const bl=mBlocked(f.id,i.dataset.mv); i.checked=!bl && S.has(i.dataset.mv); i.disabled=bl; i.closest('.opt').classList.toggle('blocked',bl); i.closest('.opt').querySelector('.only').disabled=bl; }); });
   phoneFilters('m'); document.querySelectorAll('#qqlistm [data-q]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.q===state.mq)));
-  const k=MF.filter(f=>mOn(f.id)).length; document.getElementById('mfcount').textContent=k?`(${k} on)`:'';
+  const k=MF.filter(f=>mOn(f.id)).length; document.getElementById('mfcount').textContent=k?`${k} on`:'';
   mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); }
 document.getElementById('mpresets').addEventListener('click',e=>{ const b=e.target.closest('[data-mq]'); if(!b) return; const i=+b.dataset.mq, Q=MQ[i];
   MF.forEach(f=>state.mf[f.id]=mAll(f)); Object.entries(Q.set||{}).forEach(([k,v])=>state.mf[k]=new Set([v])); state.mq=i; mSyncF(); mSelect('q:'+i); });
@@ -1632,7 +1725,7 @@ function renderTable(){
   const key = r=> sortKey==='s'?r.s: sortKey==='n'?r.n: sortKey==='f'?(r.f??9999): sortKey==='l'?(r.l??-1): sortKey[0]==='i'? r.ii[+sortKey[1]-1] : colOf(sortKey)? colOf(sortKey)[2](r.c) : 0;
   rows.sort((a,b)=>(key(a)-key(b))*sortDir || a.s-b.s);
   const head=[['s','Total'],['n','Innings'],...COLS.map(([k,l,,t])=>[k,l,t]),...INN.map((l,i)=>['i'+(i+1),(l.replace(' (following on)',' f/o'))+' inns',l+' innings']),['f','First'],['l','Latest']];
-  document.getElementById('view-table').innerHTML=`<p class="sorthint">One row per total. Click a column heading to sort by it; click it again to reverse. “f/o”: following on.</p><table><thead><tr>${head.map(([k,l,t])=>`<th data-k="${k}" scope="col"${t?` title="${t}"`:''}>${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
+  document.getElementById('view-table').innerHTML=`<p class="sorthint">One row per total. Click a column heading to sort by it; click it again to reverse. “f/o”: following on.</p><p class="swipehint">Swipe the table sideways for more columns →</p><table><thead><tr>${head.map(([k,l,t])=>`<th data-k="${k}" scope="col"${t?` title="${t}"`:''}>${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
     rows.map(r=>`<tr data-s="${r.s}"><td class="num"><b>${r.s}</b></td><td class="num">${r.n||'–'}</td>${COLS.map(([,,f])=>`<td class="num">${f(r.c)||''}</td>`).join('')}${r.ii.map(v=>`<td class="num">${v||''}</td>`).join('')}<td class="num">${r.f??''}</td><td class="num">${r.l??''}</td></tr>`).join('')+`</tbody></table>`;
 }
 document.getElementById('view-table').addEventListener('click',e=>{
@@ -1648,7 +1741,7 @@ function renderList(){
   const showT = byTarget || (state.fsel.inn.size===1 && state.fsel.inn.has('4'));
   const rows=all.slice(0,state.rankN); let rank=0, prev=null;
   const desc=filtered()?FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).map(f=>f.label.toLowerCase()+': '+summary(f)).join('; '):'no filters';
-  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest ${byTarget?'target ':''}first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest ${byTarget?'target ':''}first</button></div><span style="color:var(--ink-2);font-size:13px">${all.length.toLocaleString()} innings match the filters (${desc}).</span></div>`+
+  let h=`<div class="group" style="margin-bottom:10px"><span class="glabel">Order</span><div class="seg" id="rankSeg"><button data-d="-1" aria-pressed="${state.rankDir<0}">Highest ${byTarget?'target ':''}first</button><button data-d="1" aria-pressed="${state.rankDir>0}">Lowest ${byTarget?'target ':''}first</button></div><span style="color:var(--ink-2);font-size:13px">${filtered()? `${all.length.toLocaleString()} innings match the filters (${desc}).` : `All ${all.length.toLocaleString()} innings.`}</span></div>`+
     (byTarget?`<p class="rankby"><b>Ranked by the target the side batting last was set</b>, not by what they made. The Target column is the ranking; Total is how far they got.</p>`:'');
   h+=`<div class="tablewrap"><table class="rank${showT?' withT':''}"><thead><tr><th>#</th>${showT?`<th style="text-align:right">${byTarget?'Target (ranked)':'Target'}</th>`:''}<th style="text-align:right">Total</th><th>Innings</th><th>Inns</th><th>Ending</th><th>Toss</th><th>Result</th></tr></thead><tbody>`+
     rows.map((r,i)=>{ if(prev===null||val(r)!==prev){rank=i+1; prev=val(r);} const m=M[r[0]];
@@ -1656,7 +1749,7 @@ function renderList(){
       return `<tr data-s="${r[4]}"><td class="num c-rank">${rank}</td>${showT?`<td class="num c-tgt">${byTarget?'<b>'+(tgt(r)??'–')+'</b>':(tgt(r)??'–')}</td>`:''}<td class="num c-tot"><b>${fmtInn(r).replace(/ all out.*/,'')}</b></td>`+
         `<td class="c-who"><b>${T[r[1]]}</b> v ${T[r[2]]}<small>${m[1]} · ${m[2]||''}${tgt(r)?`<span class="tsm"> · target ${tgt(r)}</span>`:''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</small></td>`+
         `<td class="c-inn">${INN[ix(r)]}</td><td class="c-end"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${endTxt}<span class="m"> · ${INN[ix(r)]} innings · ${['toss: won, batted','toss: won, bowled','toss: lost, fielded','toss: lost, sent-in',''][r[11]]}</span></td>`+
-        `<td class="c-toss">${['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','–'][r[11]]}</td><td class="c-res">${RES[r[9]]}<small>${m[3]}</small></td></tr>`; }).join('')+
+        `<td class="c-toss">${['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','–'][r[11]]}</td><td class="c-res">${RES[r[9]]}${/^match (drawn|tied)$/i.test(m[3]||'')?'':`<small>${m[3]}</small>`}</td></tr>`; }).join('')+
     `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="moreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
   document.getElementById('view-list').innerHTML=h;
 }
@@ -1673,7 +1766,7 @@ function renderDetail(){
   const o=cache[s];
   const hidden = !o.n && filtered() && byScore[s].length>0;   // it has happened, just not with these filters
   const pill = o.status==='out'?[ICON.out+'Complete – all out','var(--out)','#fff']: o.status==='not'?[ICON.not+'Complete – not out','var(--not)','var(--not-ink)']: hidden?['Not '+WF(),'var(--bg)','var(--ink-2)']:[ICON.never+'Scorigami!', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
-  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><button class="linkbtn backrec" data-recent type="button">‹ ${TT()===null?'Latest scorigamis':'Scorigamis to '+TT()}</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
+  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><button class="linkbtn backrec" data-recent type="button">‹ ${listName()}</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
   if(!o.n){
     const nb=[]; for(let d=1;d<1000&&nb.length<2;d++){ if(s-d>=0&&cache[s-d].n&&!nb.some(x=>x<s)) nb.push(s-d); if(s+d<1000&&cache[s+d].n&&!nb.some(x=>x>s)) nb.push(s+d); }
     h+=`<p class="empty">No innings ${filtered()?'matching the filters ':''}has finished on ${s}.${hidden?` (${byScore[s].length} ${byScore[s].length===1?'innings has':'innings have'} without them.)`:''} ${nb.length?`Nearest totals reached: ${nb.sort((a,b)=>a-b).map(x=>`<a href="#" data-go="${x}" style="color:var(--accent)">${x}</a>`).join(' and ')}.`:''}</p>`;
@@ -1686,7 +1779,7 @@ function renderDetail(){
   h+=`<div class="breakdown">${shown.map((v,i)=>v?`<i style="--c:var(${HOW[i].v})"></i><span>${HOW[i].label}</span><b class="num">${v}</b>`+(i===0?o.w.map((x,j)=>x?sub('Short-handed: '+WHY[j].toLowerCase(),x):'').join(''):'')+(i===2&&o.c[6]?sub('Forfeited (0/0d)',o.c[6]):''):'').join('')}</div>`;
   if(o.star) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Includes forfeited innings, counted as 0/0 declared.</p>`;
   else if(o.starN) h+=`<p style="margin:0 0 8px;font-size:13px;color:var(--ink-2)">* Counted here as retired hurt; see the note on the innings below.</p>`;
-  h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">By innings: ${o.ii.map((x,i)=>`${INN[i]} <b class="num" style="color:var(--ink)">${x}</b>`).join(' · ')}</p>`;
+  h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">By innings: ${o.ii.map((x,i)=>x?`${INN[i]} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
   h+=`<p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-2)">Toss: ${[0,1,3,2].map(i=>[i,byScore[s].filter(r=>pass(r)&&r[11]===i).length]).filter(x=>x[1]).map(([i,n])=>`${TOSS[i].toLowerCase()} <b class="num" style="color:var(--ink)">${n}</b>`).join(' · ')}</p>`;
   h+=`<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2)">Team went on to: ${o.rr.map((x,i)=>x?`${['win','lose','draw','tie'][i]} <b class="num" style="color:var(--ink)">${x}</b>`:'').filter(Boolean).join(' · ')}</p>`;
   const list=byScore[s].filter(pass).sort((a,b)=>b[0]-a[0]);
@@ -1697,7 +1790,7 @@ function renderDetail(){
   }).join('')+`</div>`;
   D.innerHTML=h;
 }
-document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('[data-recent]')){ state.sel=null; paintAll(false); renderDetail(); document.getElementById('detail').scrollTop=0; return; } if(e.target.closest('#recMore')){ state.recN+=25; renderDetail(); return; } const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); select(+a.dataset.go);}});
+document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('[data-recent]')){ state.sel=null; state.recNever=false; paintAll(false); renderDetail(); document.getElementById('detail').scrollTop=0; return; } if(e.target.closest('#recMore')){ state.recN+=25; renderDetail(); return; } const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); select(+a.dataset.go);}});
 
 /* ---------- tooltip & selection ---------- */
 const tip=document.getElementById('tip');
@@ -1770,14 +1863,14 @@ function renderActive(){
   A.hidden=false; A.innerHTML=`<span>Showing</span>`+on.map(f=>`<button class="x" data-clear="${f.id}">${f.label}: ${summary(f)}</button>`).join('')+`<span>· ${n.toLocaleString()} innings</span><button class="linkbtn" data-clear="*">Clear all</button>`;
 }
 document.getElementById('activeBar').addEventListener('click',e=>{ const b=e.target.closest('[data-clear]'); if(!b) return; const id=b.dataset.clear; if(id==='*') resetSel(); else { const F=FILTERS.find(f=>f.id===id); state.fsel[id]=new Set(F.leaves.map(l=>l.v)); } state.preset=null; syncPresets(); refilter(); });
-function refilter(){ state.rankN=100; syncFilters(); phoneFilters('t'); const k=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).length; document.getElementById('fcount').textContent=k?`(${k} on)`:''; renderActive(); paintAll(true); renderDetail(); }
+function refilter(){ state.rankN=100; syncFilters(); phoneFilters('t'); const k=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).length; document.getElementById('fcount').textContent=k?`${k} on`:''; renderActive(); paintAll(true); renderDetail(); }
 function closePops(except){ document.querySelectorAll('.pop').forEach(p=>{ if(p.id!==except){ p.hidden=true; p.style.transform=''; document.getElementById('fb-'+p.id.slice(4)).setAttribute('aria-expanded','false'); } }); syncShade(); }
 const popShade=document.createElement('div'); popShade.id='popShade'; popShade.hidden=true; document.body.appendChild(popShade);
 popShade.addEventListener('click',()=>closePops());
 function syncShade(){ setTimeout(()=>{ const op=document.querySelector('.pop:not([hidden])'); if(op && op.previousElementSibling!==popShade) op.before(popShade);   // same stacking context as the sheet, just beneath it
-  popShade.hidden = innerWidth>700 || !op; },0); }
+  popShade.hidden = innerWidth>700 || !op || op.classList.contains('ttpop'); },0); }   // the time-travel sheet leaves the grid visible
 // on phones the menus are bottom sheets: drag the top down to dismiss
-document.addEventListener('touchstart',e=>{ const p=e.target.closest('.pop'); if(!p || innerWidth>700) return; if(!e.target.closest('.pophead') && p.scrollTop>0) return; p._y0=e.touches[0].clientY; p._dy=0; p.style.transition='none'; },{passive:true});   // (no class change here: toggling the animation would replay the slide-up mid-tap)
+document.addEventListener('touchstart',e=>{ const p=e.target.closest('.pop'); if(!p || innerWidth>700 || e.target.closest('.ttsl')) return; if(!e.target.closest('.pophead') && p.scrollTop>0) return; p._y0=e.touches[0].clientY; p._dy=0; p.style.transition='none'; },{passive:true});   // (no class change here: toggling the animation would replay the slide-up mid-tap)
 document.addEventListener('touchmove',e=>{ const p=e.target.closest('.pop'); if(!p || p._y0==null) return; const dy=e.touches[0].clientY-p._y0; if(dy<=0){ p.style.transform=''; p._dy=0; return; } p._dy=dy; p.style.transform=`translateY(${dy}px)`; if(e.cancelable) e.preventDefault(); },{passive:false});
 document.addEventListener('touchend',e=>{ const p=e.target.closest('.pop'); if(!p || p._y0==null) return; const dy=p._dy; p._y0=null; if(dy>90){ const back=p.querySelector('.popback'); if(back && innerWidth<=700) openSheet(back.dataset.back); else closePops(); } else if(dy>0){ p.style.transition='transform .18s'; p.style.transform=''; setTimeout(()=>p.style.transition='',200); } else p.style.transition=''; });
 buildFilters(); syncFilters();
@@ -1853,6 +1946,7 @@ document.getElementById('presets').addEventListener('click',e=>{
   document.querySelector('#viewSeg button[data-v="list"]').click(); refilter();
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
+document.getElementById('mVoidBtn').addEventListener('click',()=>document.getElementById('mReset').click());
 document.getElementById('resetBtn').addEventListener('click',()=>{ state.yr=[null,null]; syncYears(); resetSel(); state.preset=null; syncPresets(); refilter(); });
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','table','list','rings','dial'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
 function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
@@ -1860,8 +1954,8 @@ function flip(id,key,on,off){ document.getElementById(id).addEventListener('clic
 flip('countBtn','heat',true,false); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
 document.getElementById('kpiReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
-(function(){ const pairs=[['ftoggle','filtersBox','fcount'],['mftoggle','mFilters','mfcount']]; let open=innerWidth>=1100; try{ const v=localStorage.getItem('scorigami-filters'); if(v) open= v==='show'; }catch(e){}
-  const set=o=>{ open=o; pairs.forEach(([b,f])=>{ const B=document.getElementById(b); document.getElementById(f).classList.toggle('fopen',o); B.setAttribute('aria-expanded',String(o)); B.firstChild.textContent= o? 'Hide filters & quick questions ' : 'Show filters & quick questions '; B.lastChild.textContent= o?' ▴':' ▾'; }); try{ localStorage.setItem('scorigami-filters',o?'show':'hide'); }catch(e){} };
+(function(){ const pairs=[['ftoggle','filtersBox','fcount'],['mftoggle','mFilters','mfcount']]; let open=false; try{ const v=localStorage.getItem('scorigami-options'); if(v) open= v==='show'; }catch(e){}   // closed until someone opens it
+  const set=o=>{ open=o; pairs.forEach(([b,f])=>{ const B=document.getElementById(b); document.getElementById(f).classList.toggle('fopen',o); B.setAttribute('aria-expanded',String(o)); B.querySelector('.ftlab').textContent= o? 'Hide options' : 'Show options'; B.querySelector('.ftchev').textContent= o?'▴':'▾'; }); try{ localStorage.setItem('scorigami-options',o?'show':'hide'); }catch(e){} };
   set(open); pairs.forEach(([b])=>document.getElementById(b).addEventListener('click',()=>set(!open))); })();
 
 
@@ -1870,7 +1964,10 @@ function paintAll(re){
   const wasEmpty=state.empty; state.empty = cache.every(o=>!o.n);
   const vm=document.getElementById('voidMsg'); vm.hidden=!state.empty;
   if(state.empty && !wasEmpty){
-    document.getElementById('voidText').textContent='No men’s Test innings has ever matched this combination of filters. Not once in '+DATA.inn.length.toLocaleString()+' innings.';
+    const noTests = !DATA.inn.some(r=>yrOk(r[0]));   // no Test at all in these years (the wars, say)
+    document.querySelector('#voidMsg b').textContent = noTests? 'No Tests' : 'Never happened';
+    document.getElementById('voidText').textContent = noTests? `No men’s Tests were played ${yrPhrase()}.` : 'No men’s Test innings has ever matched this combination of filters. Not once in '+DATA.inn.length.toLocaleString()+' innings.';
+    document.getElementById('voidReset').textContent = tOnly()? 'Back to all years' : 'Reset filters';
     const board=document.querySelector('.board'); const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(!reduce && state.view==='grid'){ gridEl.classList.add('boom'); setTimeout(()=>gridEl.classList.remove('boom'),650); }
     if(!reduce){ board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }
@@ -1888,57 +1985,157 @@ function paintAll(re){
 document.querySelectorAll('.hiT').forEach(e=>e.textContent=HI_T); document.querySelectorAll('.hiO').forEach(e=>e.textContent=HI_O);
 /* ---------- latest scorigamis (the default sidebar) ---------- */
 state.recN=25; state.mRecN=25;
+// title and blurb for the list, given how many there are and how many are new
+function listHead(noun, n, nw, filt){ const [a,b]=state.yr, m=winMode(), wf=filt?' with these filters':'';
+  const t = m==='all'? 'Latest scorigamis' : m==='upto'? `Scorigamis up to and including ${b}` : b===null? `Scorigamis since ${a}` : a===b? `Scorigamis in ${a}` : `Scorigamis, ${a}–${b}`;
+  const sub = m==='all'? null : m==='upto'? (nw? `<b>${nw}</b> new in ${b}${wf}: marked <span class="newtag">new</span> here and outlined on the grid.` : `Nothing new in ${b}${wf}. The newest before then are below.`)
+    : (n? `<b>${n}</b> ${noun?'margin':'total'}${n===1?'':'s'} happened for the first time ever ${yrPhrase()}${wf}, outlined on the grid. Newest first.` : (M.some((m,i)=>yrOk(i))? `Nothing happened for the first time ${yrPhrase()}${wf}.` : `No men’s Tests were played ${yrPhrase()}.`));
+  return [t,sub]; }
 function renderRecent(D){
-  const y=TT(), L=[]; for(let s=0;s<1000;s++){ const f=cache[s]&&cache[s].first; if(f) L.push(f); }
-  L.sort((a,b)=>b[0]-a[0]||b[3]-a[3]);
-  const nw = y===null? 0 : L.filter(r=>yOf(r[0])===y).length;
-  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="mtitle">${y===null?'Latest scorigamis':`Scorigamis up to and including ${y}`}</span></div>`;
-  h+=`<p class="rsub">${y===null? `Each total the first time ${filtered()?'an innings matching your filters':'a men’s Test innings'} finished on it, newest first. Tap one for every innings on it.` : nw? `<b>${nw}</b> new in ${y}${filtered()&&!tOnly()?' with these filters':''}: marked <span class="newtag">new</span> here and outlined on the grid.` : `Nothing new in ${y}${filtered()&&!tOnly()?' with these filters':''}. The newest before then are below.`}</p>`;
-  if(!L.length){ D.innerHTML=h+'<p class="empty">None with these filters.</p>'; return; }
-  h+=`<div class="rlist">`+L.slice(0,state.recN).map(r=>{ const m=M[r[0]]; return `<button class="rrow" type="button" data-go="${r[4]}"><span class="rt num">${r[4]}</span><span class="rx"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span><b>${T[r[1]]}</b> v ${T[r[2]]}${y!==null&&yOf(r[0])===y?'<span class="newtag">new</span>':''}<small>${monY(m)} · ${ord(r[3])} innings · ${r[6]===0?'all out':fmtInn(r)}${m[2]?' · '+m[2]:''}</small></span></button>`; }).join('')+`</div>`;
+  if(state.recNever){ renderNever(D); return; }
+  const m=winMode(), L=FA.filter(f=>f && (m==='upto'? yOf(f[0])<=state.yr[1] : inWin(yOf(f[0])))).sort((a,b)=>b[0]-a[0]||b[3]-a[3]);
+  const nw = m==='upto'? L.filter(r=>yOf(r[0])===state.yr[1]).length : 0, [t,sub]=listHead('', L.length, nw, filtered()&&!tOnly());
+  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="mtitle">${t}</span></div>`;
+  h+=`<p class="rsub">${sub ?? `Each total the first time ${filtered()?'an innings matching your filters':'a men’s Test innings'} finished on it, newest first. Tap one for every innings on it.`}</p>`;
+  if(!L.length){ D.innerHTML=h; return; }
+  h+=`<div class="rlist">`+L.slice(0,state.recN).map(r=>{ const mm=M[r[0]]; return `<button class="rrow" type="button" data-go="${r[4]}"><span class="rt num">${r[4]}</span><span class="rx"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span><b>${T[r[1]]}</b> v ${T[r[2]]}${m==='upto'&&yOf(r[0])===state.yr[1]?'<span class="newtag">new</span>':''}<small>${monY(mm)} · ${ord(r[3])} innings · ${r[6]===0?'all out':fmtInn(r)}${mm[2]?' · '+mm[2]:''}</small></span></button>`; }).join('')+`</div>`;
   if(L.length>state.recN) h+=`<button class="linkbtn" id="recMore" type="button">Show more (${L.length-state.recN} more)</button>`;
   D.innerHTML=h;
 }
 function mRecentHTML(){
-  const y=TT(), seen=new Set(), L=[];
-  for(const r of MREC){ if(!mpass(r)) continue; const key= r.kind==='r'||r.kind==='i'? r.kind+':'+r.n : r.kind==='w'? 'w'+r.n : r.kind==='tie'? 'r:0' : null; if(!key||seen.has(key)) continue; seen.add(key); L.push([key,r]); }
-  L.reverse(); const nw = y===null? 0 : L.filter(([,r])=>yOf(r.i)===y).length;
-  let h=`<button class="sheetclose" data-close aria-label="Close">×</button><div class="dhead"><span class="mtitle">${y===null?'Latest margin scorigamis':`Margin scorigamis up to and including ${y}`}</span></div>`;
-  h+=`<p class="rsub">${y===null? `Each winning margin the first time ${mfiltered()?'a match matching your filters':'a men’s Test'} was won by it, newest first. Tap one for every match.` : nw? `<b>${nw}</b> new in ${y}${mfiltered()&&!mOnly()?' with these filters':''}: marked <span class="newtag">new</span> here and outlined on the grids.` : `Nothing new in ${y}${mfiltered()&&!mOnly()?' with these filters':''}. The newest before then are below.`}</p>`;
-  if(!L.length) return h+'<p class="empty">None with these filters.</p>';
-  h+=`<div class="rlist">`+L.slice(0,state.mRecN).map(([key,r])=>{ const m=M[r.i], who= r.w!==undefined? `<b>${T[r.w]}</b> beat ${T[r.l]}` : r.teams.map(t=>T[t]).join(' v ');
-    return `<button class="rrow mr" type="button" data-sel="${key}"><span class="rt num">${r.kind==='tie'?'Tie':mShort(r)}</span><span class="rx">${who}${y!==null&&yOf(r.i)===y?'<span class="newtag">new</span>':''}<small>${r.kind==='tie'?'Tied':'Won by '+mLabel(r.kind,r.n)} · ${monY(m)}${m[2]?' · '+m[2]:''}</small></span></button>`; }).join('')+`</div>`;
+  const m=winMode(), L=Object.entries(MFA).filter(([,r])=> m==='upto'? yOf(r.i)<=state.yr[1] : inWin(yOf(r.i))).sort((a,b)=>b[1].i-a[1].i);
+  const nw = m==='upto'? L.filter(([,r])=>yOf(r.i)===state.yr[1]).length : 0, [t,sub]=listHead('margin ', L.length, nw, mfiltered()&&!mOnly());
+  let h=`<button class="sheetclose" data-close aria-label="Close">×</button><div class="dhead"><span class="mtitle">${t.replace('Latest margin ','Latest margin ')}</span></div>`;
+  h+=`<p class="rsub">${sub ?? `Each winning margin the first time ${mfiltered()?'a match matching your filters':'a men’s Test'} was won by it, newest first. Tap one for every match.`}</p>`;
+  if(!L.length) return h;
+  h+=`<div class="rlist">`+L.slice(0,state.mRecN).map(([key,r])=>{ const mm=M[r.i], who= r.w!==undefined? `<b>${T[r.w]}</b> beat ${T[r.l]}` : r.teams.map(x=>T[x]).join(' v ');
+    return `<button class="rrow mr" type="button" data-sel="${key}"><span class="rt num">${r.kind==='tie'?'Tie':mShort(r)}</span><span class="rx">${who}${m==='upto'&&yOf(r.i)===state.yr[1]?'<span class="newtag">new</span>':''}<small>${r.kind==='tie'?'Tied':'Won by '+mLabel(r.kind,r.n)} · ${monY(mm)}${mm[2]?' · '+mm[2]:''}</small></span></button>`; }).join('')+`</div>`;
   if(L.length>state.mRecN) h+=`<button class="linkbtn" id="mRecMore" type="button">Show more (${L.length-state.mRecN} more)</button>`;
   return h;
 }
 
-/* ---------- time travel ---------- */
-document.querySelectorAll('[data-tt]').forEach(b=>{ b.innerHTML=`<span class="glabel">Time travel</span><button class="ttbtn ttplay" type="button" aria-label="Play through the years"></button><button class="ttbtn ttstep" data-d="-1" type="button" aria-label="Back a year">‹</button><input class="ttrange" type="range" min="${Y0}" max="${Y1}" step="1" aria-label="Show everything up to and including this year"><button class="ttbtn ttstep" data-d="1" type="button" aria-label="Forward a year">›</button><span class="ttbr"></span><b class="ttyear num" aria-live="polite"></b><button class="linkbtn ttnow" type="button">Back to today</button><button class="linkbtn ttlist" type="button"></button><small class="ttsub"></small>`; });
-var ttTimer=null, ttRaf=0;
-function syncTT(){ const y=TT(), on=y!==null;
-  document.querySelectorAll('[data-tt]').forEach(b=>{ if(!b.querySelector('.ttrange')) return; b.classList.toggle('on',on);
-    const r=b.querySelector('.ttrange'); if(document.activeElement!==r || ttTimer) r.value = on? y : Y1;
-    b.querySelector('.ttyear').textContent = on? y : 'Today';
-    b.querySelector('.ttnow').hidden=!on;
-    const p=b.querySelector('.ttplay'); p.textContent= ttTimer? '❚❚' : '▶'; p.setAttribute('aria-label', ttTimer? 'Pause':'Play through the years');
-    b.querySelector('.ttsub').textContent = on? `Showing only what had happened by the end of ${y}${state.yr[0]!==null?' (from '+state.yr[0]+')':''}. This year’s new scorigamis are outlined.` : 'Drag the slider or press play to watch the scorigamis fill in, year by year.';
-    b.querySelector('.ttlist').textContent = on? 'List ›' : 'Latest ›'; }); }
-function setTT(y){ const lo=Math.max(Y0, state.yr[0]??Y0); y=Math.max(lo,Math.min(Y1,Math.round(y)));
-  state.yr[1] = y>=Y1? null : y; state.recN=25; state.mRecN=25;
+function renderNever(D){
+  let hi=-1; for(let s=0;s<1000;s++) if(cache[s].n) hi=s; const L=[]; for(let s=0;s<=hi;s++) if(!cache[s].n) L.push(s);
+  const wf= filtered()? (tOnly()? ' '+yrPhrase() : ' with these filters') : '';
+  D.innerHTML=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><button class="linkbtn backrec" data-recent type="button">‹ Latest scorigamis</button><div class="dhead"><span class="mtitle">Never happened</span></div><p class="rsub"><b>${L.length}</b> of the totals from 0 to ${hi}${wf} no innings has ever finished on, lowest first. Tap one to see the nearest totals that have.</p>`+(L.length? `<div class="nevergrid">${L.map(s=>`<button type="button" data-go="${s}">${s}</button>`).join('')}</div>` : '<p class="empty">None: every total up to the highest has happened.</p>'); }
+// the headline tiles are buttons too
+function kpiGo(el, mode){ const a=el.dataset.ka;
+  if(mode==='t'){ if(a==='table') document.querySelector('#viewSeg button[data-v="table"]').click();
+    else if(a==='never'){ state.sel=null; state.recNever=true; paintAll(false); renderDetail(); const D=document.getElementById('detail'); D.scrollTop=0; if(innerWidth<1100) D.classList.add('open'); }
+    else if(a.startsWith('go:')) goTo(+a.slice(3)); }
+  else { if(a.startsWith('mtable:')){ state.mkind=a.slice(7); state.mrankN=100; state.msortK='n'; state.msortD=1; document.querySelector('#mViewSeg button[data-mv="table"]').click(); }
+    else if(a.startsWith('msel:')){ const sel=a.slice(5); if(mK()){ state.mkind=sel[0]; } mFocus(sel); } } }
+[['kpis','t'],['mkpis','m']].forEach(([id,m])=>{ const K=document.getElementById(id);
+  K.addEventListener('click',e=>{ const g=e.target.closest('.kgo'); if(g){ e.preventDefault(); e.stopPropagation(); const v=g.dataset.kgo; if(m==='t') goTo(+v); else { if(mK()) state.mkind=v[0]; mFocus(v); } return; } const t=e.target.closest('[data-ka]'); if(t) kpiGo(t,m); });
+  K.addEventListener('keydown',e=>{ const t=e.target.closest('[data-ka]'); if(t && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); kpiGo(t,m); } }); });
+
+/* ---------- time travel: one year, or a range ---------- */
+// One year: a single handle that walks along. Range: two handles, each with its own box and arrows at its own end;
+// play and the right-hand arrows grow the range year by year, so it builds up from wherever the left end sits.
+const TICKS=[1900,1925,1950,1975,2000,2025].filter(y=>y>Y0&&y<Y1);
+const ttEnd=(h)=>`<span class="ttend" data-end="${h}"><button class="ttarr" type="button" data-arr="${h}" data-d="-1" aria-label="${['From','To'][h]} year: back one">‹</button><input type="number" inputmode="numeric" data-ttin="${h}" placeholder="${h?Y1:Y0}" min="${Y0}" max="${Y1}" aria-label="${['From','To'][h]} year" enterkeyhint="go"><button class="ttarr" type="button" data-arr="${h}" data-d="1" aria-label="${['From','To'][h]} year: forward one">›</button></span>`;
+document.querySelectorAll('[data-tt]').forEach(b=>{ b.innerHTML=`<div class="tttop"><span class="glabel">Time travel</span><div class="seg ttseg" role="group" aria-label="Time travel mode"><button type="button" data-ttm="one" aria-pressed="false">One year</button><button type="button" data-ttm="range" aria-pressed="true">Range</button></div><button class="ttbtn ttplay" type="button" aria-label="Play through the years"></button><button class="linkbtn ttnow" type="button">All years</button></div>
+  <div class="ttrow">${ttEnd(0)}<div class="ttsl"><div class="tttrack"><div class="ttfill"></div></div>${TICKS.map(y=>`<span class="tttick${y%50?' minor':''}" style="left:${(y-Y0)/(Y1-Y0)*100}%">${y}</span>`).join('')}<button class="ttthumb" data-h="0" type="button" role="slider" aria-label="From year" aria-valuemin="${Y0}" aria-valuemax="${Y1}"></button><button class="ttthumb" data-h="1" type="button" role="slider" aria-label="To year" aria-valuemin="${Y0}" aria-valuemax="${Y1}"></button></div>${ttEnd(1)}</div>
+  <small class="ttsub"></small>`; });
+var ttTimer=null, ttRaf=0, ttDrag=null, ttMode='range';
+const ttVals=()=>[state.yr[0]??Y0, state.yr[1]??Y1];
+const ttLabel=()=>{ const [a,b]=ttVals(); return !yrOn()? 'All years' : a===b? String(a) : `${a}–${b}`; };
+function syncTT(){ if(ttMode==='one' && !(state.yr[0]!==null && state.yr[0]===state.yr[1])) ttMode='range';   // something else (Era, Reset) changed the years
+  const [a,b]=ttVals(), on=yrOn(), one=ttMode==='one', P=y=>(y-Y0)/(Y1-Y0)*100;
+  document.querySelectorAll('[data-tt]').forEach(B=>{ if(!B.querySelector('.ttsl')) return; B.classList.toggle('on',on);
+    B.querySelectorAll('[data-ttm]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.ttm===ttMode)));
+    const t=B.querySelectorAll('.ttthumb'); t[0].hidden=one; t[0].style.left=P(a)+'%'; t[1].style.left=P(b)+'%'; t[0].setAttribute('aria-valuenow',a); t[1].setAttribute('aria-valuenow',b);
+    t[1].setAttribute('aria-label', one? 'Year' : 'To year'); t[0].classList.toggle('top', !one && a===b && a>=Y1-2);
+    const f=B.querySelector('.ttfill'); f.style.left=P(one?b:a)+'%'; f.style.width=one? '0' : Math.max(0,P(b)-P(a))+'%';
+    B.querySelector('[data-end="0"]').hidden=one;
+    B.querySelectorAll('[data-ttin]').forEach(i=>{ const h=+i.dataset.ttin, v= one? b : (h? state.yr[1] : state.yr[0]); if(document.activeElement!==i) i.value= v===null? '' : v; i.setAttribute('aria-label', one? 'Year' : ['From','To'][h]+' year'); });
+    B.querySelector('.ttnow').hidden=!on;
+    const p=B.querySelector('.ttplay'); p.textContent= ttTimer? '❚❚' : '▶'; p.setAttribute('aria-label', ttTimer? 'Pause':'Play through the years');
+    const m=winMode(); B.querySelector('.ttsub').textContent = one? `Showing only ${b}. Anything that happened for the first time ever that year is outlined.` : m==='all'? 'Drag either end, use its arrows or type a year. Play builds everything up year by year.' : m==='upto'? `Showing everything up to the end of ${b}. That year’s new scorigamis are outlined.` : a===b? `Showing only ${a}. Anything that happened for the first time ever that year is outlined.` : `Showing ${a}–${b}. Anything that happened for the first time ever in those years is outlined.`; });
+  document.querySelectorAll('.ttcount').forEach(c=>c.textContent= on? ttLabel() : '');
+  const mini=document.getElementById('ttMini'); document.getElementById('ttMiniY').textContent=ttLabel(); mini.querySelector('.ttplay').textContent= ttTimer? '❚❚' : '▶'; mini.querySelector('.ttplay').setAttribute('aria-label', ttTimer?'Pause':'Play');
+  ttMiniCheck(); }
+// the mini player: only while playing, and only once the full controls are out of sight
+function ttMiniCheck(){ const mini=document.getElementById('ttMini'); if(!mini) return; if(!ttTimer){ mini.hidden=true; return; }
+  const B=document.querySelector(`[data-tt="${state.mode==='margins'?'m':'t'}"]`), r=B.getBoundingClientRect(), seen = B.offsetParent!==null && r.bottom>0 && r.top<innerHeight;
+  mini.hidden=seen; }
+addEventListener('scroll',()=>{ if(ttTimer) ttMiniCheck(); },{passive:true});
+function applyYR(nx){ if(nx[0]===state.yr[0] && nx[1]===state.yr[1]) return;
+  state.yr=nx; state.recN=25; state.mRecN=25;
   if(state.mode==='margins'){ state.msel=null; syncYears(); mRefilter(); } else { state.sel=null; syncYears(); refilter(); } }
-function ttStop(){ if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } syncTT(); }
-function ttPlay(){ if(ttTimer){ ttStop(); return; }
-  if(TT()===null) setTT(state.yr[0]??Y0);
-  ttTimer=setInterval(()=>{ const c=TT(); if(c===null){ ttStop(); return; } setTT(c+1); if(TT()===null) ttStop(); }, matchMedia('(prefers-reduced-motion: reduce)').matches? 600 : 280);
+const clampY=y=>Math.max(Y0,Math.min(Y1,Math.round(y)));
+// move one end of the range (h 0 = left, 1 = right); the ends can meet but never cross
+function setEnd(h,y){ y=clampY(y); const [a,b]=ttVals(); let A=a, B=b; if(h===0) A=Math.min(y,b); else B=Math.max(y,a);
+  applyYR([A<=Y0 && !(A===B)? null : A, B>=Y1 && !(A===B)? null : B]); }
+function setOne(y){ y=clampY(y); applyYR([y,y]); }
+function ttSetMode(m){ if(m===ttMode) return; const [a,b]=ttVals(); ttMode=m;
+  if(m==='one') setOne(yrOn()? b : Y1);   // keep the right-hand year
+  else applyYR([null, b>=Y1? null : b]);   // 'just 1948' becomes 'everything up to 1948'
   syncTT(); }
-document.addEventListener('click',e=>{ const b=e.target.closest('[data-tt] button'); if(!b) return;
+function ttStep(){ const [a,b]=ttVals(); if(ttMode==='one') setOne(b+1); else setEnd(1,b+1); }
+function ttHalt(){ if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } }
+function ttStop(){ ttHalt(); syncTT(); }
+function ttPlay(){ if(ttTimer){ ttStop(); return; }
+  const [a,b]=ttVals();
+  if(ttMode==='one'){ if(!yrOn() || b>=Y1) setOne(Y0); }
+  else if(b>=Y1) applyYR(state.yr[0]===null? [null,Y0] : [a,a]);   // start again from the left end
+  ttTimer=setInterval(()=>{ if(ttVals()[1]>=Y1){ ttStop(); return; } ttStep(); if(ttVals()[1]>=Y1) ttStop(); else ttMiniCheck(); }, matchMedia('(prefers-reduced-motion: reduce)').matches? 600 : 280);
+  syncTT(); }
+document.addEventListener('click',e=>{
+  if(e.target.closest('#ttMini .ttplay')){ ttPlay(); return; }
+  const b=e.target.closest('[data-tt] button'); if(!b || b.classList.contains('ttthumb')) return;
   if(b.classList.contains('ttplay')) ttPlay();
-  else if(b.classList.contains('ttstep')){ ttStop(); setTT((TT()??Y1) + (+b.dataset.d)); }
-  else if(b.classList.contains('ttnow')){ ttStop(); setTT(Y1); }
-  else if(b.classList.contains('ttlist')){ if(state.mode==='margins') mSelect(null); else { state.sel=null; paintAll(false); renderDetail(); if(innerWidth<1100) document.getElementById('detail').classList.add('open'); } } });
-document.addEventListener('input',e=>{ const r=e.target.closest('.ttrange'); if(!r) return; if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } cancelAnimationFrame(ttRaf); ttRaf=requestAnimationFrame(()=>setTT(+r.value)); });
-document.addEventListener('keydown',e=>{ if(e.key===' ' && e.target.closest('.ttrange')){ e.preventDefault(); ttPlay(); } });
+  else if(b.dataset.ttm){ ttHalt(); ttSetMode(b.dataset.ttm); }
+  else if(b.dataset.arr!==undefined){ ttHalt(); const h=+b.dataset.arr, d=+b.dataset.d, [a,c]=ttVals(); if(ttMode==='one') setOne(c+d); else setEnd(h,(h?c:a)+d); syncTT(); }
+  else if(b.classList.contains('ttnow')){ ttHalt(); if(ttMode==='one') ttMode='range'; applyYR([null,null]); syncTT(); } });
+document.querySelectorAll('.latestlink').forEach(b=>b.addEventListener('click',()=>{ if(state.mode==='margins') mSelect(null); else { state.sel=null; state.recNever=false; paintAll(false); renderDetail(); document.getElementById('detail').classList.add('open'); } }));
+['t','m'].forEach(m=>document.getElementById('fb-tt'+m).addEventListener('click',e=>{ e.stopPropagation(); openSheet('tt'+m); }));
+document.querySelectorAll('.ttpop [data-close]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); closePops(); }));   // Done on the phone sheet
+// typing a year: Enter or leaving the box applies it
+document.addEventListener('change',e=>{ const i=e.target.closest('[data-ttin]'); if(!i) return; ttHalt(); const v=i.value.trim(); const h=+i.dataset.ttin;
+  if(v===''){ if(ttMode==='one') syncTT(); else setEnd(h, h?Y1:Y0); return; }
+  if(ttMode==='one') setOne(+v); else { const y=clampY(+v), [a,b]=ttVals(); if(h===0 && y>b) applyYR([y,y]); else if(h===1 && y<a) applyYR([y,y]); else setEnd(h,y); }   // a typed year wins: the other end moves to meet it
+  syncTT(); });
+document.addEventListener('keydown',e=>{ const i=e.target.closest('[data-ttin]'); if(i && e.key==='Enter'){ e.preventDefault(); i.blur(); } });
+// dragging: grab a handle, or press on the bar and the nearer handle jumps there
+const ttYear=(sl,x)=>{ const r=sl.getBoundingClientRect(); return Y0+Math.round(Math.max(0,Math.min(1,(x-r.left)/r.width))*(Y1-Y0)); };
+function ttApply(){ const h=ttDrag.h, y=ttDrag.y; cancelAnimationFrame(ttRaf); ttRaf=requestAnimationFrame(()=>{ if(ttMode==='one') setOne(y); else setEnd(h,y); }); }
+document.addEventListener('pointerdown',e=>{ const sl=e.target.closest('.ttsl'); if(!sl) return; ttHalt(); e.preventDefault();
+  const y=ttYear(sl,e.clientX), [a,b]=ttVals(), th=e.target.closest('.ttthumb');
+  let h= ttMode==='one'? 1 : th? +th.dataset.h : (Math.abs(y-a)<Math.abs(y-b)? 0 : Math.abs(y-a)>Math.abs(y-b)? 1 : (y<a? 0 : 1));
+  if(ttMode!=='one' && th && a===b) h=null;   // two handles on top of each other: the first move decides which one you've got
+  ttDrag={sl,h,y,x0:e.clientX,id:e.pointerId}; sl.setPointerCapture(e.pointerId); (th||sl.querySelectorAll('.ttthumb')[h??1]).focus({preventScroll:true});
+  if(h!==null && !th) ttApply(); });
+document.addEventListener('pointermove',e=>{ if(!ttDrag||e.pointerId!==ttDrag.id) return; const y=ttYear(ttDrag.sl,e.clientX);
+  if(ttDrag.h===null){ if(Math.abs(e.clientX-ttDrag.x0)<3) return; ttDrag.h= e.clientX<ttDrag.x0? 0 : 1; }
+  if(y!==ttDrag.y){ ttDrag.y=y; ttApply(); } });
+const ttUp=e=>{ if(ttDrag && e.pointerId===ttDrag.id){ ttDrag=null; syncTT(); } };
+document.addEventListener('pointerup',ttUp); document.addEventListener('pointercancel',ttUp);
+document.addEventListener('keydown',e=>{ const t=e.target.closest('.ttthumb'); if(!t) return; const h=+t.dataset.h, [a,b]=ttVals(), d={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1,PageDown:-10,PageUp:10}[e.key];
+  if(e.key===' '){ e.preventDefault(); ttPlay(); return; }
+  const v = d!==undefined? (h?b:a)+d : e.key==='Home'? Y0 : e.key==='End'? Y1 : null; if(v===null) return; e.preventDefault(); ttHalt();
+  if(ttMode==='one') setOne(v); else setEnd(h,v); syncTT(); });
 syncTT();
+
+/* ---------- the View bar slides: drag the highlight and it snaps to the nearest view ---------- */
+document.querySelectorAll('.viewrow .seg').forEach(seg=>{
+  const th=document.createElement('span'); th.className='segthumb'; th.setAttribute('aria-hidden','true'); seg.prepend(th);
+  const btns=()=>[...seg.querySelectorAll('button')];
+  const place=()=>{ const b=btns().find(x=>x.getAttribute('aria-pressed')==='true'); if(!b||!b.offsetWidth) return; th.style.left=b.offsetLeft+'px'; th.style.top=b.offsetTop+'px'; th.style.width=b.offsetWidth+'px'; th.style.height=b.offsetHeight+'px'; };
+  new MutationObserver(place).observe(seg,{subtree:true,attributes:true,attributeFilter:['aria-pressed']});
+  new ResizeObserver(place).observe(seg); place();
+  let d=null, eat=false;
+  const nearest=x=>{ let best=null, bd=1e9; for(const b of btns()){ const r=b.getBoundingClientRect(), c=Math.abs(x-(r.left+r.width/2)); if(c<bd){ bd=c; best=b; } } return best; };
+  seg.addEventListener('pointerdown',e=>{ if(e.button>0) return; const b=e.target.closest('button'); if(!b) return; d={x0:e.clientX, y0:e.clientY, id:e.pointerId, on:false, w:th.offsetWidth, l0:th.offsetLeft, grab:e.clientX-seg.getBoundingClientRect().left-th.offsetLeft}; });
+  seg.addEventListener('pointermove',e=>{ if(!d||e.pointerId!==d.id) return; const dx=e.clientX-d.x0;
+    if(!d.on){ if(Math.abs(dx)<6 || Math.abs(e.clientY-d.y0)>Math.abs(dx)) return; d.on=true; try{ seg.setPointerCapture(d.id); }catch(err){} seg.classList.add('dragging'); const r=seg.getBoundingClientRect(); d.grab=Math.max(0,Math.min(d.w, d.x0-r.left-d.l0)); }
+    const r=seg.getBoundingClientRect(); let l=e.clientX-r.left-d.grab; l=Math.max(3,Math.min(r.width-d.w-3,l)); th.style.left=l+'px';
+    const u=nearest(r.left+l+d.w/2); btns().forEach(b=>b.classList.toggle('under',b===u)); });
+  const end=e=>{ if(!d||e.pointerId!==d.id) return; const was=d.on; d=null; seg.classList.remove('dragging'); btns().forEach(b=>b.classList.remove('under')); if(!was) return;
+    const r=th.getBoundingClientRect(), t=nearest(r.left+r.width/2); eat=true; setTimeout(()=>{ eat=false; if(t.getAttribute('aria-pressed')==='true') place(); else t.click(); },0); };
+  seg.addEventListener('pointerup',end); seg.addEventListener('pointercancel',e=>{ if(d&&d.on){ d=null; seg.classList.remove('dragging'); place(); } d=null; });
+  seg.addEventListener('click',e=>{ if(eat && e.isTrusted){ e.stopPropagation(); e.preventDefault(); } },true);   // the click that ends a drag isn't a choice
+});
 
 /* ---------- share ---------- */
 (function(){
