@@ -33,3 +33,11 @@ def test_page_written(tmp_path, monkeypatch):
     run(tmp_path, monkeypatch)
     html = (tmp_path / "docs" / "index.html").read_text()
     assert "__DATA__" not in html and '"meta"' in html
+
+
+def test_awarded_and_other_endings():
+    """The Oval 2006 innings is 'awarded'; any other unexplained ending stays 'other' (shown only if one turns up)."""
+    from scorigami.build import how_final
+    assert how_final("other", "England awarded the match (opposition refused to play)") == "awarded"
+    assert how_final("other", "Match abandoned") == "other"
+    assert how_final("draw", "England awarded the match") == "draw"
