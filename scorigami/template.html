@@ -381,6 +381,8 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 .kicker{margin:4px 0 2px;font-family:var(--display);font-size:clamp(19px,2.4vw,24px);font-weight:600;color:var(--ink-2);letter-spacing:.01em}
 .howto{display:inline-block;margin-top:8px;font-size:14px;color:var(--ink-2)}
 .kpi small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.kpi>span,.kpi>small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.35;min-height:2.7em}   /* same height on both pages, so nothing jumps */
+.kpi>b{white-space:nowrap}
 .kpi b small.kunit{display:inline;margin:0 0 0 2px;font:600 16px var(--body);color:var(--ink-2)}   /* 'runs' sits beside the number, not under it */
 .active{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px;font-size:13px;color:var(--ink-2)}
 .active button.x{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:2px 6px 2px 10px;font:500 12.5px var(--body);cursor:pointer}
@@ -420,6 +422,7 @@ button:focus-visible,input:focus-visible,.cell:focus-visible{outline:2px solid v
 input[type=range]{width:100%;accent-color:var(--accent)}
 /* table */
 .tablewrap{max-height:640px;overflow:auto}
+@media (max-width:700px){ .tablewrap{max-height:none} }   /* on phones the page does the scrolling */
 .swipehint{display:none;font-size:12.5px;color:var(--muted);margin:0 0 6px}
 @media (max-width:700px){ .swipehint{display:block} }
 .sorthint{margin:0 0 8px;font-size:13px;color:var(--ink-2);position:sticky;left:0}
@@ -484,6 +487,12 @@ footer .credits{color:var(--muted)}
 #help .heatdemo .bands i{width:34px;height:18px;border-radius:4px;display:block}
 #help .heatdemo .bands .nv i{background:var(--never);box-shadow:inset 0 0 0 2px var(--never-edge)}
 #help p{margin:0 0 8px} #help ul{margin:0 0 10px;padding-left:20px} #help li{margin:0 0 5px} #help li ul{margin:5px 0 0} #help a{color:var(--accent)} #help .keylist{list-style:none;padding:0}
+#help .helpin{font-size:15px;line-height:1.6}
+#help .hlead{font-size:15.5px;color:var(--ink)}
+#help dl.hdl{display:grid;grid-template-columns:max-content 1fr;gap:7px 16px;margin:4px 0 12px;padding:10px 14px;background:var(--bg);border-radius:10px}
+#help dl.hdl dt{font-weight:700;color:var(--ink)} #help dl.hdl dd{margin:0}
+#help .keylist li{display:flex;gap:10px;align-items:flex-start}
+@media (max-width:700px){ #help dl.hdl{grid-template-columns:1fr;gap:2px} #help dl.hdl dd{margin-bottom:8px} }
 @media (max-width:700px){ .helpbtn{padding:6px 10px 6px 6px;font-size:13px} #help{max-width:100vw;width:100vw;max-height:92vh;margin:auto 0 0;border-radius:16px 16px 0 0} #help .helpin{max-height:92vh} }
 footer h2{font-size:18px;color:var(--ink);margin:14px 0 4px}
 footer p{margin:0 0 8px}
@@ -621,9 +630,9 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div>
     <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><div class="hbtns"><button class="helpbtn sharebtn" id="shareBtn" type="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true">↗</span> Share</button><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button><div class="sharepop" id="sharePop" hidden role="menu"></div></div></div>
     <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, the term has since been taken up by fans of other sports. This is the Test cricket version, in two parts: the final run total of every men’s Test innings and how it ended, and the margin every men’s Test has been won by.</p>
-    <p class="lead invite">Dig in: almost everything below is clickable. Pick any total or margin to see the innings or matches behind it, or wind the clock back with time travel. New here? <button class="linkbtn helpopen" type="button">How it works</button></p>
+    <p class="lead invite">Dig in: almost everything below is clickable. Pick any total or margin to see the innings or matches behind it, or wind the clock back with time travel. New here? <button class="linkbtn helpopen" type="button">See how it works</button></p>
     <div class="modebar"><div class="modeswitch" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true"><b>Innings totals</b><small>Every score a side has finished on</small></button><button data-m="margins" aria-pressed="false"><b>Winning margins</b><small>Every result a Test has been won by</small></button></div></div>
-    <h2 class="kicker">Every total a men’s Test innings has finished on, from 0 up to the all-time record of <span class="hiT"></span></h2>
+    <h2 class="kicker">Every single total a men’s Test innings has ended on.</h2>
   </div>
 </header>
 
@@ -735,172 +744,102 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <div class="helphead"><h2 id="helpTitle">How it works</h2><button class="helpx" aria-label="Close">×</button></div>
 
   <h2>The idea</h2>
-  <ul>
-    <li>A <b>scorigami</b> is a score that has never happened. This site applies the idea to men’s Test cricket, in two halves you switch between at the top of the page:
-      <ul>
-        <li><b>Innings totals:</b> every total from 0 up to the all-time record (<span class="hiT"></span>), and whether any innings has finished on it.</li>
-        <li><b>Winning margins:</b> every margin a Test has been won by: by runs, by an innings and runs, or by wickets.</li>
-      </ul></li>
-    <li>Click or tap almost anything (a square, a slice, a bar, a row, a label) to open the full list of innings or matches behind it.</li>
-  </ul>
+  <p class="hlead">A <b>scorigami</b> is a score that has never happened. This site applies the idea to men’s Test cricket, in two halves:</p>
+  <dl class="hdl">
+    <dt>Innings totals</dt><dd>Every total from 0 to the record (<span class="hiT"></span>), and whether an innings has ever finished on it</dd>
+    <dt>Winning margins</dt><dd>Every margin a Test has been won by: runs, an innings and runs, or wickets</dd>
+  </dl>
+  <p>Almost everything is clickable: tap a square, slice, bar, row or tile to see the innings or matches behind it.</p>
 
   <h2>The colours</h2>
-  <h3>Normal colours</h3>
   <ul class="keylist">
-    <li><span class="sq" style="background:var(--out)"></span><span><b>Green: it has happened.</b> For innings totals, a side has been bowled out for exactly that total at least once. For margins, at least one Test has been won by exactly that margin.</span></li>
-    <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Cream: reached, but never all out</b> (innings totals only). Innings have finished on that total, but every one was declared, won the match by chasing, or was still batting when the match was drawn.</span></li>
+    <li><span class="sq" style="background:var(--out)"></span><span><b>Green: it has happened.</b> A side has been bowled out for exactly that total, or a Test has been won by exactly that margin.</span></li>
+    <li><span class="sq" style="background:var(--not);box-shadow:inset 0 0 0 1.25px var(--not-edge)"></span><span><b>Cream: reached, never all out</b> (totals only). Every innings on it was declared, won a chase, or was still batting at a draw.</span></li>
     <li><span class="sq sq-never"></span><span><b>Red: a scorigami.</b> It has never happened.</span></li>
-    <li><span class="sq" style="background:var(--zero)"></span><span><b>Dark grey: the two 0 squares</b> (margins only). <b>TIE</b> holds the two tied Tests. <b>SL</b>, “scores level”, can never be an innings win (see How winning margins work).</span></li>
+    <li><span class="sq" style="background:var(--zero)"></span><span><b>Dark grey: the two 0 squares</b> (margins only): <b>TIE</b> and <b>SL</b>. See <i>The cricket fine print</i>.</span></li>
   </ul>
   <h3>Frequency heat map</h3>
-  <ul>
-    <li>Turn it on under <b>Display</b>. Everything that has happened is shaded blue by how often: the darker, the more often. Red still means never.</li>
-    <li>The <b>Grids</b> view prints the count in each square.</li>
-    <li>For innings totals, a dot (or a dark outline on the rings and dial) marks totals that have never finished all out.</li>
-  </ul>
-  <div class="heatdemo"><b>Innings totals</b><div class="bands" id="heatDemoT"></div><b>Winning margins</b><div class="bands" id="heatDemoM"></div></div>
+  <p>Shades everything that has happened in blue by how often; the Grids view also prints the count. On totals, a dot (or a dark outline on the wheel and dial) marks totals never finished all out.</p>
+  <div class="heatdemo"><b>Totals</b><div class="bands" id="heatDemoT"></div><b>Margins</b><div class="bands" id="heatDemoM"></div></div>
   <h3>High-contrast colours</h3>
-  <ul><li>Also under <b>Display</b>: turns the scorigamis orange, for anyone who finds red and green hard to tell apart.</li></ul>
-  <h3>With filters on</h3>
-  <ul><li>Everything is recoloured using only the innings or matches that match your filters.</li></ul>
+  <p>Turns the scorigamis orange, for anyone who finds red and green hard to tell apart. Both switches are under <b>Display</b>, at the top of the board.</p>
 
-  <h2>The headline numbers</h2>
-  <h3>Innings totals</h3>
+  <h2>Finding your way around</h2>
+  <h3>The views</h3>
+  <dl class="hdl">
+    <dt>Grids</dt><dd>Boards of 100. On margins: runs, innings and the wickets chart, each foldable by tapping its heading</dd>
+    <dt>Ranked</dt><dd>Every innings or win in order, biggest or smallest first. Margins go one kind at a time, since runs, innings and wickets aren’t on the same scale</dd>
+    <dt>Table</dt><dd>One row per total or margin, with counts and first and latest years. Click a heading to sort</dd>
+    <dt>Wagon wheel</dt><dd>One ring per hundred, running clockwise from the top</dd>
+    <dt>Dial</dt><dd>Scroll through every number; on a phone, slide round the ring to get close, then fine-tune. Totals: all out above the line, the rest below. Margins: runs above, innings below</dd>
+  </dl>
+  <p>Drag the highlight along the View bar, or tap a view.</p>
+  <h3>The headline numbers</h3>
+  <p>The tiles at the top sum up the board, and they’re buttons: <b>totals have happened</b> opens the Table, <b>yet to happen</b> lists every scorigami, and the rest jump to their total or margin. Smaller numbers inside a tile are links too. A <b>green turner</b> is the newest total to be bowled out on for the first time, having only ever been reached not out before.</p>
+  <h3>The list beside the board</h3>
   <ul>
-    <li>How many totals have happened, and how many haven’t, out of every total from 0 to the record.</li>
-    <li>The lowest scorigami, and the most common total.</li>
-    <li><b>Latest scorigami:</b> the most recent total to be reached for the first time.</li>
-    <li><b>Green turner:</b> the most recent total to be bowled out on for the first time, having only ever been reached not out before.</li>
+    <li>Until you pick something, it shows the <b>latest scorigamis</b>, newest first, with how each innings ended and the result.</li>
+    <li>The toggles at the top narrow it down: <b>All out only</b> / <b>Not out only</b> for totals; <b>By runs</b> / <b>By an innings</b> / <b>By wickets</b> for margins (the two ties count as runs).</li>
+    <li><b>Latest scorigamis ›</b>, beside the heading above the board, always brings it back.</li>
   </ul>
-  <h3>Winning margins</h3>
+  <h3>Picking a number</h3>
+  <p>Choose one from the list, a tile, <b>Go to</b> or <b>Surprise me</b>, and the board points to it in whatever view you’re in: a square flashes, a slice pulses, the dial spins round, a row lights up. It only scrolls if it needs to, and never changes your view.</p>
+  <h3>Options and sharing</h3>
   <ul>
-    <li>How many run margins and innings margins have happened, and the smallest of each that never has.</li>
-    <li>The most common margin, and the latest new one.</li>
-    <li>How many of the ten wicket margins have happened (all of them).</li>
-  </ul>
-  <p>Every number counts only what matches your filters.</p>
-  <ul>
-    <li>The tiles at the top are buttons. <b>Totals have happened</b> opens the Table; <b>totals yet to happen</b> lists every total that has never happened; the others jump straight to that total or margin. The smaller numbers inside a tile (“then 2, 3, 4”, “before that…”) are links too.</li>
-  </ul>
-
-  <h2>The views</h2>
-  <h3>Grids</h3>
-  <ul>
-    <li>Boards of 100, one per hundred.</li>
-    <li>For margins, there’s one set of boards for wins by runs and one for innings wins, with the <b>Won by wickets</b> chart above them. Tap any of those three headings to fold that section away.</li>
-  </ul>
-  <h3>Ranked innings and Ranked wins</h3>
-  <ul>
-    <li>A list, biggest or smallest first.</li>
-    <li>Margins are ranked one kind at a time (runs, an innings or wickets, chosen with the buttons at the top), because they aren’t on the same scale.</li>
-  </ul>
-  <h3>Table</h3>
-  <ul>
-    <li>One row per total or margin, with counts and the first and latest year. Click a column heading to sort by it, and again to reverse.</li>
-    <li>For margins, choose runs, an innings or wickets at the top.</li>
-  </ul>
-  <h3>Wagon wheel</h3>
-  <ul>
-    <li>One ring per hundred, 0–99 in the middle, each running clockwise from the top like a clock face.</li>
-    <li>For margins there are two wheels, runs then innings, with the wickets chart underneath.</li>
-  </ul>
-  <h3>Dial</h3>
-  <ul>
-    <li>Every number in a row that you scroll through. The readout above it says what’s at the needle; tap <b>Innings ›</b> or <b>Matches ›</b> for the list.</li>
-    <li><b>On a computer</b>, a strip above the dial maps the whole range, with a box showing where you are. Drag the dial or the box, scroll over it, or click it and use the arrow keys (Shift moves ten).</li>
-    <li><b>On a phone</b>, the strip becomes a ring. Put a finger on it and slide round to the number you want. It stops at 0 and at the record. Then fine-tune with the dial.</li>
-    <li>For innings totals, all-out finishes are above the line and every other finish below; the all-out row stops at the highest all-out total ever (<span class="hiO"></span>). For margins, wins by runs are above and innings wins below (on the ring: outside and inside); each row stops at its record, with the wickets chart underneath.</li>
-  </ul>
-  <h3>The list beside the views</h3>
-  <ul>
-    <li>Until you pick something, the panel beside the views lists the latest scorigamis (totals or margins, depending on which half you’re in), newest first: each total or margin and the match where it first happened. For innings totals, each one has an <b>all out</b> (green) or <b>not out</b> (cream) tag beside the result, matching its square, with how it ended and the result; <b>All out only</b> and <b>Not out only</b> at the top narrow the list to one kind; on the margins side, <b>By runs</b>, <b>By an innings</b> and <b>By wickets</b> do the same (the two ties count as runs).</li>
-    <li>Pick a total or margin from the list, a headline tile, <b>Go to</b> or <b>Surprise me</b>, and the board points to it in whatever view you’re in: the square flashes on the grid, the slice pulses on the wagon wheel, the dial spins round to it, and the row lights up in the table or ranked list. It only scrolls if it isn’t already on screen, and it never changes your view. Tap one for the full story, and <b>‹ Latest scorigamis</b> to come back. Wherever you are, you can always get back to it with <b>Latest scorigamis ›</b> beside the heading above the board.</li>
-  </ul>
-  <h3>Getting around</h3>
-  <ul>
-    <li><b>Share</b>, at the top of the page and at the bottom, opens your device’s own share menu, on a phone or a computer. If your browser doesn’t have one, you get <b>Copy link</b> and <b>Email it</b> instead.</li>
-    <li><b>Go to</b> jumps to a number. <b>Surprise me</b> picks one that has happened.</li>
-    <li><b>Show options</b> opens the filters, time travel and quick questions; <b>Hide options</b> tucks them away again. They start closed, and the site remembers your choice.</li>
+    <li><b>Show options</b> opens the filters, time travel and quick questions. They start closed, and the site remembers your choice.</li>
+    <li><b>Share</b> opens your device’s share menu, or offers <b>Copy link</b> and <b>Email it</b>.</li>
   </ul>
 
   <h2>Time travel</h2>
+  <p class="hlead">Wind the clock back: everything then counts only what happened in the years you pick.</p>
+  <dl class="hdl">
+    <dt>One year</dt><dd>A single handle: drag it, use ‹ ›, or type a year</dd>
+    <dt>Range</dt><dd>Two handles, each with its own year box and ‹ › at its own end</dd>
+    <dt>▶ Play</dt><dd>One year walks along; a range grows a year at a time from its left end, so leave that at 1877 to watch everything build up. A small player follows you down the page while it plays</dd>
+  </dl>
   <ul>
-    <li>Time travel sits with the filters and quick questions (on a phone, it’s the <b>Time travel</b> button next to them). It has two modes:
-      <ul>
-        <li><b>One year:</b> a single handle. Drag it, use ‹ › or type a year, and everything shows only that year.</li>
-        <li><b>Range:</b> two handles, each with its own year box and ‹ › at its own end of the bar. The left-hand arrows only move the left end, and the right-hand arrows only the right.</li>
-      </ul></li>
-    <li>Click anywhere on the bar and the nearer handle jumps there. The arrow keys move a handle one year (Page Up and Page Down move ten).</li>
-    <li><b>▶</b> plays through the years. In One year mode the year walks along. In Range mode the right-hand end moves on a year at a time, so everything builds up from wherever the left end sits (from 1877 if you leave it there). While it plays, a small player with pause and the years follows you down the page.</li>
-    <li>Switching from One year to Range keeps your year as the right-hand end, so “just 1948” becomes “everything up to 1948”. <b>All years</b> puts everything back.</li>
-    <li>Everything (the views, the headline numbers and the list) then counts only what happened in those years. <b>Outlined in gold</b> on the grids: anything that happened for the first time ever in those years. If the left end is still at the start, it’s just the last year’s new ones, marked <b>new</b> in the list.</li>
-    <li>It works with your filters, and it’s the same as the years under <b>Era</b>, so the two always agree.</li>
-  </ul>
-  <h2>How innings endings are decided</h2>
-  <ul>
-    <li><b>All out:</b> the batting side was bowled out.
-      <ul><li><b>Short-handed:</b> the innings ended with fewer than ten wickets down because a batter was absent hurt, retired hurt or ill and didn’t come back. A few scorecards record a batter who retired hurt as “retired not out”. Those count as retired hurt here, and are marked with an asterisk (*) and a note saying where they were recorded that way.</li></ul></li>
-    <li><b>Declared:</b> the batting side closed its innings.
-      <ul><li><b>Forfeited*:</b> counted as a declaration on 0. The only men’s Test forfeits came at Centurion in 2000. The Laws of the time didn’t provide for a first-innings forfeit, so England’s was scored as 0/0 declared (shown as 0/0d*); South Africa’s second-innings forfeit is shown as forfeited*.</li></ul></li>
-    <li><b>Successful chase:</b> the side batting last reached its target and won.</li>
-    <li><b>Match drawn:</b> the side was still batting when the match ended in a draw. That covers a rearguard to save the Test, a chase that ran out of time, and the odd stranger case, such as the 1939 “timeless” Test at Durban, abandoned on the tenth day with England 42 short of 696, because they had a boat home to catch.</li>
-    <li><b>Other:</b> England’s 298/4 at The Oval in 2006, when the match was awarded to England after Pakistan refused to come back out after tea on the fourth day, in protest at a ball-tampering penalty.</li>
-  </ul>
-
-  <h2>How winning margins work</h2>
-  <ul>
-    <li><b>By runs:</b> the side batting last was bowled out short of its target. The margin is how far short.</li>
-    <li><b>By an innings and runs:</b> the winners batted only once, and their total was still bigger than both of the other side’s innings put together.</li>
-    <li><b>By wickets:</b> the side batting last reached its target with that many wickets still standing. The wickets chart is drawn to scale, from 10 wickets down to 1.</li>
-    <li><b>TIE</b> (0 on the runs board): the scores finished level with the side batting last all out. It has happened twice.</li>
-    <li><b>SL</b>, scores level (0 on the innings board): a side bowled out twice for exactly the other side’s one-innings total would leave the scores level, not lost by an innings. The side batting last would still have to bat again and score 1 run to win, so “an innings and 0 runs” can never happen.</li>
-    <li>Draws, ties and the one awarded match (The Oval, 2006) are listed under the wickets chart.</li>
+    <li><b>Gold outlines</b> mark anything that happened for the first time ever in your years. With the left end at the start, it’s just the last year’s, tagged <b>new</b> in the list.</li>
+    <li>Click the bar to move the nearer handle; arrow keys move a year, Page Up/Down ten. <b>All years</b> resets.</li>
+    <li>It’s the same as the years under <b>Era</b>, and works with your filters.</li>
   </ul>
 
   <h2>Filters and quick questions</h2>
-  <h3>Using the filters</h3>
   <ul>
-    <li>Each filter is a dropdown: tick what to keep, or hover a line and click “only”.</li>
-    <li><b>Era</b> also takes a year range (from and to) for spans that don’t fit decades, e.g. 1975–1995.</li>
-    <li><b>Host country</b> is where the match was played (Caribbean grounds count as West Indies, Belfast and Dublin as Ireland, Cardiff as England). <b>Home or away</b> is from the batting side’s point of view for innings totals, and the winner’s for margins; “neutral” means neither side’s own country, such as Pakistan’s home series in the UAE.</li>
-    <li>The “Showing…” line above the data lists what’s on; clear any of them with ×.</li>
-    <li><b>Teams</b> comes first in both halves. Pick one side for all its matches (both sides’ innings, or its wins, losses, draws and ties), or two or more for only the matches between them, e.g. Australia v West Indies.</li>
-    <li>Pick a single side under <b>Batting side</b> (or <b>Winner</b>) and it greys out under <b>Bowling side</b> (or <b>Loser</b>), and the other way round, since no side can play itself.</li>
+    <li>Tick what to keep in each dropdown, or hover a line and click <b>only</b>. The “Showing…” line lists what’s on; clear any with ×.</li>
+    <li><b>Teams:</b> one side for all its matches, or two or more for only the matches between them (e.g. Australia v West Indies).</li>
+    <li><b>Batting side</b> / <b>Bowling side</b> (totals) and <b>Winner</b> / <b>Loser</b> (margins) can’t be the same side, so one greys out the other.</li>
+    <li><b>Host country</b> is where it was played (Caribbean grounds count as West Indies, Cardiff as England, Belfast and Dublin as Ireland). <b>Home or away</b> follows the batting side for totals and the winner for margins; <i>neutral</i> means neither side’s country.</li>
+    <li><b>How it ended</b> has a <b>Not all out</b> shortcut. A total can be green and cream at once, so this shows exactly which totals ended which way.</li>
+    <li><b>Innings</b> separates a 3rd innings following on. <b>Toss</b> and <b>Result</b> are from the batting side’s point of view (for margins, the winner’s). Draws and ties drop out of margins once Winner, Loser, Toss, Follow-on or Batted is set.</li>
+    <li><b>Switching halves:</b> Teams, Era, Host, Home or away, Toss and the sides carry across (batting and bowling side become winner and loser). The rest wait in their own half. A note says what’s on.</li>
+    <li><b>Quick questions</b> set the filters for you and show the answer as a ranked list.</li>
   </ul>
-  <h3>Innings totals</h3>
-  <ul>
-    <li><b>How it ended</b> has a shortcut at the top, <b>Not all out</b>, that ticks or unticks every ending apart from all out in one go.</li>
-    <li>A total can be green and cream at once (bowled out on it once, declared on it another time), so filtering by ending shows exactly which totals have finished that way.</li>
-    <li><b>Innings</b> splits a 3rd innings played following on from an ordinary one.</li>
-    <li><b>Toss</b> describes the side that made the total.</li>
-    <li><b>Batting side</b> and <b>Bowling side</b> narrow it to one side’s innings; <b>Result</b> says who won from the batting side’s point of view.</li>
-    <li>For 4th innings, the target is shown alongside the total.</li>
-  </ul>
-  <h3>Winning margins</h3>
-  <ul>
-    <li><b>Winner</b> and <b>Loser</b> pick sides by result, so draws and ties drop out once either is set.</li>
-    <li><b>Toss</b>, <b>Follow-on</b> and <b>Batted</b> also describe the winners: whether they won the toss, enforced the follow-on or won after following on, and whether they batted first.</li>
-    <li>Draws and ties also drop out once a toss, follow-on or batting filter is on.</li>
-  </ul>
-  <h3>Switching between the two halves</h3>
-  <ul>
-    <li><b>Teams</b>, <b>Era</b> (and any year range), <b>Host country</b>, <b>Home or away</b>, <b>Toss</b>, and <b>Batting side</b> / <b>Bowling side</b> carry across. Batting and bowling side become <b>Winner</b> and <b>Loser</b> on the margins side, and back again; Home or away follows the batting side in one half and the winner in the other.</li>
-    <li>The filters that only one half has (Innings, How it ended, Result, Batted, Follow-on) stay set in their own half, ready for when you go back, but don’t apply in the other.</li>
-    <li>A note pops up when you switch to say what’s on, with a button to clear everything.</li>
-  </ul>
-  <h3>Quick questions</h3>
-  <ul>
-    <li>They set the filters for you and show the answer as a ranked list: in Ranked innings for totals, and in the side panel for margins.</li>
-    <li>Change a filter afterwards and the answer updates.</li>
-  </ul>
+
+  <h2>The cricket fine print</h2>
+  <h3>How innings ended</h3>
+  <dl class="hdl">
+    <dt>All out</dt><dd>Bowled out. <b>Short-handed</b> means fewer than ten wickets fell because a batter was absent, ill or retired hurt. A few scorecards say “retired not out” for this; those are marked *</dd>
+    <dt>Declared</dt><dd>Closed by the batting side. The only men’s Test forfeits (Centurion, 2000) count as declarations on 0: England’s as 0/0d*, South Africa’s as forfeited*</dd>
+    <dt>Chased</dt><dd>The side batting last reached its target</dd>
+    <dt>Drawn</dt><dd>Still batting at the end of a drawn match, including the 1939 “timeless” Test in Durban, abandoned with England 42 short because they had a boat to catch</dd>
+    <dt>Other</dt><dd>England’s 298/4 at The Oval in 2006, when the match was awarded after Pakistan refused to take the field</dd>
+  </dl>
+  <h3>How margins work</h3>
+  <dl class="hdl">
+    <dt>By runs</dt><dd>The side batting last was bowled out short of its target</dd>
+    <dt>By an innings</dt><dd>The winners batted once and still outscored both of the other side’s innings</dd>
+    <dt>By wickets</dt><dd>The target was reached with that many wickets standing</dd>
+    <dt>TIE</dt><dd>Scores level with the side batting last all out. Twice ever</dd>
+    <dt>SL</dt><dd>“scores level”: a side bowled out twice for exactly the other’s one innings hasn’t lost by an innings, because the other side still needs 1 run to win. So “an innings and 0” can never happen</dd>
+  </dl>
+  <p>Draws, ties and the awarded match are listed under the wickets chart.</p>
 
   <h2>Sources and credits</h2>
   <ul>
-    <li><b>Scorigami</b> is from Jon Bois’ <a href="https://www.sbnation.com/2014/9/8/6110147/pete-carroll-seahawks-scoragami-weird-nfl-scores" target="_blank" rel="noopener">2014 SB Nation article</a> and his 2016 video <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">“Chart Party: Scorigami”</a> on NFL scores. This site borrows the idea for Test cricket.</li>
-    <li><b>Match data</b> to March 2024 from Bhuvanesh Prasad’s <a href="https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023">Test Cricket Matches Dataset (1877–2024)</a> on Kaggle, used under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</li>
-    <li><b>Match data</b> since 2001, and every new Test, from <a href="https://cricsheet.org">Cricsheet</a>, used under the <a href="https://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License</a>.</li>
-    <li><b>Results and innings endings</b> checked against scorecards on <a href="https://www.espncricinfo.com">ESPNcricinfo</a>. Every innings links to its scorecard there.</li>
-    <li>Scores and results are facts; the classifications and design are this site’s own. Not affiliated with Jon Bois, SB Nation, Kaggle or the dataset’s author, Cricsheet, ESPNcricinfo or the ICC.</li>
+    <li><b>Scorigami</b> comes from Jon Bois: his <a href="https://www.sbnation.com/2014/9/8/6110147/pete-carroll-seahawks-scoragami-weird-nfl-scores" target="_blank" rel="noopener">2014 SB Nation article</a> and the 2016 video <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">“Chart Party: Scorigami”</a>.</li>
+    <li><b>Match data</b> to March 2024: Bhuvanesh Prasad’s <a href="https://www.kaggle.com/datasets/bhuvaneshprasad/test-matches-dataset-1877-2023">Test Cricket Matches Dataset</a> on Kaggle (<a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>). Since 2001 and every new Test: <a href="https://cricsheet.org">Cricsheet</a> (<a href="https://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution</a>).</li>
+    <li><b>Checked against</b> <a href="https://www.espncricinfo.com">ESPNcricinfo</a> scorecards; every innings links to its scorecard.</li>
+    <li>Scores and results are facts; the classifications and design are this site’s own. Not affiliated with Jon Bois, SB Nation, Kaggle, Cricsheet, ESPNcricinfo or the ICC.</li>
   </ul>
 </div></dialog>
 <div id="tip" role="tooltip"></div>
@@ -1077,7 +1016,7 @@ function renderKPIs(){
     [gaps[0]??'—', 'lowest scorigami (never reached)', gaps.length>1? 'then '+gaps.slice(1,4).map(KG).join(', ') : '', 'var(--never)', gaps.length? 'go:'+gaps[0] : ''],
     [`${topS} <small class="num" style="display:inline;font-size:16px">×${top}</small>`, 'most common total', '', 'var(--out)', 'go:'+topS],
     [latest? latest[4] : '—', 'latest scorigami', latest? `${T[latest[1]]} v ${T[latest[2]]}, ${mon(lm)}` : '', 'var(--accent)', latest? 'go:'+latest[4] : ''],
-    [f0? f0[4] : '—', 'green turner: newest all-out score', f0? `${T[f0[1]]} v ${T[f0[2]]}, ${mon(fm)}${flips.length>1?'<br>before that: '+flips.slice(1,3).map(r=>`${KG(r[4])} (${mon(M[r[0]])})`).join(', '):''}` : '', 'var(--out)', f0? 'go:'+f0[4] : '']
+    [f0? f0[4] : '—', 'green turner: newest all-out score', f0? `${T[f0[1]]} v ${T[f0[2]]}, ${mon(fm)}` : '', 'var(--out)', f0? 'go:'+f0[4] : '']
   ].map(([b,t,sub,k,ka])=>`<div class="kpi" style="--k:${k}"${ka?` data-ka="${ka}" role="button" tabindex="0"`:''}><b class="num">${b}</b><span>${t}</span>${sub?`<small>${sub}</small>`:''}</div>`).join('');
 }
 
@@ -1270,7 +1209,7 @@ function mSection(title,L,never){ return `<h3 class="msec">${title} <span class=
 const BC={x0:46, bw:2, top:48, h:110, mid:6};
 const TOSSL=['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','–'], FOL={enf:'Enforced the follow-on',fol:'Won after following on',none:'–'};
 const mMarg=x=> x.kind==='r'?`${x.n} run${x.n===1?'':'s'}`: x.kind==='i'?`An innings and ${x.n}`:`${x.n} wicket${x.n===1?'':'s'}`;
-function renderMList(){
+function renderMList(into){
   const k=state.mkind, all=MREC.filter(r=>mpass(r)&&r.kind===k).sort((a,b)=> (state.mbig? b.n-a.n : a.n-b.n) || b.i-a.i);
   const rows=all.slice(0,state.mrankN), noun={r:'wins by runs',i:'innings wins',w:'wins by wickets'}[k]; let rank=0, prev=null;
   let h=`${KINDSEG()}<p class="mrankby"><b>One kind of win at a time.</b> Runs, an innings and wickets aren’t measured on the same scale, so they’re ranked separately.${k==='w'?' Within each margin, sorted by most recent occurrence.':''}</p>`+
@@ -1280,6 +1219,7 @@ function renderMList(){
       return `<tr data-sel="${sel}"><td class="num c-rank">${rank}</td><td class="num c-tot"><b>${mMarg(x)}</b></td><td class="c-who"><b>${T[x.w]}</b> beat ${T[x.l]}<small>${m[1]} · ${m[2]||''}${m[0]?` · <a href="https://www.espncricinfo.com/ci/engine/match/${m[0]}.html" target="_blank" rel="noopener">Scorecard ↗</a>`:''}</small></td>`+
         `<td class="c-toss">${TOSSL[x.toss??4]}</td><td class="c-inn">${x.bat==='first'?'First':'Second'}</td><td class="c-end"><span class="d">${FOL[x.fo]||'–'}</span><span class="m">${[x.fo&&x.fo!=='none'?FOL[x.fo]:null,'toss: '+TOSSL[x.toss??4].toLowerCase(),'batted '+x.bat].filter(Boolean).join(' · ')}</span></td></tr>`; }).join('')+
     `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="mMoreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
+  if(into){ into.innerHTML=h; return; }
   const ml=document.getElementById('mList'), old=ml.querySelector('.tablewrap'), st=old?old.scrollTop:0; ml.innerHTML=h; const nw=ml.querySelector('.tablewrap'); if(nw) nw.scrollTop=st;
   ml.querySelectorAll('tr[data-sel]').forEach(tr=>tr.classList.toggle('sel', tr.dataset.sel===state.msel));
 }
@@ -1510,7 +1450,7 @@ mm.addEventListener('click',e=>{
   const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower'), o=e.target.closest('[data-o]'), ds=e.target.closest('[data-sel]');
   if(sq) mSelect(sq.dataset.k+':'+sq.dataset.n); else if(tw) mSelect('w'+tw.dataset.w); else if(o){ e.preventDefault(); mSelect(o.dataset.o); } else if(ds){ e.preventDefault(); if(ds.closest('#mdetail')) mFocus(ds.dataset.sel); else mSelect(ds.dataset.sel); }
   const rs=e.target.closest('#mRankSeg button'); if(rs){ state.mbig=rs.dataset.b==='1'; state.mrankN=100; renderMList(); return; }
-  if(e.target.closest('#mMoreBtn')){ state.mrankN+=100; renderMList(); return; }
+  if(e.target.closest('#mMoreBtn')){ state.mrankN+=100; appendRows(document.getElementById('mList'), renderMList); return; }
   const th=e.target.closest('#mTable th[data-k]'); if(th){ const k=th.dataset.k; if(state.msortK===k) state.msortD*=-1; else { state.msortK=k; state.msortD=(k==='n'||/f$/.test(k))?1:-1; } renderMTable(); return; }
   const kb=e.target.closest('.kindseg button'); if(kb){ state.mkind=kb.dataset.kind; state.mrankN=100; state.msortK='n'; state.msortD=1; paintMargins(); return; }
   const fb=e.target.closest('.fold'); if(fb){ const k=fb.dataset.fold; state.mfold[k]=!state.mfold[k]; mFolds(); return; }
@@ -1553,7 +1493,7 @@ document.getElementById('mSvgB').addEventListener('pointermove',e=>{ if(e.pointe
   tip.innerHTML = n===0 ? (k==='r'?`<b>Tied</b> · ${L}`:'<b>Scores level</b> · can’t be an innings win') : `<b>Won by ${mLabel(k,n)}</b> · ${L||'scorigami: never happened'}`; tip.style.display='block'; });
 document.getElementById('mSvgB').addEventListener('pointerleave',()=>{ tip.style.display='none'; });
 document.getElementById('mHeatBtn').addEventListener('click',e=>{ state.mheat=!state.mheat; e.currentTarget.setAttribute('aria-pressed',String(state.mheat)); paintMargins(); });
-document.getElementById('mCbBtn').addEventListener('click',()=>document.getElementById('cbBtn').click());
+document.getElementById('mCbBtn').addEventListener('click',()=>{ document.getElementById('cbBtn').click(); document.getElementById('mCbBtn').setAttribute('aria-pressed',String(state.cb)); });
 function mFocus(sel){ const k=sel[0], n=k==='w'? +sel.slice(1) : +sel.slice(2), from= state.mview==='bar'? MD.v : null;
   if(mK() && k!==state.mkind && (k==='w'||sel!=='r:0')){ state.mkind=k; state.mrankN=100; }   // Ranked / Table show one kind at a time: show this one
   mSelect(sel);
@@ -1611,7 +1551,7 @@ function setMode(m){
   document.querySelectorAll('#modeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));
   document.getElementById('totalsMode').hidden = m!=='totals'; document.getElementById('marginsMode').hidden = m!=='margins';
 
-  document.querySelector('.kicker').textContent = m==='totals' ? `Every total a men’s Test innings has finished on, from 0 up to the all-time record of ${HI_T}` : 'Every margin a men’s Test has been won by';
+  document.querySelector('.kicker').textContent = m==='totals' ? 'Every single total a men’s Test innings has ended on.' : 'Every single margin a men’s Test has been won by.';
   if(m==='margins'){ if(!mBuilt){ buildMargins(); mBuilt=true; mSyncF(); mSelect(null,true); } else paintMargins(); }
   document.getElementById('mCbBtn').setAttribute('aria-pressed',String(state.cb));
   tip.style.display='none';
@@ -1762,7 +1702,7 @@ document.getElementById('view-table').addEventListener('click',e=>{
 });
 
 /* ---------- ranked innings ---------- */
-function renderList(){
+function renderList(into){
   const byTarget = state.preset!==null && PRESETS[state.preset].key==='target';
   const val = r => byTarget ? tgt(r) : r[4];
   const all=DATA.inn.filter(r=>pass(r) && (!byTarget || tgt(r)!==null)).sort((a,b)=>(val(a)-val(b))*state.rankDir || a[0]-b[0]);
@@ -1779,11 +1719,11 @@ function renderList(){
         `<td class="c-inn">${INN[ix(r)]}</td><td class="c-end"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span>${endTxt}<span class="m"> · ${INN[ix(r)]} innings · ${['toss: won, batted','toss: won, bowled','toss: lost, fielded','toss: lost, sent-in',''][r[11]]}</span></td>`+
         `<td class="c-toss">${['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','–'][r[11]]}</td><td class="c-res">${RES[r[9]]}${/^match (drawn|tied)$/i.test(m[3]||'')?'':`<small>${m[3]}</small>`}</td></tr>`; }).join('')+
     `</tbody></table></div>`+(all.length>rows.length?`<button class="chip more" id="moreBtn">Show ${Math.min(100,all.length-rows.length)} more</button>`:'');
-  document.getElementById('view-list').innerHTML=h;
+  (into||document.getElementById('view-list')).innerHTML=h;
 }
 document.getElementById('view-list').addEventListener('click',e=>{
   const b=e.target.closest('#rankSeg button'); if(b){ state.rankDir=+b.dataset.d; state.rankN=100; renderList(); return; }
-  if(e.target.closest('#moreBtn')){ state.rankN+=100; renderList(); return; }
+  if(e.target.closest('#moreBtn')){ state.rankN+=100; appendRows(document.getElementById('view-list'), renderList); return; }
   if(e.target.closest('a')) return;
   const tr=e.target.closest('tr[data-s]'); if(tr) select(+tr.dataset.s);
 });
@@ -1842,6 +1782,10 @@ function goTo(s){
   if(from!==null){ TD.v=from; TD.go(s); }   // the dial spins round to it rather than jumping
   locate(s);
 }
+function appendRows(box, render){ const tmp=document.createElement('div'); render(tmp);
+  const tb=box.querySelector('tbody'), nb=tmp.querySelector('tbody'); if(!tb||!nb){ render(); return; }
+  const have=tb.rows.length, add=[...nb.rows].slice(have); const f=document.createDocumentFragment(); add.forEach(r=>f.appendChild(r)); tb.appendChild(f);
+  const ob=box.querySelector('.chip.more'), nbtn=tmp.querySelector('.chip.more'); if(ob){ if(nbtn) ob.replaceWith(nbtn); else ob.remove(); } }
 /* ---------- locate: point at a total or margin in whatever view is showing (never switch views) ---------- */
 const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 function visBottom(){ const D=document.getElementById(state.mode==='margins'?'mdetail':'detail'); if(innerWidth<1100 && D.classList.contains('open')){ const t=D.getBoundingClientRect().top; if(t>40 && t<innerHeight) return t; } return innerHeight; }
