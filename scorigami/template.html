@@ -801,7 +801,7 @@ footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px
   <p>Choose one from the list, a tile, <b>Go to</b> or <b>Surprise me</b>, and the board points to it in whatever view you’re in: a square flashes, a slice pulses, the dial spins round, a row lights up. It only scrolls if it needs to, and never changes your view.</p>
   <h3>Options and sharing</h3>
   <ul>
-    <li><b>Show options</b> opens the filters, timeline and quick questions. They start closed, and the site remembers your choice. On a phone, each has its own button.</li>
+    <li><b>Show options</b> opens the filters, timeline and quick questions. They start closed each time. On a phone, each has its own button.</li>
     <li><b>Share</b> opens your device’s share menu, or offers <b>Copy link</b> and <b>Email it</b>.</li>
   </ul>
 
@@ -1999,8 +1999,8 @@ function flip(id,key,on,off){ document.getElementById(id).addEventListener('clic
 flip('countBtn','heat',true,false); flip('cbBtn','cb',true,false);
 document.getElementById('randomBtn').addEventListener('click',()=>{ const opts=[]; for(let s=0;s<1000;s++) if(cache[s].n) opts.push(s); if(opts.length) goTo(opts[Math.floor(Math.random()*opts.length)]); });
 document.getElementById('kpiReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
-(function(){ const pairs=[['ftoggle','filtersBox','fcount'],['mftoggle','mFilters','mfcount']]; let open=false; try{ const v=localStorage.getItem('scorigami-options'); if(v) open= v==='show'; }catch(e){}   // closed until someone opens it
-  const set=o=>{ open=o; pairs.forEach(([b,f])=>{ const B=document.getElementById(b); document.getElementById(f).classList.toggle('fopen',o); B.setAttribute('aria-expanded',String(o)); B.querySelector('.ftlab').textContent= o? 'Hide options' : 'Show options'; B.querySelector('.ftchev').textContent= o?'▴':'▾'; }); try{ localStorage.setItem('scorigami-options',o?'show':'hide'); }catch(e){} };
+(function(){ const pairs=[['ftoggle','filtersBox','fcount'],['mftoggle','mFilters','mfcount']]; let open=false;   // always closed when the page loads
+  const set=o=>{ open=o; pairs.forEach(([b,f])=>{ const B=document.getElementById(b); document.getElementById(f).classList.toggle('fopen',o); B.setAttribute('aria-expanded',String(o)); B.querySelector('.ftlab').textContent= o? 'Hide options' : 'Show options'; B.querySelector('.ftchev').textContent= o?'▴':'▾'; }); };
   set(open); pairs.forEach(([b])=>document.getElementById(b).addEventListener('click',()=>{ set(!open); if(open) unfoldOpts(); })); })();
 // computers: the timeline folds like the quick questions; showing the options opens both again
 function foldTT(f){ document.querySelectorAll('.ttbar').forEach(t=>{ t.classList.toggle('folded',f); const b=t.querySelector('.ttfold'); if(b){ b.setAttribute('aria-expanded',String(!f)); b.querySelector('.ttchev').textContent= f?'▸':'▾'; } }); }
