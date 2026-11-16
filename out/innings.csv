@@ -6547,7 +6547,7 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 1813,225257,2006-08-04,Pakistan,England,4,155,10,allout,,lost,no_follow_on,lost_opp_batted,cricsheet,England won by 167 runs
 1814,225258,2006-08-17,England,Pakistan,1,173,10,allout,,won,no_follow_on,lost_sent_in,cricinfo,England awarded the match (opposition refused to play)
 1814,225258,2006-08-17,Pakistan,England,2,504,10,allout,,lost,no_follow_on,won_bowl,cricinfo,England awarded the match (opposition refused to play)
-1814,225258,2006-08-17,England,Pakistan,3,298,4,other,,won,no_follow_on,lost_sent_in,cricinfo,England awarded the match (opposition refused to play)
+1814,225258,2006-08-17,England,Pakistan,3,298,4,awarded,,won,no_follow_on,lost_sent_in,cricinfo,England awarded the match (opposition refused to play)
 1815,257765,2006-11-11,West Indies,Pakistan,1,206,10,allout,,lost,no_follow_on,won_bat,cricsheet,Pakistan won by 9 wickets
 1815,257765,2006-11-11,Pakistan,West Indies,2,485,10,allout,,won,no_follow_on,lost_opp_batted,cricsheet,Pakistan won by 9 wickets
 1815,257765,2006-11-11,West Indies,Pakistan,3,291,10,allout,,lost,no_follow_on,won_bat,cricsheet,Pakistan won by 9 wickets
