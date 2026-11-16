@@ -492,9 +492,10 @@ def write_outputs(store: Store, counts_src: dict):
             status[r["runs"]] = "out" if r["how"] in ("allout", "allout_short") else "not"
     hi = max(i for i, s in enumerate(status) if s != "never")      # the all-time record: nothing above it counts
     reached = sum(s != "never" for s in status)
-    desc = (f"Every men’s Test innings total from 0 up to the all-time record of {hi}: {reached:,} have happened, "
-            f"{hi + 1 - reached:,} are still waiting. See how each one ended, and which are scorigamis.")
-    make_images(status, reached, hi)
+    wins = margins_seen(store.matches[mid]["result"] for mid in {mid for (mid, _), _ in recs})
+    desc = (f"Every men’s Test innings total from 0 up to the record of {hi}: {reached:,} have happened, "
+            f"{hi + 1 - reached:,} are still scorigamis. Plus every margin a Test has been won by.")
+    make_images(status, reached, hi, wins)
     tpl = (ROOT / "scorigami" / "template.html").read_text(encoding="utf-8")
     html = (tpl.replace("__SITE__", SITE_URL).replace("__DESC__", desc)
                .replace("__DATA__", json.dumps(page, separators=(",", ":"))))
@@ -503,43 +504,89 @@ def write_outputs(store: Store, counts_src: dict):
 
 
 SITE_URL = os.environ.get("SITE_URL", "https://buckle-badger.github.io/test-cricket-scorigami/")
-FONT_DIRS = ["/usr/share/fonts/truetype/dejavu", "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/dejavu"]
+FONT_DIRS = [ROOT / "scorigami" / "fonts", "/usr/share/fonts/truetype/dejavu", "/usr/share/fonts/truetype/liberation",
+             "/usr/share/fonts/dejavu"]
+# The site's own fonts (both SIL Open Font Licence, bundled in scorigami/fonts), with plain fallbacks
+FONTS = {"display": ["BarlowCondensed-Bold.ttf", "DejaVuSansCondensed-Bold.ttf", "LiberationSans-Bold.ttf"],
+         "body": ["IBMPlexSans-Variable.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"]}
 
 
-def _font(size, bold=False):
+def _font(size, kind="body", weight=400):
     from PIL import ImageFont
-    names = ["DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"] if bold else ["DejaVuSans.ttf", "LiberationSans-Regular.ttf"]
-    for d in FONT_DIRS:
-        for n in names:
+    for n in FONTS[kind]:
+        for d in FONT_DIRS:
             if Path(d, n).exists():
-                return ImageFont.truetype(str(Path(d, n)), size)
+                f = ImageFont.truetype(str(Path(d, n)), size)
+                if "Variable" in n:
+                    try: f.set_variation_by_axes([weight, 100])      # axes: weight, width
+                    except Exception: pass
+                return f
     return ImageFont.load_default(size=size)
 
 
-def make_images(status, reached, hi=999):
+def margins_seen(results):
+    """How many different winning margins have happened: {'r': runs, 'i': an innings and runs, 'w': wickets}."""
+    seen = {"r": set(), "i": set(), "w": set()}
+    for t in results:
+        t = (t or "").lower()
+        if m := re.search(r"won by an innings and (\d+) runs?", t): seen["i"].add(int(m[1]))
+        elif m := re.search(r"won by (\d+) runs?", t): seen["r"].add(int(m[1]))
+        elif m := re.search(r"won by (\d+) wickets?", t): seen["w"].add(int(m[1]))
+    return {k: len(v) for k, v in seen.items()}
+
+
+def make_images(status, reached, hi=999, wins=None):
     """Link-preview card (docs/og.png) and home-screen icon (docs/icon.png). Skipped if Pillow is missing."""
     try:
         from PIL import Image, ImageDraw
     except ImportError:
         print("Pillow not installed: skipping preview images", file=sys.stderr); return
-    bg, ink, ink2 = "#f4f6f3", "#131714", "#4a524c"
-    col = {"out": "#4f806d", "not": "#efe7d2", "never": "#f2c9ca"}
-    im = Image.new("RGB", (1200, 630), bg); d = ImageDraw.Draw(im)
-    TX = (1200 - (5 * (10 * 16 + 9 * 2) + 4 * 24)) // 2
-    d.text((TX - 3, 52), "Men’s Test Scorigami", font=_font(64, True), fill=ink)
-    d.text((TX, 136), f"{reached:,} of {hi + 1:,} innings totals (0 to {hi}) have happened. {hi + 1 - reached:,} are still waiting.",
-           font=_font(28), fill=ink2)
-    cell, gap, pgap = 16, 2, 24                 # ten 10×10 boards, five across, two down
+    bg, ink, ink2, line, accent = "#f4f6f3", "#131714", "#4a524c", "#d8ddd7", "#1d5a43"
+    col = {"out": "#4f806d", "not": "#f6f1e3", "never": "#f2c9ca"}
+    edge = {"not": "#b9b4a4", "never": "#e3a2a6"}
+    W, H, L = 1200, 630, 64
+    im = Image.new("RGB", (W, H), bg); d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, W, 10], fill=accent)
+    def fit(text, size, kind, weight=400):        # shrink to fit the width (only matters if the fallback font is wider)
+        while size > 12 and d.textlength(text, font=_font(size, kind, weight)) > W - 2 * L: size -= 2
+        return _font(size, kind, weight)
+    title, sub = "Scorigami: Test Cricket (Men’s)", "Every total a men’s Test innings has ended on, and every margin a Test has been won by."
+    d.text((L - 3, 34), title, font=fit(title, 76, "display"), fill=ink)
+    d.text((L, 128), sub, font=fit(sub, 25, "body"), fill=ink2)
+
+    cell, gap, pgap = 14, 2, 18                 # ten 10×10 boards, five across, two down
     pw = 10 * cell + 9 * gap
-    x0 = (1200 - (5 * pw + 4 * pgap)) // 2; y0 = 210
+    x0, y0 = L, 196
     for p in range(10):
         px, py = x0 + (p % 5) * (pw + pgap), y0 + (p // 5) * (pw + pgap)
         for t in range(10):
             for u in range(10):
-                x, y = px + u * (cell + gap), py + t * (cell + gap)
-                if p * 100 + t * 10 + u > hi:
+                n = p * 100 + t * 10 + u
+                if n > hi:
                     continue
-                d.rounded_rectangle([x, y, x + cell, y + cell], radius=3, fill=col[status[p * 100 + t * 10 + u]])
+                x, y = px + u * (cell + gap), py + t * (cell + gap); st = status[n]
+                d.rounded_rectangle([x, y, x + cell, y + cell], radius=3, fill=col[st], outline=edge.get(st), width=1)
+    bw = 5 * pw + 4 * pgap
+
+    # the numbers, to the right of the boards
+    sx = x0 + bw + 46
+    d.line([(sx - 24, y0), (sx - 24, y0 + 2 * pw + pgap)], fill=line, width=2)
+    stats = [(f"{reached:,}", f"of {hi + 1:,} innings totals", "have happened", ink),
+             (f"{hi + 1 - reached:,}", "totals are still", "scorigamis", "#a3111a")]
+    if wins:
+        stats.append((f"{sum(wins.values()):,}", "different winning", "margins so far", ink))
+    yy = y0 - 8
+    for big, a, b, c in stats:
+        d.text((sx, yy), big, font=_font(64, "display"), fill=c)
+        d.text((sx, yy + 68), a, font=_font(19, "body", 500), fill=ink2)
+        d.text((sx, yy + 91), b, font=_font(19, "body", 500), fill=ink2)
+        yy += 128 if len(stats) == 2 else 112
+
+    # colour key along the bottom
+    ky = y0 + 2 * pw + pgap + 34; kx = L; kf = _font(20, "body", 500)
+    for st, lab in [("out", "Bowled out on it"), ("not", "Reached, never all out"), ("never", "Never happened: a scorigami")]:
+        d.rounded_rectangle([kx, ky + 3, kx + 20, ky + 23], radius=4, fill=col[st], outline=edge.get(st), width=1)
+        d.text((kx + 30, ky), lab, font=kf, fill=ink2); kx += 30 + d.textlength(lab, font=kf) + 34
     im.save(DOCS / "og.png", optimize=True)
 
     ic = Image.new("RGB", (180, 180), "#2f5e4f"); d = ImageDraw.Draw(ic)
