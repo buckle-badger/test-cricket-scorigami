@@ -589,7 +589,7 @@ html,body{overflow-x:clip}
 .rrow .rt{font:700 22px/1 var(--display);min-width:3ch;text-align:right;color:var(--ink)}
 .rrow.mr .rt{font-size:17px;min-width:5.5ch}
 .rnum{font:700 40px/1 var(--display);color:var(--ink);width:2.1em;text-align:right;align-self:center;letter-spacing:-.01em}
-.rrow.mr .rnum{display:flex;flex-direction:column;align-items:flex-end;gap:3px} .rnum small{font:600 10.5px/1 var(--body);color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}   /* the total is the headline: as tall as the row */
+.rrow.mr .rnum{display:flex;flex-direction:column;align-items:flex-end;gap:0} .rrow.mr .rnum small{margin-top:-1px} .rrow.mr .rby{color:var(--ink)} .rrow.mr .rnum small.pre{margin:0 0 -1px;font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:.03em} .rnum small{font:600 10.5px/1 var(--body);color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}   /* the total is the headline: as tall as the row */
 .rpill{display:inline-block;font:700 10px/1 var(--body);text-transform:uppercase;letter-spacing:.05em;padding:4px 7px;border-radius:999px;margin-right:7px;vertical-align:1px;white-space:nowrap}
 .rpill.out{background:var(--out);color:var(--out-ink)}
 .rpill.not{background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)}
@@ -1998,7 +1998,7 @@ function renderRecent(D){
   if(!L.length){ D.innerHTML=h+(ALL.length?'<p class="empty">None of this kind.</p>':''); return; }
   h+=`<div class="rlist">`+L.slice(0,state.recN).map(r=>{ const mm=M[r[0]], out=isOut(r);
     const how = out? (r[6]===1? 'short-handed' : '') : `${fmtInn(r)} ${HOWWORD[r[6]]}`;
-    const res = r[9]!=null && RESWORD[r[9]]? `${T[r[1]]} ${RESWORD[r[9]]}` : '';
+    const res = r[9]==2? 'Match drawn' : r[9]==3? 'Match tied' : r[9]!=null && RESWORD[r[9]]? `${T[r[1]]} ${RESWORD[r[9]]}` : '';
     return `<button class="rrow" type="button" data-go="${r[4]}"><span class="rnum num">${r[4]}</span><span class="rx"><b>${T[r[1]]}</b> v ${T[r[2]]}${m==='upto'&&yOf(r[0])===state.yr[1]?'<span class="newtag">new</span>':''}<small>${[monY(mm), ord(r[3])+' innings', how, mm[2]].filter(Boolean).join(' · ')}</small><small class="rres"><span class="rpill ${out?'out':'not'}">${out?'all out':'not out'}</span>${res}</small></span></button>`; }).join('')+`</div>`;
   if(L.length>state.recN) h+=`<button class="linkbtn" id="recMore" type="button">Show more (${L.length-state.recN} more)</button>`;
   D.innerHTML=h;
@@ -2013,7 +2013,7 @@ function mRecentHTML(){
   if(ALL.length) h+=`<div class="rkind" role="group" aria-label="Show">${[['r','By runs'],['i','By an innings'],['w','By wickets']].map(([k,l])=>`<button type="button" class="rk-m" data-mrk="${k}" aria-pressed="${state.mRecKind===k}">${l} <small>${cnt[k]}</small></button>`).join('')}${state.mRecKind?'<button type="button" class="linkbtn" data-mrk="">Show all</button>':''}</div>`;
   if(!L.length) return h+(ALL.length?'<p class="empty">None of this kind.</p>':'');
   h+=`<div class="rlist">`+L.slice(0,state.mRecN).map(([key,r])=>{ const mm=M[r.i], who= r.w!==undefined? `<b>${T[r.w]}</b> beat ${T[r.l]}` : r.teams.map(x=>T[x]).join(' v ');
-    return `<button class="rrow mr" type="button" data-sel="${key}"><span class="rnum num">${r.kind==='tie'?'0':r.n}<small>${r.kind==='tie'?'tie':r.kind==='r'?(r.n===1?'run':'runs'):r.kind==='i'?'inns &amp; runs':(r.n===1?'wicket':'wickets')}</small></span><span class="rx">${who}${m==='upto'&&yOf(r.i)===state.yr[1]?'<span class="newtag">new</span>':''}<small>${r.kind==='tie'?'Tied':'Won by '+mLabel(r.kind,r.n)} · ${monY(mm)}${mm[2]?' · '+mm[2]:''}</small></span></button>`; }).join('')+`</div>`;
+    return `<button class="rrow mr" type="button" data-sel="${key}"><span class="rnum num">${r.kind==='i'?'<small class="pre">inns &amp;</small>':''}${r.kind==='tie'?'0':r.n}${r.kind==='tie'?'<small>tie</small>':r.kind==='w'?`<small>${r.n===1?'wicket':'wickets'}</small>`:''}</span><span class="rx">${who}${m==='upto'&&yOf(r.i)===state.yr[1]?'<span class="newtag">new</span>':''}<small><span class="rby">${r.kind==='tie'?'Tied':'by '+mLabel(r.kind,r.n)}</span> · ${monY(mm)}${mm[2]?' · '+mm[2]:''}</small></span></button>`; }).join('')+`</div>`;
   if(L.length>state.mRecN) h+=`<button class="linkbtn" id="mRecMore" type="button">Show more (${L.length-state.mRecN} more)</button>`;
   return h;
 }
