@@ -124,6 +124,10 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .kindseg{margin-bottom:10px}
 .fhead{display:flex;align-items:center;gap:12px}
 .resetchip{padding:4px 12px;font-weight:600;color:var(--accent);border-color:var(--accent)}
+.opt .selfnote{display:none;color:var(--muted)}
+.opt .zeronote{display:none;color:var(--muted);font-weight:400} .opt.zero:not(.blocked){opacity:.45} .opt.zero:not(.blocked) .zeronote{display:inline} .opt.blocked{opacity:.5} .opt.blocked .selfnote{display:inline} .opt.blocked .only,.opt.blocked .cnt{visibility:hidden}
+.yrrow{display:flex;align-items:center;gap:8px;padding:6px 6px 2px;font-size:13.5px} .yrrow input{width:5.2em;font:15px var(--mono);padding:5px 6px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)} .yrrow>span:first-child{font-weight:600}
+.yrhint{margin:2px 6px 4px;font-size:12px;color:var(--muted)}
 .pop .opt.short{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:6px}
 .pop .opt.short small{color:var(--muted);font-weight:400}
 .viewrow .glabel{font-size:12.5px;color:var(--ink);font-weight:700}
@@ -200,6 +204,14 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .kpi b{display:block;font-family:var(--display);font-size:30px;line-height:1.1;font-weight:600}
 .kpi span{color:var(--ink-2);font-size:13px}
 .controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-bottom:16px}
+@media (max-width:700px){
+  .controls.opts{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
+  .controls.opts .group{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}
+  .controls.opts .group>.glabel,.controls.opts .group>label{grid-column:1/-1;margin-bottom:-2px}
+  .controls.opts .chip{justify-content:center;padding:9px 10px;font-size:14px;border-radius:10px}
+  .controls.opts .chip.tog{justify-content:flex-start}
+  .controls.opts #jump,.controls.opts #mjump{width:100%;box-sizing:border-box;font-size:16px;padding:9px 12px;border-radius:10px}
+}
 .group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .group>label,.glabel{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--surface)}
@@ -231,14 +243,69 @@ svg.big .blab{font-size:58px} svg.big .btk{font-size:40px}
 .fbtn::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);margin-left:2px;opacity:.6}
 .pop{position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:270px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.16);padding:8px}
 .opt{display:grid;grid-template-columns:18px 12px 1fr auto auto;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;font-size:13.5px;cursor:pointer}
-.opt:hover{background:var(--bg)}
+@media (hover:hover){ .opt:hover{background:var(--bg)} .opt:hover .only{visibility:visible} }
 .opt input{margin:0;accent-color:var(--accent)}
 .opt i{width:10px;height:10px;border-radius:3px;background:var(--c,transparent)}
 .opt .cnt{font:12px var(--mono);color:var(--muted)}
 .opt .only{border:0;background:none;color:var(--accent);font:500 12px var(--body);cursor:pointer;visibility:hidden;padding:0 2px}
-.opt:hover .only,.opt .only:focus-visible{visibility:visible}
+.opt .only:focus-visible{visibility:visible}
+@media (hover:none){ .opt .only{visibility:visible} .opt{padding:8px 6px} }
 .kids{margin-left:26px;border-left:1px solid var(--line);padding-left:4px}
-.popfoot{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.pophead{display:none}
+.fnote{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:70;width:min(440px,calc(100vw - 24px));box-sizing:border-box;background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.25);padding:14px 16px;animation:fnin .2s ease-out}
+@keyframes fnin{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translateX(-50%)}}
+.fnote>b{font:700 16px var(--display);color:var(--ink)}
+.fnote ul{list-style:none;padding:0;margin:8px 0 10px;display:grid;gap:8px}
+.fnote li{display:grid;gap:2px} .fnote li span{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600} .fnote li b{font-size:14.5px;color:var(--ink)}
+.fnbtns{display:flex;justify-content:space-between;align-items:center} .fnbtns .chip{padding:6px 18px;font-weight:600}
+.phonebar,.pactive,.popback{display:none}
+@media (max-width:700px){
+  .optrow:has(.ftoggle){display:none}
+  #filtersBox,#mFilters{display:block!important;border:0;padding:0;margin:0;background:none;box-shadow:none}
+  .filters>.fhead,.filters .fwrap>.fbtn,.filters>.qq,.filters .fbar{min-height:0} .filters>.fhead,.filters .fwrap>.fbtn,.filters>.qq{display:none!important}
+  .filters>.group{display:block;margin:0}
+  .phonebar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 8px}
+  .pbtn{display:flex;align-items:center;gap:7px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);border-radius:12px;padding:11px 12px;font:600 14.5px var(--body);cursor:pointer;text-align:left}
+  .pbtn .pic{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--surface);font-size:13px;flex:none}
+  .pbtn .pch{margin-left:auto;color:var(--muted);font-size:18px;line-height:1}
+  .pbtn .pcount{background:var(--accent);color:var(--surface);border-radius:999px;padding:0 7px;font-size:12px;line-height:20px}
+  .pbtn .pcount:empty{display:none}
+  .pactive{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .pactive:empty{display:none}
+  .pactive button{border:1px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));color:var(--ink);border-radius:999px;padding:5px 10px;font:600 12.5px var(--body);cursor:pointer}
+  .popback{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));color:var(--accent);border-radius:999px;font:700 15px var(--body);padding:7px 14px 7px 10px;cursor:pointer;margin:2px 0 4px}
+  .popback span{font-size:24px;line-height:16px;margin-top:-3px}
+  .pophead{position:sticky}
+  .hubrows button{display:flex;width:100%;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:14px 6px;font:500 15.5px var(--body);color:var(--ink);cursor:pointer;text-align:left}
+  .hubrows button:last-child{border-bottom:0}
+  .hubrows .hv{margin-left:auto;color:var(--muted);font-size:14px;text-align:right;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hubrows button.on .hv{color:var(--accent);font-weight:700}
+  .hubrows .pch{color:var(--muted);font-size:18px}
+  .qqlist button{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:14px 6px;font:500 15.5px var(--body);color:var(--ink);text-align:left;cursor:pointer}
+  .qqlist button[aria-pressed="true"]{color:var(--accent);font-weight:700}
+}
+#popShade{position:fixed;inset:0;background:rgba(10,20,15,.4);z-index:55}
+@media (max-width:700px){
+  .pop{position:fixed;left:0;right:0;bottom:0;top:auto;min-width:0;width:100%;max-height:78vh;overflow-y:auto;overscroll-behavior:contain;z-index:60;border:0;border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.25);padding:0 12px calc(12px + env(safe-area-inset-bottom));box-sizing:border-box}
+  .pop.enter{animation:sheetup .22s ease-out}
+  @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+  .pophead{display:flex;flex-direction:column;align-items:center;gap:8px;position:sticky;top:0;background:var(--surface);padding:8px 0 10px;z-index:1;border-bottom:1px solid var(--line);margin-bottom:6px;touch-action:none}
+  .pophead .grab{width:40px;height:5px;border-radius:3px;background:var(--line)}
+  .pophead b{font:700 17px var(--display);color:var(--ink)}
+  .opt{grid-template-columns:12px 1fr auto auto;padding:12px 10px;margin:2px 0;border-radius:10px;font-size:15.5px;position:relative}
+  .opt input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+  .opt i:not([style]){display:none} .opt:has(i:not([style])){grid-template-columns:1fr auto auto}
+  .opt:has(input:checked){background:color-mix(in srgb,var(--accent) 13%,transparent);font-weight:600}
+  .opt:has(input:indeterminate){background:color-mix(in srgb,var(--accent) 6%,transparent)}
+  .opt .cnt::after{content:"";display:inline-block;width:1.1em;margin-left:10px;text-align:center;color:var(--accent);font:700 16px var(--body)}
+  .opt:has(input:checked) .cnt::after{content:"✓"}
+  .opt:has(input:indeterminate) .cnt::after{content:"–"}
+  .opt .only{font-size:13px;padding:4px 6px}
+  .kids{margin-left:14px}
+  .popfoot{position:sticky;bottom:calc(-12px - env(safe-area-inset-bottom));background:var(--surface);padding:12px 4px;margin-top:8px}
+  .popfoot .linkbtn{font-size:15px;font-weight:600}
+}
+.popfoot{gap:14px;display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
 .preset{border:1px dashed var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:4px 11px;font:500 12.5px var(--body);cursor:pointer}
 .preset:hover{color:var(--ink);border-color:var(--accent)}
 .preset[aria-pressed="true"]{border-style:solid;border-color:var(--accent);color:var(--accent)}
@@ -345,7 +412,7 @@ tbody tr{cursor:pointer}
 tbody tr:hover{background:var(--bg)}
 /* detail */
 .detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;position:sticky;top:16px}
-@media (min-width:1101px){ .detail{max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain} }
+@media (min-width:1101px){ .detail{top:104px;max-height:calc(100vh - 120px);overflow-y:auto;overscroll-behavior:contain} }
 .dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .dhead .big{font-family:var(--display);font-size:64px;line-height:.9;font-weight:700}
 .pill{box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--pc);color:var(--pi)}
@@ -415,15 +482,58 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
 .void-msg button{border:0;background:var(--accent);color:var(--surface);font:600 14px var(--body);padding:8px 16px;border-radius:7px;cursor:pointer}
 .cell{transition:transform .55s cubic-bezier(.2,.7,.3,1),opacity .55s,background-color .3s}
 .boom .cell{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4);opacity:0}
+#view-grid,.board{overflow:clip}   /* the scatter animation must never widen the page (on phones that zooms it out and shifts the sheets) */
+html,body{overflow-x:clip}
 .shake{animation:shake .45s}
 @keyframes shake{0%,100%{transform:none}20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-4px)}60%{transform:translate(-5px,2px)}80%{transform:translate(3px,-1px)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.boom .cell{transform:none;opacity:1}}
+
+/* time travel */
+:root{--fresh:#d39b00} .cb .cell.fresh{outline-color:var(--ink)!important}
+.ttbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin:4px 0 14px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.ttbar{position:sticky;top:0;z-index:25;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+@media (max-width:700px){ .ttbar{padding:8px 10px;gap:6px 8px} .ttbar small.ttsub{display:none} .ttbar .glabel{order:6} .ttbr{display:block!important;order:5;flex-basis:100%;height:0} .ttyear{order:7;font-size:21px;min-width:0} .ttnow{order:8} .ttlist{order:9;margin-left:auto} .ttbar .ttrange{flex:1 1 0;min-width:0} .ttbar .ttnow{font-size:13px} }
+.ttbr{display:none}
+.ttbar.on{border-color:var(--fresh);box-shadow:inset 3px 0 0 var(--fresh)}
+.ttbar .glabel{margin-right:2px}
+.ttbtn{flex:none;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);width:36px;height:36px;border-radius:50%;font:700 15px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
+.ttbtn.ttplay{background:var(--accent);color:var(--surface)}
+.ttbtn:hover{filter:brightness(1.1)}
+.ttrange{flex:1 1 220px;min-width:140px;accent-color:var(--accent);height:28px;cursor:pointer}
+.ttyear{font:700 24px/1 var(--display);min-width:4.2ch;text-align:center;color:var(--ink)}
+.ttbar small.ttsub{flex-basis:100%;color:var(--ink-2);font-size:13px;margin-top:-2px}
+.ttlist{display:none}
+@media (max-width:1100px){ .ttlist{display:inline} }
+.cell.fresh,.msq.fresh{outline:3px solid var(--fresh)!important;outline-offset:-1px;z-index:2;animation:fresh .9s ease-out}
+@keyframes fresh{0%{transform:scale(1.35)}100%{transform:none}}
+.newtag{display:inline-block;padding:0 6px;border-radius:999px;background:var(--fresh);color:#1d1600;font:700 11px/17px var(--body);vertical-align:1px;margin-left:4px;text-transform:uppercase;letter-spacing:.04em}
+.rsub{margin:8px 0 10px;color:var(--ink-2);font-size:13.5px}
+.rlist{display:flex;flex-direction:column}
+.rrow{all:unset;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline;padding:8px 6px;border-top:1px solid var(--line)}
+.rrow:hover{background:var(--bg)} .rrow:focus-visible{outline:2px solid var(--accent)}
+.rrow .rt{font:700 22px/1 var(--display);min-width:3ch;text-align:right;color:var(--ink)}
+.rrow.mr .rt{font-size:17px;min-width:5.5ch}
+.rrow .rx{font-size:14px;color:var(--ink)} .rrow .rx small{display:block;color:var(--ink-2);font-size:12.5px;margin-top:2px}
+.backrec{display:inline-block;margin:0 0 8px;font-weight:600}
+#recMore,#mRecMore{margin-top:10px}
+/* share */
+.hbtns{display:flex;gap:8px;flex:none;position:relative}
+.sharebtn{background:var(--accent);color:var(--surface)} .sharebtn span{background:var(--surface);color:var(--accent)}
+.sharebtn:hover{filter:brightness(1.12);background:var(--accent);color:var(--surface)} .sharebtn:hover span{background:var(--surface);color:var(--accent)}
+.sharepop{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.2);padding:6px;min-width:210px;display:flex;flex-direction:column}
+.sharepop[hidden]{display:none}
+.sharepop a,.sharepop button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font:500 14.5px var(--body);color:var(--ink)}
+.sharepop a:hover,.sharepop button:hover{background:var(--bg)}
+.sharepop svg{width:18px;height:18px;flex:none;color:var(--accent)}
+.sharepop .copied{color:var(--accent);font-weight:700}
+footer .sharefoot{all:unset;cursor:pointer;display:inline-block;padding:8px 14px;border-radius:999px;background:var(--accent);color:var(--surface);font-weight:600;margin-right:8px}
+@media (max-width:700px){ .hbtns{flex-direction:column;align-items:flex-end;gap:6px} .hbtns .helpbtn{margin-top:0} .hbtns .helpbtn:first-child{margin-top:10px} }
 </style>
 </head>
 <body>
 <header>
   <div>
-    <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button></div>
+    <div class="titlerow"><h1>Scorigami: Test Cricket (Men’s)</h1><div class="hbtns"><button class="helpbtn sharebtn" id="shareBtn" type="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true">↗</span> Share</button><button class="helpbtn helpopen" aria-haspopup="dialog"><span aria-hidden="true">?</span> How it works</button><div class="sharepop" id="sharePop" hidden role="menu"></div></div></div>
     <p class="lead">A <b>scorigami</b> is a score that has never happened before. Originally <a href="https://www.sbnation.com/2016/12/7/13856392/chart-party-scorigami" target="_blank" rel="noopener">coined for the NFL</a>, the term has since been taken up by fans of other sports. This is the Test cricket version, in two parts: the final run total of every men’s Test innings and how it ended, and the margin every men’s Test has been won by.</p>
     <div class="modebar"><div class="modeswitch" id="modeSeg" role="tablist" aria-label="What to count"><button data-m="totals" aria-pressed="true"><b>Innings totals</b><small>Every score a side has finished on</small></button><button data-m="margins" aria-pressed="false"><b>Winning margins</b><small>Every result a Test has been won by</small></button></div></div>
     <h2 class="kicker">Every total a men’s Test innings has finished on, from 0 up to the all-time record of <span class="hiT"></span></h2>
@@ -446,12 +556,14 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
     <button class="chip tog" id="cbBtn" aria-pressed="false" title="Makes the three kinds of cell easier to tell apart if you see some colours differently">High-contrast colours</button></div>
   <div class="group"><label for="jump">Go to</label><input id="jump" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 36"><button class="chip" id="randomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
+<div class="phonebar"><button class="pbtn" id="fb-hubt" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountt"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqt" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactt"></div>
 <div class="optrow"><button class="chip ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filtersBox">Show filters &amp; quick questions <b id="fcount"></b> ▾</button></div>
-<div class="filters" id="filtersBox" aria-label="Filters">
+<div class="filters" id="filtersBox" aria-label="Filters"><div class="pop hub" id="pop-hubt" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowst"></div><div class="popfoot"><button class="linkbtn" data-hubreset="t" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqt" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistt"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div>
   <div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="resetBtn">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="fbar"></div></div>
   <details class="qq" id="qq"><summary>Quick questions ▾</summary><span id="presets" class="group"></span></details>
 </div>
 <p class="hint">Click or tap on anything below (a number, a slice, a row) to see the innings behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
+<div class="ttbar" data-tt="t"></div>
 <div class="layout">
   <section class="board" aria-label="Scorigami views">
     <div class="active" id="activeBar" hidden></div>
@@ -487,11 +599,13 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
     <button class="chip tog" id="mCbBtn" aria-pressed="false">High-contrast colours</button></div>
   <div class="group"><label for="mjump">Go to</label><input id="mjump" class="jumpbox" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" enterkeyhint="go" placeholder="e.g. 9"><button class="chip" id="mRandomBtn" style="padding-left:10px">Surprise me</button></div>
 </div>
+<div class="phonebar"><button class="pbtn" id="fb-hubm" type="button"><span class="pic" aria-hidden="true">⚲</span><span>Filters</span><b class="pcount" id="pcountm"></b><span class="pch" aria-hidden="true">›</span></button><button class="pbtn" id="fb-qqm" type="button"><span class="pic" aria-hidden="true">?</span><span>Quick questions</span><span class="pch" aria-hidden="true">›</span></button></div><div class="pactive" id="pactm"></div>
 <div class="optrow"><button class="chip ftoggle" id="mftoggle" aria-expanded="false" aria-controls="mFilters">Show filters &amp; quick questions <b id="mfcount"></b> ▾</button></div>
-<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
+<div class="filters mfilters" id="mFilters" aria-label="Margin filters"><div class="pop hub" id="pop-hubm" hidden role="dialog" aria-label="Filters"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Filters</b></div><div class="hubrows" id="hubrowsm"></div><div class="popfoot"><button class="linkbtn" data-hubreset="m" type="button">Reset all</button><button class="linkbtn" data-close type="button">Done</button></div></div><div class="pop hub" id="pop-qqm" hidden role="dialog" aria-label="Quick questions"><div class="pophead"><span class="grab" aria-hidden="true"></span><b>Quick questions</b></div><div class="qqlist" id="qqlistm"></div><div class="popfoot"><span></span><button class="linkbtn" data-close type="button">Done</button></div></div><div class="fhead"><span class="glabel">Filters</span><button class="chip resetchip" id="mReset">↺ Reset all filters</button></div><div class="group"><div class="fbar" id="mfbar"></div></div>
   <details class="qq" id="mqq"><summary>Quick questions ▾</summary><span id="mpresets" class="group"></span></details></div>
 <h2 class="msect" id="mBoardHead">Every winning margin</h2>
 <p class="hint">Click or tap on anything below (a square, a slice, a row) to see the matches behind it. <button class="linkbtn helpopen" data-h="hs1">What do the colours mean?</button></p>
+<div class="ttbar" data-tt="m"></div>
 <div class="layout">
   <section class="board" aria-label="Winning margins by runs">
     <div class="legend" id="mlegend"></div>
@@ -524,10 +638,11 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
   <p><span id="coverage"></span></p>
   <p id="srcNote" hidden></p>
   <p>Comments, corrections and “constructive feedback” welcome on X: <a href="https://x.com/bucklebadger" target="_blank" rel="noopener">@bucklebadger</a></p>
-  <p class="tip"><a href="https://ko-fi.com/bucklebadger" target="_blank" rel="noopener">Enjoying this? Shout me a beer 🍺</a></p>
+  <p class="tip"><button class="sharefoot" type="button" data-share>↗ Share this page</button><a href="https://ko-fi.com/bucklebadger" target="_blank" rel="noopener">Enjoying this? Shout me a beer 🍺</a></p>
   <p id="copy">© <span id="copyYears">2026</span> BuckleBadger. All rights reserved. Match data remains under its sources’ own terms.</p>
   <p id="updated" style="color:var(--muted)"></p>
 </footer>
+<div id="fnote" class="fnote" role="dialog" aria-live="polite" aria-labelledby="fnoteT" hidden><b id="fnoteT">Your filters have changed:</b><ul></ul><div class="fnbtns"><button class="linkbtn" id="fnClear" type="button">Clear all filters</button><button class="chip" id="fnOk" type="button">OK</button></div></div>
 <dialog id="help" aria-labelledby="helpTitle"><div class="helpin">
   <div class="helphead"><h2 id="helpTitle">How it works</h2><button class="helpx" aria-label="Close">×</button></div>
 
@@ -605,8 +720,19 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
     <li><b>On a phone</b>, the strip becomes a ring. Put a finger on it and slide round to the number you want. It stops at 0 and at the record. Then fine-tune with the dial.</li>
     <li>For innings totals, all-out finishes are above the line and every other finish below; the all-out row stops at the highest all-out total ever (<span class="hiO"></span>). For margins, wins by runs are above and innings wins below (on the ring: outside and inside); each row stops at its record, with the wickets chart underneath.</li>
   </ul>
+  <h3>Time travel</h3>
+  <ul>
+    <li>The <b>Time travel</b> bar above the views winds the clock back. Drag the slider, step a year at a time with ‹ and ›, or press ▶ to watch the scorigamis fill in year by year. <b>Back to today</b> puts everything back.</li>
+    <li>Everything (the views, the headline numbers and the list) then counts only what had happened by the end of that year. That year’s new scorigamis are outlined in gold on the grids and marked <b>new</b> in the list.</li>
+    <li>It works with your filters, and it’s the same as setting the “to” year under <b>Era</b>, so the two always agree.</li>
+  </ul>
+  <h3>The list beside the views</h3>
+  <ul>
+    <li>Until you pick something, the panel beside the views lists the latest scorigamis, newest first: each total or margin and the match where it first happened. Tap one for the full story, and <b>‹ Latest scorigamis</b> to come back. On a phone, open it from the Time travel bar.</li>
+  </ul>
   <h3>Getting around</h3>
   <ul>
+    <li><b>Share</b>, at the top of the page and at the bottom, opens your device’s own share menu, on a phone or a computer. If your browser doesn’t have one, you get <b>Copy link</b> and <b>Email it</b> instead.</li>
     <li><b>Go to</b> jumps to a number. <b>Surprise me</b> picks one that has happened.</li>
     <li><b>Hide filters</b> tucks the filters away, and the site remembers your choice.</li>
   </ul>
@@ -636,21 +762,32 @@ footer .sq,#help .sq{flex:none;width:18px;height:18px;border-radius:4px;margin-t
   <h3>Using the filters</h3>
   <ul>
     <li>Each filter is a dropdown: tick what to keep, or hover a line and click “only”.</li>
+    <li><b>Era</b> also takes a year range (from and to) for spans that don’t fit decades, e.g. 1975–1995.</li>
+    <li><b>Host country</b> is where the match was played (Caribbean grounds count as West Indies, Belfast and Dublin as Ireland, Cardiff as England). <b>Home or away</b> is from the batting side’s point of view for innings totals, and the winner’s for margins; “neutral” means neither side’s own country, such as Pakistan’s home series in the UAE.</li>
     <li>The “Showing…” line above the data lists what’s on; clear any of them with ×.</li>
+    <li><b>Teams</b> comes first in both halves. Pick one side for all its matches (both sides’ innings, or its wins, losses, draws and ties), or two or more for only the matches between them, e.g. Australia v West Indies.</li>
+    <li>Pick a single side under <b>Batting side</b> (or <b>Winner</b>) and it greys out under <b>Bowling side</b> (or <b>Loser</b>), and the other way round, since no side can play itself.</li>
   </ul>
   <h3>Innings totals</h3>
   <ul>
     <li><b>How it ended</b> has a shortcut at the top, <b>Not all out</b>, that ticks or unticks every ending apart from all out in one go.</li>
     <li>A total can be green and cream at once (bowled out on it once, declared on it another time), so filtering by ending shows exactly which totals have finished that way.</li>
     <li><b>Innings</b> splits a 3rd innings played following on from an ordinary one.</li>
-    <li><b>Toss</b> and <b>Team’s result</b> describe the side that made the total.</li>
+    <li><b>Toss</b> describes the side that made the total.</li>
+    <li><b>Batting side</b> and <b>Bowling side</b> narrow it to one side’s innings; <b>Result</b> says who won from the batting side’s point of view.</li>
     <li>For 4th innings, the target is shown alongside the total.</li>
   </ul>
   <h3>Winning margins</h3>
   <ul>
-    <li><b>Team</b> is the side that won; <b>Against</b> is the side that lost.</li>
+    <li><b>Winner</b> and <b>Loser</b> pick sides by result, so draws and ties drop out once either is set.</li>
     <li><b>Toss</b>, <b>Follow-on</b> and <b>Batted</b> also describe the winners: whether they won the toss, enforced the follow-on or won after following on, and whether they batted first.</li>
-    <li>Draws and ties count for either side under Team and Against, and drop out once a toss, follow-on or batting filter is on.</li>
+    <li>Draws and ties also drop out once a toss, follow-on or batting filter is on.</li>
+  </ul>
+  <h3>Switching between the two halves</h3>
+  <ul>
+    <li><b>Teams</b>, <b>Era</b> (and any year range), <b>Host country</b>, <b>Home or away</b>, <b>Toss</b>, and <b>Batting side</b> / <b>Bowling side</b> carry across. Batting and bowling side become <b>Winner</b> and <b>Loser</b> on the margins side, and back again; Home or away follows the batting side in one half and the winner in the other.</li>
+    <li>The filters that only one half has (Innings, How it ended, Result, Batted, Follow-on) stay set in their own half, ready for when you go back, but don’t apply in the other.</li>
+    <li>A note pops up when you switch to say what’s on, with a button to clear everything.</li>
   </ul>
   <h3>Quick questions</h3>
   <ul>
@@ -689,6 +826,30 @@ const RES = ['Won','Lost','Drawn','Tied'];
 const FO = ['Match with follow on','No follow on'];
 const TOSS = ['Won, batted','Won, bowled','Lost, fielded','Lost, sent-in','Not recorded'];
 const T = DATA.teams, M = DATA.matches;
+// the country each ground is in (the Caribbean grounds count as West Indies; Belfast and Dublin as Ireland; Cardiff as England)
+const GROUNDS={Australia:'Adelaide Brisbane Cairns Canberra Darwin Hobart Mackay Melbourne Perth Sydney',England:'Birmingham Cardiff Chester-le-Street Leeds London Manchester Nottingham Sheffield Southampton',
+  India:'Ahmedabad Bengaluru Chandigarh Chennai Cuttack Dehra_Dun Delhi Dharamsala Guwahati Hyderabad Indore Jaipur Jalandhar Kanpur Kolkata Lucknow Mumbai Nagpur New_Chandigarh Pune Rajkot Ranchi Visakhapatnam',
+  Pakistan:'Bahawalpur Faisalabad Gujranwala Karachi Lahore Multan Peshawar Rawalpindi Sheikhupura Sialkot','New Zealand':'Auckland Christchurch Dunedin Hamilton Mount_Maunganui Napier Wellington',
+  'South Africa':'Bloemfontein Cape_Town Centurion Durban East_London Gqeberha Johannesburg Potchefstroom','Sri Lanka':'Colombo Galle Kandy Moratuwa',
+  'West Indies':"Basseterre Bridgetown Georgetown Gros_Islet Kingston Kingstown North_Sound Port_of_Spain Providence Roseau St_George's St_John's Tarouba",
+  Bangladesh:'Bogra Chattogram Dhaka Fatullah Khulna Sylhet',Zimbabwe:'Bulawayo Harare',Ireland:'Belfast Dublin',UAE:'Abu_Dhabi Dubai Sharjah'};
+const GROUND_OF={}; Object.entries(GROUNDS).forEach(([c,g])=>g.split(' ').forEach(x=>GROUND_OF[x.replace(/_/g,' ')]=c));
+const HOSTS=(()=>{ const teams={}; DATA.inn.forEach(r=>{ (teams[r[0]]=teams[r[0]]||new Set()).add(T[r[1]]).add(T[r[2]]); });
+  return M.map((m,i)=> m[2]==='Hyderabad' && teams[i] && teams[i].has('Pakistan') && +m[1]<1990 ? 'Pakistan' : GROUND_OF[m[2]]==='Bangladesh' && +m[1]<1972 ? 'Pakistan' : (GROUND_OF[m[2]]||'Elsewhere')); })();   // Dacca and Chittagong were in Pakistan until 1971   // two Hyderabads: Sind (Pakistan) and Deccan (India)
+const hostOf=i=>HOSTS[i];
+const homeAway=(i,team,other)=> HOSTS[i]===team ? 'home' : HOSTS[i]===other ? 'away' : 'neutral';   // neutral: neither side's own country
+// a year range, shared by both halves (null = no limit)
+// state.yr: a year range shared by both halves (null = no limit)
+const yrOn=()=> state.yr[0]!==null || state.yr[1]!==null;
+const Y0=+M[0][1], Y1=Math.max(...M.map(m=>+m[1]));
+const TT=()=>state.yr[1];   // the time-travel year (the 'to' year), if any
+const yOf=i=>+M[i][1];
+const tOnly=()=> state.yr[1]!==null && state.yr[0]===null && FILTERS.every(f=>state.fsel[f.id].size===f.leaves.length);   // only time travel is narrowing things
+const mOnly=()=> state.yr[1]!==null && state.yr[0]===null && !MF.some(f=>mOn(f.id));
+const WF=()=> tOnly()? `by the end of ${TT()}` : 'with these filters', WFm=()=> mOnly()? `by the end of ${TT()}` : 'with these filters';
+const monY=m=>{ const d=m[5]||''; return d.length>=7? new Date(d.slice(0,7)+'-01T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : m[1]; };
+const yrOk=i=>{ const y=+M[i][1]; return (state.yr[0]===null||y>=state.yr[0]) && (state.yr[1]===null||y<=state.yr[1]); };
+const yrLabel=()=> state.yr[0]!==null && state.yr[1]!==null ? (state.yr[0]===state.yr[1]? `${state.yr[0]}` : `${state.yr[0]}–${state.yr[1]}`) : state.yr[0]!==null ? `${state.yr[0]} on` : `to ${state.yr[1]}`;
 const why = r => (r[8]===undefined||r[8]<0) ? 5 : r[8];
 const byScore = Array.from({length:1000},()=>[]);
 const HI_T = DATA.inn.reduce((m,r)=> r[4]<1000 && r[4]>m ? r[4] : m, 0), NT = HI_T+1;
@@ -707,38 +868,50 @@ const META = DATA.meta || {};
   document.getElementById('updated').textContent = META.built ? `Last updated ${new Date(META.built+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})}.` : '';
   const sn=document.getElementById('srcNote'); sn.textContent = (META.last||'') > '2024-03-31' ? '' : 'Not yet included: Tests after the CSV ends (March 2024), until the Cricsheet update runs.'; sn.hidden=!sn.textContent; })();
 
-const state = {view:'grid', labels:'total', cb:false, marks:false, fsel:{}, preset:null, rankDir:-1, rankN:100, sel:null, layer:-1, rx:-24, ry:-38, spread:34, nums:true};
+const state = {yr:[null,null], view:'grid', labels:'total', cb:false, marks:false, fsel:{}, preset:null, rankDir:-1, rankN:100, sel:null, layer:-1, rx:-24, ry:-38, spread:34, nums:true};
 
-const FILTERS = [
-  {id:'end', label:'How it ended', key:r=> r[6]===1?'s'+why(r):String(r[6]), opts:[
-    {l:'All out',c:'--e0',kids:[{v:'0',l:'All ten wickets'},...WHY.map((w,i)=>({v:'s'+i,l:'Short-handed: '+w.toLowerCase()}))]},
-    {l:'Declared',c:'--e2',kids:[{v:'2',l:'Declared'},{v:'6',l:'Forfeited (0/0d)'}]},{v:'3',l:'Successful chase',c:'--e3'},{v:'4',l:'Match drawn (batting at the end)',c:'--e4'},{v:'5',l:'Other',c:'--e5'}]},
-  {id:'inn', label:'Innings', key:r=>String(ix(r)), opts:[
-    {v:'0',l:'1st'},{v:'1',l:'2nd'},{l:'3rd',kids:[{v:'2',l:'Normal'},{v:'3',l:'Following on',short:'3rd (following on)'}]},{v:'4',l:'4th'}]},
-  {id:'team', label:'Team', key:r=>T[r[1]], opts:[...T].sort().map(t=>({v:t,l:t}))},
-  {id:'opp', label:'Against', key:r=>T[r[2]], opts:[...T].sort().map(t=>({v:t,l:t}))},
+// Sides playing: one side = all its matches; two or more = only matches between them
+const sideTest=(a,b,S,n)=> S.size>=n ? true : S.size===1 ? (S.has(a)||S.has(b)) : (S.has(a)&&S.has(b));
+const FILTERS = [   // who, when, then the match as it unfolds
+  {id:'side', label:'Teams', key:r=>T[r[1]], keys:r=>[T[r[1]],T[r[2]]], test:(r,S,f)=>sideTest(T[r[1]],T[r[2]],S,f.leaves.length), opts:[...T].sort().map(t=>({v:t,l:t}))},
+  {id:'team', label:'Batting side', key:r=>T[r[1]], opts:[...T].sort().map(t=>({v:t,l:t}))},
+  {id:'opp', label:'Bowling side', key:r=>T[r[2]], opts:[...T].sort().map(t=>({v:t,l:t}))},
   {id:'era', label:'Era', key:r=>{const y=+M[r[0]][1]; return String(Math.floor(y/10)*10)+'s';}, opts:[
     {l:'1877–1914',kids:['1870s','1880s','1890s','1900s','1910s'].map(v=>({v,l:v}))},
     {l:'1920–1939',kids:['1920s','1930s'].map(v=>({v,l:v}))},
     {l:'1946–1969',kids:['1940s','1950s','1960s'].map(v=>({v,l:v}))},
     {l:'1970–1999',kids:['1970s','1980s','1990s'].map(v=>({v,l:v}))},
     {l:'2000–today',kids:['2000s','2010s','2020s'].map(v=>({v,l:v}))}]},
+  {id:'host', label:'Host country', key:r=>hostOf(r[0]), opts:[...new Set(HOSTS)].sort().map(v=>({v,l:v}))},
+  {id:'ha', label:'Home or away', key:r=>homeAway(r[0],T[r[1]],T[r[2]]), opts:[{v:'home',l:'Batting side at home'},{v:'away',l:'Batting side away'},{v:'neutral',l:'Neutral venue'}]},
   {id:'toss', label:'Toss', key:r=>String(r[11]), opts:[
     {l:'Won toss',kids:[{v:'0',l:'Won, batted'},{v:'1',l:'Won, bowled'}]},
     {l:'Lost toss',kids:[{v:'3',l:'Lost, sent-in'},{v:'2',l:'Lost, fielded'}]},{v:'4',l:'Not recorded'}]},
-  {id:'res', label:'Team’s result', key:r=>String(r[9]), opts:RES.map((l,i)=>({v:String(i),l}))},
+  {id:'inn', label:'Innings', key:r=>String(ix(r)), opts:[
+    {v:'0',l:'1st'},{v:'1',l:'2nd'},{l:'3rd',kids:[{v:'2',l:'Normal'},{v:'3',l:'Following on',short:'3rd (following on)'}]},{v:'4',l:'4th'}]},
+  {id:'end', label:'How it ended', key:r=> r[6]===1?'s'+why(r):String(r[6]), opts:[
+    {l:'All out',c:'--e0',kids:[{v:'0',l:'All ten wickets'},...WHY.map((w,i)=>({v:'s'+i,l:'Short-handed: '+w.toLowerCase()}))]},
+    {l:'Declared',c:'--e2',kids:[{v:'2',l:'Declared'},{v:'6',l:'Forfeited (0/0d)'}]},{v:'3',l:'Successful chase',c:'--e3'},{v:'4',l:'Match drawn (batting at the end)',c:'--e4'},{v:'5',l:'Other',c:'--e5'}]},
   {id:'fo', label:'Follow-on', key:r=>String(fo(r)), opts:[{v:'0',l:'Match with follow-on'},{v:'1',l:'No follow-on'}]},
+  {id:'res', label:'Result', key:r=>String(r[9]), opts:['Batting side won','Bowling side won','Drawn','Tied'].map((l,i)=>({v:String(i),l}))},
 ];
 // count every leaf, drop leaves that never occur, then drop parents left empty
 FILTERS.forEach(f=>{
-  const cnt={}; DATA.inn.forEach(r=>{const k=f.key(r); cnt[k]=(cnt[k]||0)+1;});
+  const cnt={}; DATA.inn.forEach(r=>{ (f.keys? f.keys(r) : [f.key(r)]).forEach(k=>cnt[k]=(cnt[k]||0)+1); });
   const prune=o=>{ if(o.kids){ o.kids=o.kids.filter(k=>cnt[k.v]); o.n=o.kids.reduce((a,k)=>a+cnt[k.v],0); o.kids.forEach(k=>k.n=cnt[k.v]); return o.kids.length>0; } o.n=cnt[o.v]||0; return o.n>0; };
   f.opts=f.opts.filter(prune);
   f.leaves=f.opts.flatMap(o=>o.kids?o.kids.map(k=>({...k,parent:o})):[o]);
   state.fsel[f.id]=new Set(f.leaves.map(l=>l.v));
 });
-function pass(r){ for(const f of FILTERS) if(!state.fsel[f.id].has(f.key(r))) return false; return true; }
-function filtered(){ return FILTERS.some(f=>state.fsel[f.id].size<f.leaves.length); }
+const fOk=(f,r)=> f.test ? f.test(r,state.fsel[f.id],f) : state.fsel[f.id].has(f.key(r));
+function pass(r){ if(!yrOk(r[0])) return false; for(const f of FILTERS) if(!fOk(f,r)) return false; return true; }
+function filtered(){ return yrOn() || FILTERS.some(f=>state.fsel[f.id].size<f.leaves.length); }
+// how many innings each option would have, given every OTHER filter as it stands
+function liveCounts(){ const C={}; FILTERS.forEach(f=>C[f.id]={});
+  for(const r of DATA.inn){ if(r[4]>HI_T || !yrOk(r[0])) continue; let bad=null, n=0; for(const f of FILTERS){ if(!fOk(f,r)){ bad=f; if(++n>1) break; } }
+    const add=f=>(f.keys? f.keys(r) : [f.key(r)]).forEach(k=>C[f.id][k]=(C[f.id][k]||0)+1);
+    if(n===0) FILTERS.forEach(add); else if(n===1) add(bad); }
+  return C; }
 function info(s){
   let star=false, starN=false; const c=[0,0,0,0,0,0,0], w=[0,0,0,0,0,0], ii=[0,0,0,0,0], rr=[0,0,0,0]; let n=0, first=null, last=null, firstOut=null;
   for(const r of byScore[s]){ if(!pass(r)) continue; c[r[6]]++; n++; if(r[6]===6) star=true; else if(note(r)) starN=true; ii[ix(r)]++; rr[r[9]]++; if(r[6]===1) w[why(r)]++; if(first===null||r[0]<first[0]) first=r; if(last===null||r[0]>last[0]) last=r; if(r[6]<=1 && (firstOut===null||r[0]<firstOut[0])) firstOut=r; }
@@ -786,8 +959,8 @@ function renderKPIs(){
   const flips=[]; for(let s=0;s<1000;s++){ const o=cache[s]; if(o.firstOut && o.first && o.first!==o.firstOut && o.first[0]<o.firstOut[0]) flips.push(o.firstOut); }
   flips.sort((a,b)=>b[0]-a[0]);
   const f0=flips[0], fm=f0?M[f0[0]]:null;
-  K.classList.toggle('filt', filtered()); document.getElementById('kpinote').hidden=!filtered();
-  const rangeTxt = `of ${(hi+1).toLocaleString()} possible, from 0 to ${hi} (the highest ${filtered()?'with these filters':'score to date'})`;
+  K.classList.toggle('filt', filtered()); { const kn=document.getElementById('kpinote'); kn.hidden=!filtered(); kn.firstChild.textContent= tOnly()? `These figures count only what had happened by the end of ${TT()}.` : 'These figures count only the innings that match your filters.'; document.getElementById('kpiReset').textContent= tOnly()? 'Back to today' : 'Show all innings'; }
+  const rangeTxt = `from 0 to ${hi} (the highest ${filtered()?WF():'score to date'})`;
   K.innerHTML = [
     [reached.toLocaleString(), 'totals have happened', rangeTxt, 'var(--out)'],
     [(hi+1-reached).toLocaleString(), 'totals have yet to happen', rangeTxt, 'var(--never)'],
@@ -803,15 +976,15 @@ function renderLegend(){
   const nv=state.cb?'background:var(--never-cb);color:var(--never-cb-ink)':'background:var(--never);color:var(--never-ink);box-shadow:inset 0 0 0 2px var(--never-edge)';
   const item=(st,ic,t,sub)=>`<span class="key"><span class="sw" style="${st}">${ICON[ic]}</span><span class="kt"><b>${t}</b><small>${sub}</small></span></span>`;
   if(state.heat){
-    document.getElementById('legend').innerHTML = `<div class="heatkey"><b>Times each total has come up${filtered()?' (with these filters)':''}</b><div class="bands">${HEAT.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` +
-      item(nv,'never',filtered()?'None with these filters':'Scorigami!','No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
+    document.getElementById('legend').innerHTML = `<div class="heatkey"><b>Times each total has come up${filtered()?` (${WF()})`:''}</b><div class="bands">${HEAT.map((h,i)=>`<span><i style="background:var(--q${i+1})"></i>${h[2]}</span>`).join('')}</div></div>` +
+      item(nv,'never',filtered()?'None '+WF():'Scorigami!', tOnly()? `No innings had ended on this total by the end of ${TT()}.` : 'No innings has ever ended on this total. Yet.'.replace('ever ended',filtered()?'matching your filters ended':'ever ended')) +
       `<span class="key"><span class="sw" style="background:var(--q4);position:relative"><span class="hd" style="position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--dot)"></span></span><span class="kt"><b>${state.view==='grid'?'Dot':'Dark outline'}: never all out</b><small>Innings have ended on this total, but never with the side bowled out.</small></span></span>`;
     return;
   }
   document.getElementById('legend').innerHTML =
     item('background:var(--out);color:var(--out-ink)','out','Complete – all out','At least one side has been bowled out for exactly this total.') +
     item('background:var(--not);color:var(--not-ink);box-shadow:inset 0 0 0 1.25px var(--not-edge)','not','Complete – not out','Innings have ended here, but never all out: declared, chased down, or batting at the close.') +
-    (filtered()? item(nv,'never','None with these filters','No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
+    (filtered()? item(nv,'never','None '+WF(), tOnly()? `No innings had ended on this total by the end of ${TT()}.` : 'No innings matching your filters ended on this total.') : item(nv,'never','Scorigami!','No innings has ever ended on this total. Yet.'));
 }
 
 /* ---------- grid ---------- */
@@ -829,7 +1002,7 @@ function buildGrid(){
 function paintCells(root){
   root.querySelectorAll('.cell[data-s]').forEach(el=>{
     const s=+el.dataset.s, o=cache[s]; const [bg,ink,edge]=cellStyle(s); el.style.background=bg; el.style.color=ink; el.style.boxShadow=edge; el.style.fontWeight=o.n?'400':'600';
-    el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel);
+    el.classList.toggle('never', !o.n); el.classList.toggle('sel', s===state.sel); if(root===gridEl) el.classList.toggle('fresh', TT()!==null && !!o.first && yOf(o.first[0])===TT());
     if(root!==gridEl && state.heat && o.n && o.status==='not') el.style.boxShadow='inset 0 0 0 2px var(--dot)';
     if(root===gridEl){ const lab = state.heat ? (o.n||'') : s; const mk=marks(o); el.innerHTML = lab + (mk?`<span class="mk">${mk}</span>`:'') + (state.heat && o.n && o.status==='not' && !state.empty ? '<span class="hd"></span>' : ''); el.setAttribute('aria-label', `${s}: ${o.n} innings`); }
   });
@@ -855,28 +1028,44 @@ const MREC=(function(){
     return rec; });
 })();
 const MF=[
-  {id:'team', l:'Team', opts:[...new Set(MREC.filter(r=>r.w!==undefined).map(r=>T[r.w]))].sort().map(t=>[t,t])},
-  {id:'opp', l:'Against', opts:[...new Set(MREC.filter(r=>r.l!==undefined).map(r=>T[r.l]))].sort().map(t=>[t,t])},
+  {id:'side', l:'Teams', opts:[...new Set(MREC.flatMap(r=>r.teams.map(x=>T[x])))].sort().map(t=>[t,t])},
+  {id:'team', l:'Winner', opts:[...new Set(MREC.filter(r=>r.w!==undefined).map(r=>T[r.w]))].sort().map(t=>[t,t])},
+  {id:'opp', l:'Loser', opts:[...new Set(MREC.filter(r=>r.l!==undefined).map(r=>T[r.l]))].sort().map(t=>[t,t])},
   {id:'era', l:'Era', opts:[...new Set(MREC.map(r=>r.dec))].sort().map(d=>[d,d])},
+  {id:'host', l:'Host country', opts:[...new Set(MREC.map(r=>hostOf(r.i)))].sort().map(v=>[v,v])},
+  {id:'ha', l:'Home or away', opts:[['home','Winner at home'],['away','Winner away'],['neutral','Neutral venue']]},
   {id:'toss', l:'Toss', opts:[['0','Won, batted'],['1','Won, bowled'],['3','Lost, sent-in'],['2','Lost, fielded']]},
-  {id:'fo', l:'Follow-on', opts:[['enf','Enforced the follow-on'],['fol','Won after following on'],['none','No follow-on']]},
   {id:'bat', l:'Batted', opts:[['first','Batted first'],['second','Batted second']]},
+  {id:'fo', l:'Follow-on', opts:[['enf','Enforced the follow-on'],['fol','Won after following on'],['none','No follow-on']]},
 ];
-state.mf={}; MF.forEach(f=>state.mf[f.id]='');
+const mAll=f=> new Set(f.opts.map(o=>o[0]));
+state.mf={}; MF.forEach(f=>state.mf[f.id]=mAll(f));
+const mOn=id=>{ const f=MF.find(x=>x.id===id), S=state.mf[id]; return f.opts.some(([v])=>!S.has(v) && !mBlocked(id,v)); };   // is this filter narrowing anything?
+function mBlocked(id,v){ const other= id==='team'?'opp' : id==='opp'?'team' : null; if(!other) return false; const O=state.mf[other]; return O.size===1 && O.has(v); }   // a side can't play itself
 state.mheat=false; state.msel=null; state.mshow='both'; state.mkind='r'; state.mfold={r:false,i:false,w:false}; state.mview='grid'; state.mbz=1; state.mbig=true; state.mrankN=100; state.msortK='n'; state.msortD=1;
-function mpass(r){ const F=state.mf, won=r.w!==undefined;
-  if(F.team && !(won? T[r.w]===F.team : r.teams.some(x=>T[x]===F.team))) return false;
-  if(F.opp && !(won? T[r.l]===F.opp : r.teams.some(x=>T[x]===F.opp))) return false;
-  if(F.era && r.dec!==F.era) return false;
-  if((F.toss||F.fo||F.bat) && !won) return false;
-  if(F.toss && String(r.toss)!==F.toss) return false;
-  if(F.fo && r.fo!==F.fo) return false;
-  if(F.bat && r.bat!==F.bat) return false;
+function mpass(r){ const F=state.mf, won=r.w!==undefined, on=MON;
+  if(on.side && !sideTest(T[r.teams[0]],T[r.teams[1]],F.side,Infinity)) return false;
+  if((on.team||on.opp) && !won) return false;   // Winner and Loser only make sense for a result
+  if(on.team && !F.team.has(T[r.w])) return false;
+  if(on.opp && !F.opp.has(T[r.l])) return false;
+  if(on.era && !F.era.has(r.dec)) return false;
+  if(!yrOk(r.i)) return false;
+  if(on.host && !F.host.has(hostOf(r.i))) return false;
+  if(on.ha && !(won ? F.ha.has(homeAway(r.i,T[r.w],T[r.l])) : (F.ha.has('neutral') && homeAway(r.i,T[r.teams[0]],T[r.teams[1]])==='neutral'))) return false;   // draws only count as neutral-venue matches
+  if((on.toss||on.fo||on.bat) && !won) return false;
+  if(on.toss && !F.toss.has(String(r.toss))) return false;
+  if(on.fo && !F.fo.has(r.fo)) return false;
+  if(on.bat && !F.bat.has(r.bat)) return false;
   return true; }
+let MON={};
+const mVals=(r,id)=>{ const won=r.w!==undefined; switch(id){ case 'side': return r.teams.map(x=>T[x]); case 'host': return [hostOf(r.i)]; case 'ha': return won? [homeAway(r.i,T[r.w],T[r.l])] : homeAway(r.i,T[r.teams[0]],T[r.teams[1]])==='neutral'? ['neutral'] : []; case 'team': return won? [T[r.w]] : []; case 'opp': return won? [T[r.l]] : []; case 'era': return [r.dec]; case 'toss': return won? [String(r.toss)] : []; case 'fo': return won? [r.fo] : []; case 'bat': return won? [r.bat] : []; } return []; };
+function mLiveCounts(){ const C={}; MF.forEach(f=>C[f.id]={}); MON={}; MF.forEach(f=>MON[f.id]=mOn(f.id));
+  for(const r of MREC) for(const f of MF){ const keep=MON[f.id]; MON[f.id]=false; const ok=mpass(r); MON[f.id]=keep; if(ok) mVals(r,f.id).forEach(v=>C[f.id][v]=(C[f.id][v]||0)+1); }
+  return C; }
 let MG={};
-function mrecompute(){ MG={r:{},i:{},w:{},tie:[],draw:[],award:[]};
+function mrecompute(){ MON={}; MF.forEach(f=>MON[f.id]=mOn(f.id)); MG={r:{},i:{},w:{},tie:[],draw:[],award:[]};
   MREC.forEach(r=>{ if(!mpass(r)) return; if(r.kind==='r'||r.kind==='i'||r.kind==='w') (MG[r.kind][r.n]=MG[r.kind][r.n]||[]).push(r); else MG[r.kind].push(r); }); }
-const mfiltered=()=>MF.some(f=>state.mf[f.id]);
+const mfiltered=()=>yrOn() || MF.some(f=>mOn(f.id));
 const mLabel=(k,n)=> k==='r'?`${n} run${n===1?'':'s'}`: k==='i'?`an innings and ${n} run${n===1?'':'s'}`: `${n} wicket${n===1?'':'s'}`;
 const NV=()=>state.cb?'var(--never-cb)':'var(--never)';
 const HEATM=[[1,1,'1'],[2,2,'2'],[3,3,'3'],[4,4,'4'],[5,6,'5–6'],[7,9,'7–9'],[10,1e9,'10+']];   // margins are rarer than totals
@@ -891,7 +1080,8 @@ function mStyle(k,n){ const L=mCount(k,n);
   return {bg:'var(--out)', ink:'var(--out-ink)', edge:'', L}; }
 const mLab=(k,n,L)=> n===0 ? (k==='r'?'TIE':'SL') : state.mheat ? (L||'') : n;
 function buildMargins(){
-  document.getElementById('mfbar').innerHTML = MF.map(f=>`<label class="msel"><span>${f.l}</span><select data-mf="${f.id}"><option value="">All</option>${f.opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></label>`).join('');
+  const mcount=(f,v)=> MREC.filter(r=>{ const won=r.w!==undefined; switch(f.id){ case 'side': return r.teams.some(x=>T[x]===v); case 'host': return hostOf(r.i)===v; case 'ha': return won ? homeAway(r.i,T[r.w],T[r.l])===v : v==='neutral'&&homeAway(r.i,T[r.teams[0]],T[r.teams[1]])==='neutral'; case 'team': return won&&T[r.w]===v; case 'opp': return won&&T[r.l]===v; case 'era': return r.dec===v; case 'toss': return won&&String(r.toss)===v; case 'fo': return won&&r.fo===v; case 'bat': return won&&r.bat===v; } }).length;
+  document.getElementById('mfbar').innerHTML = MF.map(f=>`<div class="fwrap"><button class="fbtn" id="fb-m${f.id}" data-mfb="${f.id}" aria-expanded="false" aria-haspopup="true"></button><div class="pop" id="pop-m${f.id}" hidden role="group" aria-label="${f.l}"><div class="pophead"><span class="grab" aria-hidden="true"></span><button class="popback" data-back="hubm" type="button"><span aria-hidden="true">‹</span> All filters</button><b>${f.l}</b></div>${f.id==='era'? '<div class="yrrow"><span>Years</span><input type="number" inputmode="numeric" data-yr="0" placeholder="from" min="1877" max="2100"><span>–</span><input type="number" inputmode="numeric" data-yr="1" placeholder="to" min="1877" max="2100"><button class="linkbtn" type="button" data-yrclear>clear</button></div><p class="yrhint">Or pick decades:</p>' : ''}${f.opts.map(([v,l])=>`<label class="opt"><input type="checkbox" data-mf="${f.id}" data-mv="${v}"><i></i><span>${l}<small class="selfnote"> · can’t play themselves</small><small class="zeronote"> · no data</small></span><span class="cnt">${mcount(f,v).toLocaleString()}</span><button class="only" data-mf="${f.id}" data-mv="${v}" type="button">only</button></label>`).join('')}<div class="popfoot"><button class="linkbtn" data-mall="${f.id}" type="button">Select all</button><button class="linkbtn" data-mnone="${f.id}" type="button">Deselect all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
   const grid=(k,top,mx)=>{ let h=''; for(let p=0;p<=top;p++){ h+=`<div class="panel"><h3>${p?p*100+'s':'0–99'}<small id="mpc${k}${p}"></small></h3><div class="pgrid"><span></span>`;
     for(let u=0;u<10;u++) h+=`<span class="ax">${u}</span>`;
     for(let t=0;t<10;t++){ h+=`<span class="ax">${p*100+t*10>mx?'':t}</span>`; for(let u=0;u<10;u++){ const n=p*100+t*10+u; h+= n>mx ? '<span class="cell off" aria-hidden="true"></span>' : `<button class="cell mcell msq" data-k="${k}" data-n="${n}"></button>`; } }
@@ -924,7 +1114,7 @@ function paintMargins(){
   document.getElementById('mBoardHead').textContent = mK() ? 'Every winning margin, one kind at a time' : 'Every winning margin'; mFolds();
   if(state.mview==='bar'){ if(!isRing()) paintBarcode(); dialBuild(); }
   if(grid) document.querySelectorAll('#mGrids .msq').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
-    el.style.background=st.bg; el.style.color=st.ink; el.style.boxShadow=st.edge; el.textContent=mLab(k,n,st.L); el.classList.toggle('sel', state.msel===k+':'+n); });
+    el.style.background=st.bg; el.style.color=st.ink; el.style.boxShadow=st.edge; el.textContent=mLab(k,n,st.L); el.classList.toggle('sel', state.msel===k+':'+n); const L0= n===0? (k==='r'?MG.tie:[]) : (MG[k][n]||[]); el.classList.toggle('fresh', TT()!==null && L0.length>0 && yOf(L0[0].i)===TT()); });
   else if(state.mview==='rings') document.querySelectorAll('#mRings .mrcell').forEach(el=>{ const k=el.dataset.k, n=+el.dataset.n, st=mStyle(k,n);
     const tie=k==='r'&&n===0; el.style.fill = st.bg; el.style.stroke = (st.na||tie) ? 'none' : (!st.L && !state.cb ? 'var(--never-edge)' : 'none'); el.style.strokeWidth = (!st.L||tie) ? '1.4px':'0';
     el.classList.toggle('sel', state.msel===k+':'+n); });
@@ -952,8 +1142,8 @@ function renderMKpis(){
   const fm=(k,n)=> k==='r'? `${n} <small style="font-size:.55em">runs</small>` : `inns &amp; ${n}`;
   const K=document.getElementById('mkpis'); K.classList.toggle('filt', mfiltered());
   K.innerHTML=[
-    [R?R.c:'—', 'run margins have happened', R?`of ${R.mx} possible, from 1 to ${R.mx} (the biggest win by runs${mfiltered()?' with these filters':''})`:'', 'var(--out)'],
-    [I?I.c:'—', 'innings margins have happened', I?`of ${I.mx} possible, from an innings and 1 to an innings and ${I.mx}`:'', 'var(--out)'],
+    [R?R.c:'—', 'run margins have happened', R?`from 1 to ${R.mx} (the biggest win by runs${mfiltered()?' '+WFm():''})`:'', 'var(--out)'],
+    [I?I.c:'—', 'innings margins have happened', I?`from an innings and 1 to an innings and ${I.mx}`:'', 'var(--out)'],
     [R?`${R.low} <small style="font-size:.55em">runs</small>`:'—', 'smallest run margin never seen', I?`and an innings and ${I.low} for innings wins`:'', 'var(--never)'],
     [mc?fm(mc[0],mc[1]):'—', 'most common margin', mc?`${mc[2]} wins by exactly that`:'', 'var(--out)'],
     [latest?fm(latest.k,latest.n):'—', 'latest margin scorigami', latest?`${T[latest.f.w]} beat ${T[latest.f.l]}, ${mon(M[latest.f.i])}`:'', 'var(--accent)'],
@@ -1174,22 +1364,23 @@ function bcHit(e){ const svg=document.getElementById('mSvgB'), m=svg.getScreenCT
 function bcScroll(n){ const sc=document.querySelector('#mBar .mbarscroll'), svg=document.getElementById('mSvgB'); if(!sc||!svg) return; const w=svg.getBoundingClientRect().width, vb=svg.viewBox.baseVal.width||1;
   sc.scrollTo({left: Math.max(0,(BC.x0+n*BC.bw*(state.mbz||1))*w/vb - sc.clientWidth/2), behavior:'smooth'}); }
 const MQ=[
-  {l:'Narrowest wins by runs', pick:r=>r.kind==='r', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Smallest margins first.'},
   {l:'Biggest wins by runs', pick:r=>r.kind==='r', sort:(a,b)=>b.n-a.n, n:30},
   {l:'Biggest innings wins', pick:r=>r.kind==='i', sort:(a,b)=>b.n-a.n, n:30},
+  {l:'Narrowest wins by runs', pick:r=>r.kind==='r', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Smallest margins first.'},
   {l:'One-wicket wins', pick:r=>r.kind==='w'&&r.n===1, sort:(a,b)=>b.i-a.i},
-  {l:'Wins after following on', set:{fo:'fol'}, pick:r=>r.w!==undefined, sort:(a,b)=>b.i-a.i},
+  {l:'Narrowest wins chasing', pick:r=>r.kind==='w', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Fewest wickets left standing first.'},
   {l:'Biggest wins after being sent in', set:{toss:'3'}, pick:r=>r.kind==='r'||r.kind==='i', sort:(a,b)=>(b.kind==='i')-(a.kind==='i')||b.n-a.n, n:30, note:'Innings wins first, then wins by runs.'},
   {l:'Innings wins batting second', set:{bat:'second'}, pick:r=>r.kind==='i', sort:(a,b)=>b.n-a.n, n:30},
-  {l:'Narrowest wins chasing', pick:r=>r.kind==='w', sort:(a,b)=>a.n-b.n||b.i-a.i, n:30, note:'Fewest wickets left standing first.'},
+  {l:'Wins after following on', set:{fo:'fol'}, pick:r=>r.w!==undefined, sort:(a,b)=>b.i-a.i},
 ];
 state.mq=null;
 function mSelect(sel,quiet){
-  state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button>`;
+  if(sel===null){ state.msel=null; state.mq=null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed','false')); paintMargins(); const d=document.getElementById('mdetail'); d.innerHTML=mRecentHTML(); if(!quiet && innerWidth<1100) d.classList.add('open'); return; }
+  state.msel=sel; state.mq = sel[0]==='q' ? +sel.slice(2) : null; mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); paintMargins(); const d=document.getElementById('mdetail'); let h=`<button class="sheetclose" data-close aria-label="Close">×</button><button class="linkbtn backrec" data-mrecent type="button">‹ ${TT()===null?'Latest margin scorigamis':'Margin scorigamis to '+TT()}</button>`;
   if(/^[ri]:/.test(sel)){ const k=sel[0], n=+sel.slice(2);
     if(n===0 && k==='r') h+=`<div class="dhead"><span class="mtitle">Tied</span></div>`+mSection('Matches', MG.tie, 'No tied Tests match these filters.');
     else if(n===0) h+=`<div class="dhead"><span class="mtitle">Scores level</span></div><p class="empty">Can’t be an innings win: with the scores level, the side batting last would still have to pad up again and score 1 run to win.</p>`;
-    else { h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel(k,n)}</span></div>`+mSection('Matches', (k==='r'?MG.r:MG.i)[n]||[], `No Test has ever been won by ${mLabel(k,n)}${mfiltered()?' with these filters':''}. <b>Scorigami!</b>`);
+    else { h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel(k,n)}</span></div>`+mSection('Matches', (k==='r'?MG.r:MG.i)[n]||[], `No Test has ever been won by ${mLabel(k,n)}${mfiltered()?' '+WFm():''}. <b>Scorigami!</b>`);
       const other=k==='r'?'i':'r', L=(other==='r'?MG.r:MG.i)[n]||[]; h+=`<p class="mother">Also: won by ${mLabel(other,n)}: <a href="#" data-sel="${other}:${n}">${L.length||'never (scorigami)'}</a></p>`; }
   } else if(sel[0]==='w'){ const n=+sel.slice(1); h+=`<div class="dhead"><span class="mtitle">Won by ${mLabel('w',n)}</span></div>`+mSection('Matches', MG.w[n]||[], 'None with these filters.'); }
   else if(sel[0]==='q'){ const Q=MQ[+sel.slice(2)], L=MREC.filter(r=>mpass(r)&&Q.pick(r)).sort(Q.sort), top=Q.n? L.slice(0,Q.n) : L;
@@ -1199,6 +1390,8 @@ function mSelect(sel,quiet){
 }
 const mm=document.getElementById('marginsMode');
 mm.addEventListener('click',e=>{
+  if(e.target.closest('[data-mrecent]')){ mSelect(null,true); document.getElementById('mdetail').scrollTop=0; return; }
+  if(e.target.closest('#mRecMore')){ state.mRecN+=25; mSelect(null,true); return; }
   const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower'), o=e.target.closest('[data-o]'), ds=e.target.closest('[data-sel]');
   if(sq) mSelect(sq.dataset.k+':'+sq.dataset.n); else if(tw) mSelect('w'+tw.dataset.w); else if(o){ e.preventDefault(); mSelect(o.dataset.o); } else if(ds){ e.preventDefault(); mSelect(ds.dataset.sel); }
   const rs=e.target.closest('#mRankSeg button'); if(rs){ state.mbig=rs.dataset.b==='1'; state.mrankN=100; renderMList(); return; }
@@ -1211,14 +1404,30 @@ mm.addEventListener('click',e=>{
   const vb=e.target.closest('#mViewSeg button'); if(vb){ state.mview=vb.dataset.mv; state.mrankN=100; document.querySelectorAll('#mViewSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b===vb))); paintMargins(); }
   if(e.target.closest('[data-close]')) document.getElementById('mdetail').classList.remove('open');
 });
-mm.addEventListener('change',e=>{ const s_=e.target.closest('select[data-mf]'); if(!s_) return; state.mf[s_.dataset.mf]=s_.value; mSyncF(); if(state.msel!==null) mSelect(state.msel,true); else paintMargins(); });
+const mRefilter=()=>{ state.mrankN=100; mSyncF(); mSelect(state.msel,true); };
+mm.addEventListener('change',e=>{ const i=e.target.closest('input[data-mf]'); if(!i) return; const S=state.mf[i.dataset.mf];
+  if(i.checked) S.add(i.dataset.mv); else S.delete(i.dataset.mv);
+  state.mq=null; mRefilter(); });
+document.getElementById('mfbar').addEventListener('click',e=>{
+  const fb=e.target.closest('.fbtn'); if(fb){ const p=document.getElementById('pop-m'+fb.dataset.mfb); closePops(p.id); p.hidden=!p.hidden; p.scrollTop=0; if(!p.hidden){ p.classList.add('enter'); setTimeout(()=>p.classList.remove('enter'),260); } fb.setAttribute('aria-expanded',String(!p.hidden)); syncShade(); return; }
+  if(e.target.dataset.close!==undefined){ closePops(); return; }
+  if(e.target.dataset.mnone){ state.mf[e.target.dataset.mnone]=new Set(); state.mq=null; mRefilter(); return; }
+  if(e.target.dataset.mall){ const f=MF.find(x=>x.id===e.target.dataset.mall); state.mf[f.id]=mAll(f); state.mq=null; mRefilter(); return; }
+  const only=e.target.closest('.only'); if(only){ e.preventDefault(); if(only.disabled) return; state.mf[only.dataset.mf]=new Set([only.dataset.mv]); state.mq=null; mRefilter(); } });
 document.getElementById('mpresets').innerHTML=MQ.map((q,i)=>`<button class="preset" data-mq="${i}" aria-pressed="false">${q.l}</button>`).join('');
-function mSyncF(){ mm.querySelectorAll('select[data-mf]').forEach(x=>{ x.value=state.mf[x.dataset.mf]; x.parentElement.classList.toggle('on',!!x.value); });
-  const k=MF.filter(f=>state.mf[f.id]).length; document.getElementById('mfcount').textContent=k?`(${k} on)`:'';
+document.getElementById('qqlistm').innerHTML=MQ.map((q,i)=>`<button type="button" data-q="${i}" aria-pressed="false">${q.l}</button>`).join('');
+function mSyncF(){ const LC=mLiveCounts(); MF.forEach(f=>{ document.querySelectorAll(`#pop-m${f.id} .opt`).forEach(o=>{ const i=o.querySelector('input'), n=LC[f.id][i.dataset.mv]||0; o.querySelector('.cnt').textContent=n.toLocaleString(); o.classList.toggle('zero',n===0); }); });
+  MF.forEach(f=>{ const S=state.mf[f.id], live=f.opts.filter(([v])=>!mBlocked(f.id,v)), sel=live.filter(([v])=>S.has(v));
+    const sum= sel.length===live.length ? 'All' : sel.length===1 ? sel[0][1] : sel.length===0 ? 'None' : `${sel.length} of ${live.length}`;
+    const b=document.getElementById('fb-m'+f.id); b.innerHTML=`${f.l}: <b>${sum}</b>`; b.classList.toggle('on', sel.length<live.length);
+    if(f.id==='era' && yrOn()){ b.innerHTML=`${f.l}: <b>${yrLabel()}${sel.length<live.length?' · '+sum:''}</b>`; b.classList.add('on'); }
+    document.querySelectorAll(`#pop-m${f.id} input[data-mv]`).forEach(i=>{ const bl=mBlocked(f.id,i.dataset.mv); i.checked=!bl && S.has(i.dataset.mv); i.disabled=bl; i.closest('.opt').classList.toggle('blocked',bl); i.closest('.opt').querySelector('.only').disabled=bl; }); });
+  phoneFilters('m'); document.querySelectorAll('#qqlistm [data-q]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.q===state.mq)));
+  const k=MF.filter(f=>mOn(f.id)).length; document.getElementById('mfcount').textContent=k?`(${k} on)`:'';
   mm.querySelectorAll('[data-mq]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.mq===state.mq))); }
 document.getElementById('mpresets').addEventListener('click',e=>{ const b=e.target.closest('[data-mq]'); if(!b) return; const i=+b.dataset.mq, Q=MQ[i];
-  MF.forEach(f=>state.mf[f.id]=''); Object.assign(state.mf, Q.set||{}); state.mq=i; mSyncF(); mSelect('q:'+i); });
-document.getElementById('mReset').addEventListener('click',()=>{ state.mq=null; MF.forEach(f=>state.mf[f.id]=''); mSyncF(); if(state.msel!==null && state.msel[0]!=='q') mSelect(state.msel,true); else { mrecompute(); let low=1; while(MG.r[low]) low++; mSelect('r:'+low,true); } });
+  MF.forEach(f=>state.mf[f.id]=mAll(f)); Object.entries(Q.set||{}).forEach(([k,v])=>state.mf[k]=new Set([v])); state.mq=i; mSyncF(); mSelect('q:'+i); });
+document.getElementById('mReset').addEventListener('click',()=>{ state.yr=[null,null]; syncYears(); state.mq=null; MF.forEach(f=>state.mf[f.id]=mAll(f)); mSyncF(); mSelect(state.msel!==null && state.msel[0]==='q'? null : state.msel,true); });
 mm.addEventListener('pointerover',e=>{ if(e.pointerType==='touch') return; const sq=e.target.closest('.msq,.mrcell'), tw=e.target.closest('.tower');
   if(!sq&&!tw){ if(e.target.closest('#marginsMode')) tip.style.display='none'; return; }
   let h;
@@ -1243,12 +1452,46 @@ mjump.addEventListener('input',()=>{ const v=mjump.value.replace(/\D/g,'').slice
 mjump.addEventListener('keydown',e=>{ if(e.key==='Enter') mjumpGo(); });
 mjump.addEventListener('change',mjumpGo);
 let mBuilt=false;
+const SHARED=['side','team','opp','era','host','ha','toss'];
+const tF=id=>FILTERS.find(f=>f.id===id), mFd=id=>MF.find(f=>f.id===id);
+const tAll=id=>tF(id).leaves.map(l=>l.v), mAllV=id=>mFd(id).opts.map(o=>o[0]);
+const tSel=id=>{ const S=state.fsel[id]; return tAll(id).filter(v=>S.has(v)); };
+const mSel=id=>{ const S=state.mf[id]; return mAllV(id).filter(v=>S.has(v)&&!mBlocked(id,v)); };
+const tShort=id=>{ const f=tF(id); return shortF(id,f.label,tSel(id),f.leaves.length,summary(f)); };
+const mShortF=id=>{ const f=mFd(id), live=f.opts.filter(([v])=>!mBlocked(id,v)), sel=mSel(id); if(sel.length===live.length) return null;
+  const sum= sel.length===1 ? f.opts.find(o=>o[0]===sel[0])[1] : sel.length===0 ? 'None' : `${sel.length} of ${live.length}`; return shortF(id,f.l,sel,live.length,sum); };
+function carryOver(from,to){
+  document.getElementById('fnote').hidden=true; const lost=[];
+  for(const id of SHARED){
+    if(from==='totals'){ const sel=tSel(id), full=sel.length===tAll(id).length, ok=mAllV(id), keep=sel.filter(v=>ok.includes(v));
+      if(!full && !keep.length) lost.push(tShort(id)+' (not available here)');
+      state.mf[id]= full||!keep.length ? new Set(ok) : new Set(keep); }
+    else { const sel=mSel(id), full=!mOn(id), ok=tAll(id), keep=sel.filter(v=>ok.includes(v));
+      state.fsel[id]= full||!keep.length ? new Set(ok) : new Set(keep); }
+  }
+  state.preset=null; state.mq=null;
+  // what to tell them
+  const tOwn=['inn','end','fo','res'], mOwn=['bat','fo'];
+  const carried = SHARED.map(id=> to==='margins'? mShortF(id) : tShort(id)).filter(Boolean); if(yrOn()) carried.unshift(yrLabel());
+  const back = (to==='margins'? mOwn.map(mShortF) : tOwn.map(tShort)).filter(Boolean);
+  const idle = (from==='totals'? tOwn.map(tShort) : mOwn.map(mShortF)).filter(Boolean);
+  if(!carried.length && !back.length && !idle.length && !lost.length) return;   // (the year range is shared, so it always carries)
+  const where= to==='margins'?'winning margins':'innings totals', other= to==='margins'?'innings totals':'winning margins';
+  let h='';
+  if(carried.length) h+=`<li><span>Carried over</span><b>${carried.join(' · ')}</b></li>`;
+  if(back.length) h+=`<li><span>Still on from last time</span><b>${back.join(' · ')}</b></li>`;
+  if(idle.length) h+=`<li><span>Only for ${other}, so off here</span><b>${idle.join(' · ')}</b></li>`;
+  if(lost.length) h+=`<li><span>Dropped</span><b>${lost.join(' · ')}</b></li>`;
+  const n=document.getElementById('fnote'); n.querySelector('ul').innerHTML=h; n.hidden=false;
+}
+state.mode='totals';
 function setMode(m){
+  if(state.mode!==m){ const from=state.mode; state.mode=m; carryOver(from,m); if(m==='totals') refilter(); else if(mBuilt) mSyncF(); }
   document.querySelectorAll('#modeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));
   document.getElementById('totalsMode').hidden = m!=='totals'; document.getElementById('marginsMode').hidden = m!=='margins';
 
   document.querySelector('.kicker').textContent = m==='totals' ? `Every total a men’s Test innings has finished on, from 0 up to the all-time record of ${HI_T}` : 'Every margin a men’s Test has been won by';
-  if(m==='margins'){ if(!mBuilt){ buildMargins(); mBuilt=true; mrecompute(); let low=1; while(MG.r[low]) low++; mSelect('r:'+low,true); } else paintMargins(); }
+  if(m==='margins'){ if(!mBuilt){ buildMargins(); mBuilt=true; mSyncF(); mSelect(null,true); } else paintMargins(); }
   document.getElementById('mCbBtn').setAttribute('aria-pressed',String(state.cb));
   tip.style.display='none';
 }
@@ -1269,6 +1512,10 @@ function remembered(key, btns, cls, onTxt, offTxt, dflt){ let hide=dflt; try{ co
   document.addEventListener('click',e=>{ const ho=e.target.closest('.helpopen'); if(ho){ e.preventDefault(); dlg.showModal(); dlg.querySelector('.helpin').scrollTop=0; if(ho.dataset.h){ const d=document.getElementById(ho.dataset.h); d.open=true; setTimeout(()=>d.scrollIntoView({block:'start'}),30); } } });
   dlg.addEventListener('click',e=>{ if(e.target===dlg || e.target.closest('.helpx')) dlg.close(); }); })();
 document.getElementById('modeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setMode(b.dataset.m); });
+document.getElementById('fnOk').addEventListener('click',()=>{ document.getElementById('fnote').hidden=true; });
+document.getElementById('fnClear').addEventListener('click',()=>{ document.getElementById('fnote').hidden=true;
+  FILTERS.forEach(f=>state.fsel[f.id]=new Set(f.leaves.map(l=>l.v))); MF.forEach(f=>state.mf[f.id]=mAll(f)); state.preset=null; state.mq=null;
+  if(state.mode==='totals'){ document.getElementById('resetBtn').click(); } else { document.getElementById('mReset').click(); } });
 
 /* ---------- rings ---------- */
 const SVGNS='http://www.w3.org/2000/svg';
@@ -1296,7 +1543,7 @@ function paintRings(){
     el.style.strokeWidth = never? '1.2px' : (state.heat && o.status==='not') ? '2.4px' : '1px';
     el.classList.toggle('sel', s===state.sel); el.setAttribute('aria-label',`${s}: ${o.n} innings`); });
   document.getElementById('ringN').textContent=`${k}/${NT}`;
-  document.getElementById('ringN2').textContent= filtered()?'totals reached with these filters':'totals reached';
+  document.getElementById('ringN2').textContent= filtered()?'totals reached '+WF():'totals reached';
 }
 
 /* ---------- hero ring: every total up to the record in one circle ---------- */
@@ -1339,7 +1586,7 @@ function buildHero(){
     const c=st[m.s]==='never'?'var(--never-edge)':st[m.s]==='out'?'var(--out)':'var(--ink-2)';
     h+=`<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="${c}" stroke-width="1.6"/>`;
     h+=`<text text-anchor="${anchor}" data-go="${m.s}" style="cursor:pointer"><tspan class="lab" x="${lx.toFixed(1)}" y="${y0.toFixed(1)}">${m.s}</tspan>${two?`<tspan class="cap" x="${lx.toFixed(1)}" dy="22">${m.cap}</tspan>`:''}</text>`; }
-  h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${reached}/${NT}</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${filtered()?'reached with these filters':'totals reached'}</text>`;
+  h+=`<text class="ctr num" x="${cx}" y="${cy+12}" text-anchor="middle">${reached}/${NT}</text><text class="ctr2" x="${cx}" y="${cy+48}" text-anchor="middle">${filtered()?'reached '+WF():'totals reached'}</text>`;
   if(state.sel!=null && state.sel>=0 && state.sel<NT) h+=`<path d="${arc(cx,cy,ri-6,ro+6,A(state.sel)-0.15,A(state.sel+1)+0.15)}" fill="none" stroke="var(--ink)" stroke-width="3" pointer-events="none"/>`;
   h+=`<g id="hNeedle" pointer-events="none"><line x1="${cx}" y1="${cy-ri+10}" x2="${cx}" y2="${cy-ro-6}" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy-ro-12}" r="10" fill="var(--ink)"/><circle cx="${cx}" cy="${cy-ro-12}" r="4" fill="var(--surface)"/></g>`;
   svg.innerHTML=h; heroNeedle(TD.v);
@@ -1422,11 +1669,11 @@ document.getElementById('view-list').addEventListener('click',e=>{
 
 /* ---------- detail ---------- */
 function renderDetail(){
-  const D=document.getElementById('detail'); const s=state.sel; if(s===null){D.innerHTML='';return;}
+  const D=document.getElementById('detail'); const s=state.sel; if(s===null){ renderRecent(D); return; }
   const o=cache[s];
   const hidden = !o.n && filtered() && byScore[s].length>0;   // it has happened, just not with these filters
-  const pill = o.status==='out'?[ICON.out+'Complete – all out','var(--out)','#fff']: o.status==='not'?[ICON.not+'Complete – not out','var(--not)','var(--not-ink)']: hidden?['Not with these filters','var(--bg)','var(--ink-2)']:[ICON.never+'Scorigami!', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
-  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
+  const pill = o.status==='out'?[ICON.out+'Complete – all out','var(--out)','#fff']: o.status==='not'?[ICON.not+'Complete – not out','var(--not)','var(--not-ink)']: hidden?['Not '+WF(),'var(--bg)','var(--ink-2)']:[ICON.never+'Scorigami!', state.cb?'var(--never-cb)':'var(--never)', state.cb?'var(--never-cb-ink)':'var(--never-ink)'];
+  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><button class="linkbtn backrec" data-recent type="button">‹ ${TT()===null?'Latest scorigamis':'Scorigamis to '+TT()}</button><div class="dhead"><span class="big num">${s}</span><span class="pill" style="--pc:${pill[1]};--pi:${pill[2]}">${pill[0]}</span></div>`;
   if(!o.n){
     const nb=[]; for(let d=1;d<1000&&nb.length<2;d++){ if(s-d>=0&&cache[s-d].n&&!nb.some(x=>x<s)) nb.push(s-d); if(s+d<1000&&cache[s+d].n&&!nb.some(x=>x>s)) nb.push(s+d); }
     h+=`<p class="empty">No innings ${filtered()?'matching the filters ':''}has finished on ${s}.${hidden?` (${byScore[s].length} ${byScore[s].length===1?'innings has':'innings have'} without them.)`:''} ${nb.length?`Nearest totals reached: ${nb.sort((a,b)=>a-b).map(x=>`<a href="#" data-go="${x}" style="color:var(--accent)">${x}</a>`).join(' and ')}.`:''}</p>`;
@@ -1450,11 +1697,11 @@ function renderDetail(){
   }).join('')+`</div>`;
   D.innerHTML=h;
 }
-document.getElementById('detail').addEventListener('click',e=>{const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); select(+a.dataset.go);}});
+document.getElementById('detail').addEventListener('click',e=>{ if(e.target.closest('[data-recent]')){ state.sel=null; paintAll(false); renderDetail(); document.getElementById('detail').scrollTop=0; return; } if(e.target.closest('#recMore')){ state.recN+=25; renderDetail(); return; } const a=e.target.closest('[data-go]'); if(a){e.preventDefault(); select(+a.dataset.go);}});
 
 /* ---------- tooltip & selection ---------- */
 const tip=document.getElementById('tip');
-function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · ${filtered()&&byScore[s].length?'none with these filters':'scorigami: never reached'}`; const g=o.c.map((v,i)=>i===0? v+o.c[1] : i===1? 0 : i===2? v+o.c[6] : i===6? 0 : v); return `<b>${s}</b> · ${o.n} innings<br>`+g.map((v,i)=>v?`${HOW[i].label}: ${v}`+(i===0&&o.c[1]?` <span style="opacity:.75">(${o.c[1]} short-handed)</span>`:'')+(i===2&&o.c[6]?` <span style="opacity:.75">(${o.c[6]} forfeited)</span>`:''):'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
+function tipText(s){ const o=cache[s]; if(!o.n) return `<b>${s}</b> · ${filtered()&&byScore[s].length?'none '+WF():'scorigami: never reached'}`; const g=o.c.map((v,i)=>i===0? v+o.c[1] : i===1? 0 : i===2? v+o.c[6] : i===6? 0 : v); return `<b>${s}</b> · ${o.n} innings<br>`+g.map((v,i)=>v?`${HOW[i].label}: ${v}`+(i===0&&o.c[1]?` <span style="opacity:.75">(${o.c[1]} short-handed)</span>`:'')+(i===2&&o.c[6]?` <span style="opacity:.75">(${o.c[6]} forfeited)</span>`:''):'').filter(Boolean).join('<br>')+`<br><span style="opacity:.75">${o.ii.map((x,i)=>x?INN[i]+' '+x:'').filter(Boolean).join(' · ')} inns</span>`; }
 document.addEventListener('pointerover',e=>{ if(e.target.closest('.mcell')) return; const c=e.target.closest('.cell,.rcell'); if(!c){tip.style.display='none';return;} tip.innerHTML=tipText(+c.dataset.s); tip.style.display='block';});
 document.addEventListener('pointermove',e=>{ if(tip.style.display!=='block') return; const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-8), y=Math.min(e.clientY+14, innerHeight-tip.offsetHeight-8); tip.style.left=x+'px'; tip.style.top=y+'px'; });
 document.addEventListener('click',e=>{ if(e.target.closest('.mcell')) return; const c=e.target.closest('.cell,.rcell'); if(c) select(+c.dataset.s);});
@@ -1485,7 +1732,7 @@ jump.addEventListener('change',jumpGo);
 /* ---------- filter dropdowns ---------- */
 function leafLabel(f,l){ return l.short || (l.parent? (f.id==='end'? l.l : f.id==='toss'? l.parent.l.replace(' toss','')+', '+l.l.toLowerCase() : l.parent.l+' '+l.l.toLowerCase()) : l.l); }
 function summary(f){
-  const S=state.fsel[f.id]; if(S.size===f.leaves.length) return 'All';
+  const S=state.fsel[f.id]; if(S.size===f.leaves.length) return 'All'; if(S.size===0) return 'None';
   if(f.id==='end'){ const nn=f.leaves.filter(l=>!END_OUT(l.v)); if(S.size===nn.length && nn.every(l=>S.has(l.v))) return 'Not all out'; }
   for(const o of f.opts) if(o.kids && o.kids.every(k=>S.has(k.v)) && S.size===o.kids.length) return o.l;
   const on=f.leaves.filter(l=>S.has(l.v)); if(on.length<=2) return on.map(l=>leafLabel(f,l)).join(', ');
@@ -1494,17 +1741,22 @@ function summary(f){
 const END_OUT=v=> v==='0' || v[0]==='s';   // all-out leaves of the How it ended filter
 function optRow(f,o,isParent){
   const c=o.c?`style="--c:var(${o.c})"`:'';
-  return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}</span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
+  return `<label class="opt"><input type="checkbox" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`}><i ${c}></i><span>${o.l}<small class="selfnote"> · can’t play themselves</small><small class="zeronote"> · no data</small></span><span class="cnt">${o.n.toLocaleString()}</span><button class="only" data-f="${f.id}" ${isParent?`data-p="${f.opts.indexOf(o)}"`:`data-v="${o.v}"`} type="button">only</button></label>`;
 }
 function buildFilters(){
   document.getElementById('fbar').innerHTML = FILTERS.map(f=>`<div class="fwrap"><button class="fbtn" id="fb-${f.id}" data-f="${f.id}" aria-expanded="false" aria-haspopup="true"></button>
-    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}">${f.id==='end'? `<label class="opt short"><input type="checkbox" data-f="end" data-g="not"><i></i><span><b>Not all out</b> <small>(declared, chased, drawn, other)</small></span><span class="cnt">${f.leaves.filter(l=>!END_OUT(l.v)).reduce((a,l)=>a+(l.n||0),0).toLocaleString()}</span><button class="only" data-f="end" data-g="not" type="button">only</button></label>` : ''}${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
-    <div class="popfoot"><button class="linkbtn" data-all="${f.id}" type="button">Select all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
+    <div class="pop" id="pop-${f.id}" hidden role="group" aria-label="${f.label}"><div class="pophead"><span class="grab" aria-hidden="true"></span><button class="popback" data-back="hubt" type="button"><span aria-hidden="true">‹</span> All filters</button><b>${f.label}</b></div>${f.id==='era'? '<div class="yrrow"><span>Years</span><input type="number" inputmode="numeric" data-yr="0" placeholder="from" min="1877" max="2100"><span>–</span><input type="number" inputmode="numeric" data-yr="1" placeholder="to" min="1877" max="2100"><button class="linkbtn" type="button" data-yrclear>clear</button></div><p class="yrhint">Or pick decades:</p>' : ''}${f.id==='end'? `<label class="opt short"><input type="checkbox" data-f="end" data-g="not"><i></i><span><b>Not all out</b> <small>(declared, chased, drawn, other)</small></span><span class="cnt">${f.leaves.filter(l=>!END_OUT(l.v)).reduce((a,l)=>a+(l.n||0),0).toLocaleString()}</span><button class="only" data-f="end" data-g="not" type="button">only</button></label>` : ''}${f.opts.map(o=>o.kids? optRow(f,o,true)+`<div class="kids">${o.kids.map(k=>optRow(f,k,false)).join('')}</div>` : optRow(f,o,false)).join('')}
+    <div class="popfoot"><button class="linkbtn" data-all="${f.id}" type="button">Select all</button><button class="linkbtn" data-none="${f.id}" type="button">Deselect all</button><button class="linkbtn" data-close type="button">Done</button></div></div></div>`).join('');
 }
+let LIVE={};
 function syncFilters(){
+  LIVE=liveCounts();
   FILTERS.forEach(f=>{
     const S=state.fsel[f.id], btn=document.getElementById('fb-'+f.id);
     btn.innerHTML=`${f.label}: <b>${summary(f)}</b>`; btn.classList.toggle('on', S.size<f.leaves.length);
+    if(f.id==='era' && yrOn()){ btn.innerHTML=`${f.label}: <b>${yrLabel()}${S.size<f.leaves.length?' · '+summary(f):''}</b>`; btn.classList.add('on'); }
+    { const L=LIVE[f.id]||{}; document.querySelectorAll(`#pop-${f.id} .opt`).forEach(o=>{ const i=o.querySelector('input'); if(!i) return; const vs=vals(f,i), n=vs.reduce((a,v)=>a+(L[v]||0),0); o.querySelector('.cnt').textContent=n.toLocaleString(); o.classList.toggle('zero',n===0); }); }
+    if(f.id==='team'||f.id==='opp'){ const O=state.fsel[f.id==='team'?'opp':'team']; document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>{ const bl=O.size===1&&O.has(i.dataset.v); i.disabled=bl; i.closest('.opt').classList.toggle('blocked',bl); }); }
     document.querySelectorAll(`#pop-${f.id} input[data-v]`).forEach(i=>i.checked=S.has(i.dataset.v));
     document.querySelectorAll(`#pop-${f.id} input[data-g]`).forEach(i=>{ const L=vals(f,i), k=L.filter(v=>S.has(v)).length; i.checked=k===L.length; i.indeterminate=k>0&&!i.checked; });
     document.querySelectorAll(`#pop-${f.id} input[data-p]`).forEach(i=>{ const k=f.opts[+i.dataset.p].kids.filter(x=>S.has(x.v)).length; i.checked=k===f.opts[+i.dataset.p].kids.length; i.indeterminate=k>0&&!i.checked; });
@@ -1518,16 +1770,25 @@ function renderActive(){
   A.hidden=false; A.innerHTML=`<span>Showing</span>`+on.map(f=>`<button class="x" data-clear="${f.id}">${f.label}: ${summary(f)}</button>`).join('')+`<span>· ${n.toLocaleString()} innings</span><button class="linkbtn" data-clear="*">Clear all</button>`;
 }
 document.getElementById('activeBar').addEventListener('click',e=>{ const b=e.target.closest('[data-clear]'); if(!b) return; const id=b.dataset.clear; if(id==='*') resetSel(); else { const F=FILTERS.find(f=>f.id===id); state.fsel[id]=new Set(F.leaves.map(l=>l.v)); } state.preset=null; syncPresets(); refilter(); });
-function refilter(){ state.rankN=100; syncFilters(); const k=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).length; document.getElementById('fcount').textContent=k?`(${k} on)`:''; renderActive(); paintAll(true); renderDetail(); }
-function closePops(except){ document.querySelectorAll('.pop').forEach(p=>{ if(p.id!==except){ p.hidden=true; document.getElementById('fb-'+p.id.slice(4)).setAttribute('aria-expanded','false'); } }); }
+function refilter(){ state.rankN=100; syncFilters(); phoneFilters('t'); const k=FILTERS.filter(f=>state.fsel[f.id].size<f.leaves.length).length; document.getElementById('fcount').textContent=k?`(${k} on)`:''; renderActive(); paintAll(true); renderDetail(); }
+function closePops(except){ document.querySelectorAll('.pop').forEach(p=>{ if(p.id!==except){ p.hidden=true; p.style.transform=''; document.getElementById('fb-'+p.id.slice(4)).setAttribute('aria-expanded','false'); } }); syncShade(); }
+const popShade=document.createElement('div'); popShade.id='popShade'; popShade.hidden=true; document.body.appendChild(popShade);
+popShade.addEventListener('click',()=>closePops());
+function syncShade(){ setTimeout(()=>{ const op=document.querySelector('.pop:not([hidden])'); if(op && op.previousElementSibling!==popShade) op.before(popShade);   // same stacking context as the sheet, just beneath it
+  popShade.hidden = innerWidth>700 || !op; },0); }
+// on phones the menus are bottom sheets: drag the top down to dismiss
+document.addEventListener('touchstart',e=>{ const p=e.target.closest('.pop'); if(!p || innerWidth>700) return; if(!e.target.closest('.pophead') && p.scrollTop>0) return; p._y0=e.touches[0].clientY; p._dy=0; p.style.transition='none'; },{passive:true});   // (no class change here: toggling the animation would replay the slide-up mid-tap)
+document.addEventListener('touchmove',e=>{ const p=e.target.closest('.pop'); if(!p || p._y0==null) return; const dy=e.touches[0].clientY-p._y0; if(dy<=0){ p.style.transform=''; p._dy=0; return; } p._dy=dy; p.style.transform=`translateY(${dy}px)`; if(e.cancelable) e.preventDefault(); },{passive:false});
+document.addEventListener('touchend',e=>{ const p=e.target.closest('.pop'); if(!p || p._y0==null) return; const dy=p._dy; p._y0=null; if(dy>90){ const back=p.querySelector('.popback'); if(back && innerWidth<=700) openSheet(back.dataset.back); else closePops(); } else if(dy>0){ p.style.transition='transform .18s'; p.style.transform=''; setTimeout(()=>p.style.transition='',200); } else p.style.transition=''; });
 buildFilters(); syncFilters();
 if(innerWidth>=700) document.getElementById('qq').open=true;
 document.getElementById('fbar').addEventListener('click',e=>{
   const fb=e.target.closest('.fbtn');
-  if(fb){ const p=document.getElementById('pop-'+fb.dataset.f); closePops(p.id); p.hidden=!p.hidden; fb.setAttribute('aria-expanded',String(!p.hidden)); return; }
+  if(fb){ const p=document.getElementById('pop-'+fb.dataset.f); closePops(p.id); p.hidden=!p.hidden; p.scrollTop=0; if(!p.hidden){ p.classList.add('enter'); setTimeout(()=>p.classList.remove('enter'),260); } fb.setAttribute('aria-expanded',String(!p.hidden)); syncShade(); return; }
   const f=FILTERS.find(x=>x.id===(e.target.closest('[data-f]')||{}).dataset?.f || x.id===e.target.dataset.all);
   if(e.target.dataset.close!==undefined){ closePops(); return; }
   if(e.target.dataset.all){ const F=FILTERS.find(x=>x.id===e.target.dataset.all); state.fsel[F.id]=new Set(F.leaves.map(l=>l.v)); state.preset=null; syncPresets(); refilter(); return; }
+  if(e.target.dataset.none){ state.fsel[e.target.dataset.none]=new Set(); state.preset=null; syncPresets(); refilter(); return; }
   const only=e.target.closest('.only');
   if(only){ e.preventDefault(); const F=FILTERS.find(x=>x.id===only.dataset.f); state.fsel[F.id]=new Set(vals(F,only)); state.preset=null; syncPresets(); refilter(); }
 });
@@ -1535,27 +1796,55 @@ document.getElementById('fbar').addEventListener('change',e=>{
   const i=e.target; if(i.type!=='checkbox') return; const F=FILTERS.find(x=>x.id===i.dataset.f); const S=state.fsel[F.id];
   const vs=vals(F,i); const on = (i.dataset.p!==undefined || i.dataset.g) ? !vs.every(v=>S.has(v)) : i.checked;
   vs.forEach(v=> on? S.add(v): S.delete(v));
-  if(S.size===0){ vs.forEach(v=>S.add(v)); }   // a filter can't be emptied; use "only" instead
   state.preset=null; syncPresets(); refilter();
 });
-document.addEventListener('click',e=>{ if(!e.target.closest('.fwrap')) closePops(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.fwrap, .pop') && e.target!==popShade) closePops(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePops(); });
 
 /* ---------- quick questions ---------- */
-const ALLOUT=()=>FILTERS[0].leaves.filter(l=>l.v==='0'||l.v[0]==='s').map(l=>l.v);
+const ALLOUT=()=>FILTERS.find(f=>f.id==='end').leaves.filter(l=>l.v==='0'||l.v[0]==='s').map(l=>l.v);
 const PRESETS=[
-  {l:'Biggest 4th-innings totals in drawn Tests', set:{inn:['4'],res:['2']}, dir:-1},
-  {l:'Highest successful chases', set:{inn:['4'],end:['3']}, dir:-1},
-  {l:'Lowest targets successfully defended', set:{inn:['4'],res:['1']}, dir:1, key:'target'},
+  {l:'Highest totals after being sent in', set:{inn:['0'],toss:['3']}, dir:-1},
+  {l:'Lowest all-outs after choosing to bat', set:{inn:['0'],toss:['0'],end:()=>ALLOUT()}, dir:1},
   {l:'Lowest declarations that won', set:{end:['2'],res:['0']}, dir:1},
   {l:'Highest declarations that lost', set:{end:['2'],res:['1']}, dir:-1},
   {l:'Biggest totals following on', set:{inn:['3']}, dir:-1},
   {l:'Wins after following on', set:{inn:['3'],res:['0']}, dir:-1},
-  {l:'Highest totals after being sent in', set:{inn:['0'],toss:['3']}, dir:-1},
-  {l:'Lowest all-outs after choosing to bat', set:{inn:['0'],toss:['0'],end:()=>ALLOUT()}, dir:1},
+  {l:'Highest successful chases', set:{inn:['4'],end:['3']}, dir:-1},
+  {l:'Lowest targets successfully defended', set:{inn:['4'],res:['1']}, dir:1, key:'target'},
+  {l:'Biggest 4th-innings totals in drawn Tests', set:{inn:['4'],res:['2']}, dir:-1},
 ];
+function syncYears(){ syncTT(); document.querySelectorAll('[data-yr]').forEach(i=>{ const v=state.yr[+i.dataset.yr]; if(document.activeElement!==i) i.value= v===null?'':v; }); }
+document.addEventListener('change',e=>{ const i=e.target.closest('[data-yr]'); if(!i) return; const v=i.value.trim()===''? null : Math.round(+i.value); state.yr[+i.dataset.yr]= Number.isFinite(v)? v : null;
+  if(state.yr[0]!==null && state.yr[1]!==null && state.yr[0]>state.yr[1]) state.yr=[state.yr[1],state.yr[0]]; syncYears(); if(state.mode==='margins') mRefilter(); else refilter(); });
+document.addEventListener('click',e=>{ if(e.target.closest('[data-yrclear]')){ e.stopPropagation(); state.yr=[null,null]; syncYears(); if(state.mode==='margins') mRefilter(); else refilter(); } },true);
+const CODE={'Afghanistan':'AFG','Australia':'AUS','Bangladesh':'BAN','England':'ENG','ICC World XI':'ICC','India':'IND','Ireland':'IRE','New Zealand':'NZ','Pakistan':'PAK','South Africa':'SA','Sri Lanka':'SL','West Indies':'WI','Zimbabwe':'ZIM'};
+// one filter in a few characters: country codes for sides, the summary for the rest
+function shortF(id,label,sel,total,sum){ if(sel.length===total) return null;
+  if(id==='side'){ const c=sel.map(v=>CODE[v]||v); return sel.length===0? 'Teams: none' : sel.length===1? c[0]+' matches' : sel.length===2? c.join(' v ') : sel.length<=4? c.join(' / ')+' matches' : `${sel.length} sides`; } if(id==='team'||id==='opp'){ const t= sel.length<=3 ? sel.map(v=>CODE[v]||v).join('/') : `${sel.length} sides`; return id==='opp'? (label==='Loser'?'beat '+t:t+' bowling') : (label==='Winner'? t+' won' : t+' batting'); }
+  if(id==='opp'||id==='team'){ } if(id==='era' && sel.length) return sel.length<=3 ? sel.join(', ') : `${sel[0]}–${sel[sel.length-1]} (${sel.length} decades)`;
+  return sel.length===0? `${label}: none` : `${label}: ${sum}`; }
+function phoneFilters(m){ const rows=[], act=[];
+  if(m==='t') FILTERS.forEach(f=>{ const S=state.fsel[f.id], sel=f.leaves.filter(l=>S.has(l.v)).map(l=>l.v), sum=summary(f), sh=shortF(f.id,f.label,sel,f.leaves.length,sum);
+      rows.push(`<button type="button" data-open="${f.id}" class="${sh?'on':''}"><span>${f.label}</span><span class="hv">${sum}</span><span class="pch">›</span></button>`); if(sh) act.push(`<button type="button" data-open="${f.id}">${sh}</button>`); });
+  else MF.forEach(f=>{ const S=state.mf[f.id], live=f.opts.filter(([v])=>!mBlocked(f.id,v)), sel=live.filter(([v])=>S.has(v)).map(o=>o[0]), sum=document.getElementById('fb-m'+f.id).querySelector('b').textContent, sh=shortF(f.id,f.l,sel,live.length,sum);
+      rows.push(`<button type="button" data-open="m${f.id}" class="${sh?'on':''}"><span>${f.l}</span><span class="hv">${sum}</span><span class="pch">›</span></button>`); if(sh) act.push(`<button type="button" data-open="m${f.id}">${sh}</button>`); });
+  if(yrOn()){ act.unshift(`<button type="button" data-open="${m==='t'?'era':'mera'}">${yrLabel()}</button>`); }
+  document.getElementById('hubrows'+m).innerHTML=rows.join(''); document.getElementById('pact'+m).innerHTML=act.join(''); document.getElementById('pcount'+m).textContent= act.length||''; }
+function openSheet(id){ closePops(); const p=document.getElementById('pop-'+id); if(!p) return; p.hidden=false; p.scrollTop=0; p.classList.add('enter'); setTimeout(()=>p.classList.remove('enter'),260); const b=document.getElementById('fb-'+id); if(b) b.setAttribute('aria-expanded','true'); syncShade(); }
+['t','m'].forEach(m=>{
+  document.getElementById('fb-hub'+m).addEventListener('click',e=>{ e.stopPropagation(); openSheet('hub'+m); });
+  document.getElementById('fb-qq'+m).addEventListener('click',e=>{ e.stopPropagation(); openSheet('qq'+m); });
+  document.getElementById('pact'+m).addEventListener('click',e=>{ const b=e.target.closest('[data-open]'); if(b){ e.stopPropagation(); openSheet(b.dataset.open); } });
+  document.getElementById('hubrows'+m).addEventListener('click',e=>{ const b=e.target.closest('[data-open]'); if(b){ e.stopPropagation(); openSheet(b.dataset.open); } });
+  document.getElementById('pop-hub'+m).addEventListener('click',e=>{ if(e.target.dataset.hubreset){ e.stopPropagation(); document.getElementById(m==='t'?'resetBtn':'mReset').click(); } else if(e.target.dataset.close!==undefined) closePops(); });
+  document.getElementById('pop-qq'+m).addEventListener('click',e=>{ const b=e.target.closest('[data-q]'); if(b){ e.stopPropagation(); closePops(); document.querySelector(m==='t'? `#presets [data-p="${b.dataset.q}"]` : `#mpresets [data-mq="${b.dataset.q}"]`).click(); } else if(e.target.dataset.close!==undefined) closePops(); });
+});
+phoneFilters('t');
+document.addEventListener('click',e=>{ const b=e.target.closest('.popback'); if(b){ e.stopPropagation(); openSheet(b.dataset.back); } },true);
 document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>`<button class="preset" data-p="${i}" aria-pressed="false">${p.l}</button>`).join('');
-function syncPresets(){ document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.p===state.preset))); }
+function syncPresets(){ document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.p===state.preset))); document.querySelectorAll('#qqlistt [data-q]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.q===state.preset))); }
+document.getElementById('qqlistt').innerHTML=PRESETS.map((p,i)=>`<button type="button" data-q="${i}" aria-pressed="false">${p.l}</button>`).join('');
 function resetSel(){ FILTERS.forEach(f=>state.fsel[f.id]=new Set(f.leaves.map(l=>l.v))); }
 document.getElementById('presets').addEventListener('click',e=>{
   const b=e.target.closest('.preset'); if(!b) return; const P=PRESETS[+b.dataset.p];
@@ -1564,7 +1853,7 @@ document.getElementById('presets').addEventListener('click',e=>{
   document.querySelector('#viewSeg button[data-v="list"]').click(); refilter();
 });
 document.getElementById('voidReset').addEventListener('click',()=>document.getElementById('resetBtn').click());
-document.getElementById('resetBtn').addEventListener('click',()=>{ resetSel(); state.preset=null; syncPresets(); refilter(); });
+document.getElementById('resetBtn').addEventListener('click',()=>{ state.yr=[null,null]; syncYears(); resetSel(); state.preset=null; syncPresets(); refilter(); });
 document.querySelector('.controls').addEventListener('click',e=>{const b=e.target.closest('[data-v]'); if(!b) return; state.view=b.dataset.v; document.querySelectorAll('#viewSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===state.view))); ['grid','table','list','rings','dial'].forEach(v=>document.getElementById('view-'+v).hidden = v!==state.view); document.getElementById('legend').hidden = state.view==='list' || state.view==='table'; syncCountBtn(); paintAll(false);});
 function syncCountBtn(){ const b=document.getElementById('countBtn'), on=state.view!=='list' && state.view!=='table'; b.disabled=!on; b.title= on? 'Shade each total by how often it has come up' : 'Colours only: try it on Grids, Wagon wheel or Dial'; }
 function flip(id,key,on,off){ document.getElementById(id).addEventListener('click',e=>{ state[key]= state[key]===on? off : on; e.currentTarget.setAttribute('aria-pressed',String(state[key]===on)); paintAll(false); renderDetail(); }); }
@@ -1597,8 +1886,83 @@ function paintAll(re){
     if(ring) buildHero(); else paintTStrip(); tDialBuild(); }
 }
 document.querySelectorAll('.hiT').forEach(e=>e.textContent=HI_T); document.querySelectorAll('.hiO').forEach(e=>e.textContent=HI_O);
+/* ---------- latest scorigamis (the default sidebar) ---------- */
+state.recN=25; state.mRecN=25;
+function renderRecent(D){
+  const y=TT(), L=[]; for(let s=0;s<1000;s++){ const f=cache[s]&&cache[s].first; if(f) L.push(f); }
+  L.sort((a,b)=>b[0]-a[0]||b[3]-a[3]);
+  const nw = y===null? 0 : L.filter(r=>yOf(r[0])===y).length;
+  let h=`<button class="sheetclose" id="sheetClose" aria-label="Close">×</button><div class="dhead"><span class="mtitle">${y===null?'Latest scorigamis':`Scorigamis up to and including ${y}`}</span></div>`;
+  h+=`<p class="rsub">${y===null? `Each total the first time ${filtered()?'an innings matching your filters':'a men’s Test innings'} finished on it, newest first. Tap one for every innings on it.` : nw? `<b>${nw}</b> new in ${y}${filtered()&&!tOnly()?' with these filters':''}: marked <span class="newtag">new</span> here and outlined on the grid.` : `Nothing new in ${y}${filtered()&&!tOnly()?' with these filters':''}. The newest before then are below.`}</p>`;
+  if(!L.length){ D.innerHTML=h+'<p class="empty">None with these filters.</p>'; return; }
+  h+=`<div class="rlist">`+L.slice(0,state.recN).map(r=>{ const m=M[r[0]]; return `<button class="rrow" type="button" data-go="${r[4]}"><span class="rt num">${r[4]}</span><span class="rx"><span class="tag" style="--c:var(${HOW[r[6]].v})"></span><b>${T[r[1]]}</b> v ${T[r[2]]}${y!==null&&yOf(r[0])===y?'<span class="newtag">new</span>':''}<small>${monY(m)} · ${ord(r[3])} innings · ${r[6]===0?'all out':fmtInn(r)}${m[2]?' · '+m[2]:''}</small></span></button>`; }).join('')+`</div>`;
+  if(L.length>state.recN) h+=`<button class="linkbtn" id="recMore" type="button">Show more (${L.length-state.recN} more)</button>`;
+  D.innerHTML=h;
+}
+function mRecentHTML(){
+  const y=TT(), seen=new Set(), L=[];
+  for(const r of MREC){ if(!mpass(r)) continue; const key= r.kind==='r'||r.kind==='i'? r.kind+':'+r.n : r.kind==='w'? 'w'+r.n : r.kind==='tie'? 'r:0' : null; if(!key||seen.has(key)) continue; seen.add(key); L.push([key,r]); }
+  L.reverse(); const nw = y===null? 0 : L.filter(([,r])=>yOf(r.i)===y).length;
+  let h=`<button class="sheetclose" data-close aria-label="Close">×</button><div class="dhead"><span class="mtitle">${y===null?'Latest margin scorigamis':`Margin scorigamis up to and including ${y}`}</span></div>`;
+  h+=`<p class="rsub">${y===null? `Each winning margin the first time ${mfiltered()?'a match matching your filters':'a men’s Test'} was won by it, newest first. Tap one for every match.` : nw? `<b>${nw}</b> new in ${y}${mfiltered()&&!mOnly()?' with these filters':''}: marked <span class="newtag">new</span> here and outlined on the grids.` : `Nothing new in ${y}${mfiltered()&&!mOnly()?' with these filters':''}. The newest before then are below.`}</p>`;
+  if(!L.length) return h+'<p class="empty">None with these filters.</p>';
+  h+=`<div class="rlist">`+L.slice(0,state.mRecN).map(([key,r])=>{ const m=M[r.i], who= r.w!==undefined? `<b>${T[r.w]}</b> beat ${T[r.l]}` : r.teams.map(t=>T[t]).join(' v ');
+    return `<button class="rrow mr" type="button" data-sel="${key}"><span class="rt num">${r.kind==='tie'?'Tie':mShort(r)}</span><span class="rx">${who}${y!==null&&yOf(r.i)===y?'<span class="newtag">new</span>':''}<small>${r.kind==='tie'?'Tied':'Won by '+mLabel(r.kind,r.n)} · ${monY(m)}${m[2]?' · '+m[2]:''}</small></span></button>`; }).join('')+`</div>`;
+  if(L.length>state.mRecN) h+=`<button class="linkbtn" id="mRecMore" type="button">Show more (${L.length-state.mRecN} more)</button>`;
+  return h;
+}
+
+/* ---------- time travel ---------- */
+document.querySelectorAll('[data-tt]').forEach(b=>{ b.innerHTML=`<span class="glabel">Time travel</span><button class="ttbtn ttplay" type="button" aria-label="Play through the years"></button><button class="ttbtn ttstep" data-d="-1" type="button" aria-label="Back a year">‹</button><input class="ttrange" type="range" min="${Y0}" max="${Y1}" step="1" aria-label="Show everything up to and including this year"><button class="ttbtn ttstep" data-d="1" type="button" aria-label="Forward a year">›</button><span class="ttbr"></span><b class="ttyear num" aria-live="polite"></b><button class="linkbtn ttnow" type="button">Back to today</button><button class="linkbtn ttlist" type="button"></button><small class="ttsub"></small>`; });
+var ttTimer=null, ttRaf=0;
+function syncTT(){ const y=TT(), on=y!==null;
+  document.querySelectorAll('[data-tt]').forEach(b=>{ if(!b.querySelector('.ttrange')) return; b.classList.toggle('on',on);
+    const r=b.querySelector('.ttrange'); if(document.activeElement!==r || ttTimer) r.value = on? y : Y1;
+    b.querySelector('.ttyear').textContent = on? y : 'Today';
+    b.querySelector('.ttnow').hidden=!on;
+    const p=b.querySelector('.ttplay'); p.textContent= ttTimer? '❚❚' : '▶'; p.setAttribute('aria-label', ttTimer? 'Pause':'Play through the years');
+    b.querySelector('.ttsub').textContent = on? `Showing only what had happened by the end of ${y}${state.yr[0]!==null?' (from '+state.yr[0]+')':''}. This year’s new scorigamis are outlined.` : 'Drag the slider or press play to watch the scorigamis fill in, year by year.';
+    b.querySelector('.ttlist').textContent = on? 'List ›' : 'Latest ›'; }); }
+function setTT(y){ const lo=Math.max(Y0, state.yr[0]??Y0); y=Math.max(lo,Math.min(Y1,Math.round(y)));
+  state.yr[1] = y>=Y1? null : y; state.recN=25; state.mRecN=25;
+  if(state.mode==='margins'){ state.msel=null; syncYears(); mRefilter(); } else { state.sel=null; syncYears(); refilter(); } }
+function ttStop(){ if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } syncTT(); }
+function ttPlay(){ if(ttTimer){ ttStop(); return; }
+  if(TT()===null) setTT(state.yr[0]??Y0);
+  ttTimer=setInterval(()=>{ const c=TT(); if(c===null){ ttStop(); return; } setTT(c+1); if(TT()===null) ttStop(); }, matchMedia('(prefers-reduced-motion: reduce)').matches? 600 : 280);
+  syncTT(); }
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-tt] button'); if(!b) return;
+  if(b.classList.contains('ttplay')) ttPlay();
+  else if(b.classList.contains('ttstep')){ ttStop(); setTT((TT()??Y1) + (+b.dataset.d)); }
+  else if(b.classList.contains('ttnow')){ ttStop(); setTT(Y1); }
+  else if(b.classList.contains('ttlist')){ if(state.mode==='margins') mSelect(null); else { state.sel=null; paintAll(false); renderDetail(); if(innerWidth<1100) document.getElementById('detail').classList.add('open'); } } });
+document.addEventListener('input',e=>{ const r=e.target.closest('.ttrange'); if(!r) return; if(ttTimer){ clearInterval(ttTimer); ttTimer=null; } cancelAnimationFrame(ttRaf); ttRaf=requestAnimationFrame(()=>setTT(+r.value)); });
+document.addEventListener('keydown',e=>{ if(e.key===' ' && e.target.closest('.ttrange')){ e.preventDefault(); ttPlay(); } });
+syncTT();
+
+/* ---------- share ---------- */
+(function(){
+  const url=(document.querySelector('link[rel=canonical]')||{}).href || location.href.split('#')[0];
+  const title='Scorigami: Test Cricket (Men’s)', text='Every men’s Test innings total and winning margin ever, and the ones that have never happened.';
+  const E=encodeURIComponent, pop=document.getElementById('sharePop'), btn=document.getElementById('shareBtn');
+  pop.innerHTML=`<button type="button" data-sh="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13.5a4.5 4.5 0 0 0 6.4.4l2.8-2.8a4.5 4.5 0 0 0-6.4-6.4l-1.3 1.3"/><path d="M14 10.5a4.5 4.5 0 0 0-6.4-.4l-2.8 2.8a4.5 4.5 0 0 0 6.4 6.4l1.3-1.3"/></svg><span>Copy link</span></button><a data-sh href="mailto:?subject=${E(title)}&body=${E(text+'\n\n'+url)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.8 6.5 12 13l8.2-6.5"/></svg><span>Email it</span></a>`;
+  const close=()=>{ pop.hidden=true; btn.setAttribute('aria-expanded','false'); };
+  async function share(fromFooter){
+    if(navigator.share){ try{ await navigator.share({title,text,url}); return; }catch(e){ if(e && e.name==='AbortError') return; } }   // the device's own share menu (phone or computer); anything else falls back to the small menu
+    if(fromFooter){ btn.scrollIntoView({block:'center',behavior:'smooth'}); }
+    pop.hidden=!pop.hidden; btn.setAttribute('aria-expanded',String(!pop.hidden)); }
+  btn.addEventListener('click',e=>{ e.stopPropagation(); share(false); });
+  document.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); share(true); }));
+  pop.addEventListener('click',async e=>{ const c=e.target.closest('[data-sh="copy"]'); if(c){ e.stopPropagation(); let ok=false; try{ await navigator.clipboard.writeText(url); ok=true; }catch(err){}
+      if(!ok){ const t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); try{ ok=document.execCommand('copy'); }catch(err){} t.remove(); }
+      const lab=c.querySelector('span'); lab.textContent= ok? 'Link copied ✓' : url; c.classList.add('copied'); setTimeout(()=>{ lab.textContent='Copy link'; c.classList.remove('copied'); close(); }, 1400); return; }
+    if(e.target.closest('a')) setTimeout(close,100); });
+  document.addEventListener('click',e=>{ if(!pop.hidden && !e.target.closest('#sharePop')) close(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+})();
+
 buildGrid(); buildRings(); recompute();
-state.sel = cache.reduce((b,o,s)=>o.n>cache[b].n?s:b,0);
+state.sel = null;
 paintAll(false); renderDetail();
 </script>
 </body>
