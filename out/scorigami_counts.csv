@@ -11,7 +11,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 9,2,0,0,0,2,0,0,0,0,not out only
 10,5,0,0,0,5,0,0,0,0,not out only
 11,3,0,0,0,2,1,0,0,0,not out only
-12,5,0,0,0,3,2,0,0,0,not out only
+12,6,0,0,0,4,2,0,0,0,not out only
 13,6,0,0,0,5,1,0,0,0,not out only
 14,5,0,0,0,3,2,0,0,0,not out only
 15,6,0,0,0,4,2,0,0,0,not out only
@@ -89,7 +89,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 87,11,4,1,0,4,2,0,0,0,all out
 88,11,4,0,0,4,3,0,0,0,all out
 89,12,4,2,1,3,2,0,0,0,all out
-90,12,7,1,0,1,3,0,0,0,all out
+90,13,7,1,0,2,3,0,0,0,all out
 91,9,6,0,0,1,2,0,0,0,all out
 92,12,5,0,1,2,4,0,0,0,all out
 93,14,9,1,0,4,0,0,0,0,all out
@@ -97,7 +97,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 95,18,7,0,0,7,4,0,0,0,all out
 96,11,4,0,1,3,3,0,0,0,all out
 97,19,10,2,2,4,1,0,0,0,all out
-98,13,5,0,0,6,2,0,0,0,all out
+98,14,6,0,0,6,2,0,0,0,all out
 99,18,12,1,0,3,2,0,0,0,all out
 100,21,12,0,2,4,3,0,0,0,all out
 101,11,7,2,0,1,1,0,0,0,all out
@@ -167,7 +167,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 165,28,21,2,0,1,4,0,0,0,all out
 166,25,14,0,1,2,8,0,0,0,all out
 167,20,17,1,1,0,1,0,0,0,all out
-168,29,20,1,3,3,2,0,0,0,all out
+168,30,21,1,3,3,2,0,0,0,all out
 169,33,26,0,4,1,2,0,0,0,all out
 170,27,20,0,2,3,2,0,0,0,all out
 171,20,16,1,0,2,1,0,0,0,all out
@@ -216,7 +216,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 214,39,32,1,2,1,3,0,0,0,all out
 215,36,27,1,3,3,2,0,0,0,all out
 216,35,29,0,2,2,2,0,0,0,all out
-217,24,14,0,6,3,1,0,0,0,all out
+217,25,15,0,6,3,1,0,0,0,all out
 218,30,25,0,3,1,1,0,0,0,all out
 219,33,22,1,5,5,0,0,0,0,all out
 220,27,19,2,1,2,3,0,0,0,all out
@@ -283,7 +283,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 281,27,23,0,1,1,2,0,0,0,all out
 282,34,26,0,0,5,3,0,0,0,all out
 283,18,13,1,3,1,0,0,0,0,all out
-284,30,23,0,4,1,2,0,0,0,all out
+284,31,23,0,4,1,3,0,0,0,all out
 285,28,21,0,3,1,3,0,0,0,all out
 286,32,30,0,1,0,1,0,0,0,all out
 287,30,19,0,6,2,3,0,0,0,all out
@@ -294,7 +294,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 292,30,25,1,3,0,1,0,0,0,all out
 293,23,19,0,3,0,1,0,0,0,all out
 294,36,30,0,3,2,1,0,0,0,all out
-295,27,23,0,3,0,1,0,0,0,all out
+295,28,23,0,4,0,1,0,0,0,all out
 296,44,35,1,6,1,1,0,0,0,all out
 297,23,17,0,4,1,1,0,0,0,all out
 298,25,19,1,1,1,2,0,0,1,all out
@@ -315,7 +315,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 313,21,16,0,5,0,0,0,0,0,all out
 314,15,10,0,4,0,1,0,0,0,all out
 315,24,17,1,1,3,2,0,0,0,all out
-316,25,23,0,1,0,1,0,0,0,all out
+316,26,24,0,1,0,1,0,0,0,all out
 317,24,19,1,1,2,1,0,0,0,all out
 318,20,16,0,3,0,1,0,0,0,all out
 319,21,18,0,2,0,1,0,0,0,all out
@@ -324,7 +324,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 322,18,15,0,1,1,1,0,0,0,all out
 323,24,19,0,4,0,1,0,0,0,all out
 324,17,13,1,2,1,0,0,0,0,all out
-325,24,13,2,8,0,1,0,0,0,all out
+325,25,14,2,8,0,1,0,0,0,all out
 326,29,23,2,2,1,1,0,0,0,all out
 327,23,20,2,1,0,0,0,0,0,all out
 328,31,27,0,2,0,2,0,0,0,all out
@@ -338,7 +338,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 336,20,16,0,2,1,1,0,0,0,all out
 337,14,13,0,0,0,1,0,0,0,all out
 338,17,15,0,2,0,0,0,0,0,all out
-339,16,14,0,1,0,1,0,0,0,all out
+339,17,15,0,1,0,1,0,0,0,all out
 340,20,15,0,3,1,1,0,0,0,all out
 341,19,16,0,2,0,1,0,0,0,all out
 342,26,23,0,2,1,0,0,0,0,all out
@@ -359,7 +359,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 357,19,16,1,1,0,1,0,0,0,all out
 358,17,15,0,2,0,0,0,0,0,all out
 359,16,13,0,3,0,0,0,0,0,all out
-360,14,12,0,2,0,0,0,0,0,all out
+360,15,13,0,2,0,0,0,0,0,all out
 361,17,12,1,4,0,0,0,0,0,all out
 362,20,11,1,5,2,1,0,0,0,all out
 363,12,11,1,0,0,0,0,0,0,all out
@@ -399,7 +399,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 397,20,17,2,1,0,0,0,0,0,all out
 398,10,8,0,1,0,1,0,0,0,all out
 399,7,5,0,2,0,0,0,0,0,all out
-400,15,13,0,2,0,0,0,0,0,all out
+400,16,14,0,2,0,0,0,0,0,all out
 401,14,10,0,3,0,1,0,0,0,all out
 402,12,10,0,2,0,0,0,0,0,all out
 403,19,16,0,3,0,0,0,0,0,all out
@@ -433,7 +433,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 431,10,8,0,2,0,0,0,0,0,all out
 432,12,6,0,5,0,1,0,0,0,all out
 433,6,5,0,1,0,0,0,0,0,all out
-434,5,4,0,1,0,0,0,0,0,all out
+434,6,4,0,2,0,0,0,0,0,all out
 435,16,14,0,2,0,0,0,0,0,all out
 436,8,6,0,2,0,0,0,0,0,all out
 437,10,8,0,2,0,0,0,0,0,all out
@@ -445,7 +445,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 443,8,3,0,4,0,1,0,0,0,all out
 444,7,5,0,2,0,0,0,0,0,all out
 445,13,11,0,2,0,0,0,0,0,all out
-446,8,6,0,2,0,0,0,0,0,all out
+446,9,7,0,2,0,0,0,0,0,all out
 447,13,8,0,5,0,0,0,0,0,all out
 448,17,10,0,7,0,0,0,0,0,all out
 449,9,6,0,3,0,0,0,0,0,all out
@@ -556,7 +556,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 554,5,4,0,1,0,0,0,0,0,all out
 555,6,1,0,3,0,2,0,0,0,all out
 556,8,4,0,4,0,0,0,0,0,all out
-557,2,0,0,2,0,0,0,0,0,not out only
+557,3,1,0,2,0,0,0,0,0,all out
 558,7,4,0,3,0,0,0,0,0,all out
 559,5,0,0,5,0,0,0,0,0,not out only
 560,3,0,0,3,0,0,0,0,0,not out only

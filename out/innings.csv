@@ -9629,3 +9629,18 @@ test,match_id,date,team,opposition,innings,runs,wickets,ending,short_handed_reas
 2642,1555123,2026-11-05,Zimbabwe,Afghanistan,1,504,10,allout,,drawn,no_follow_on,won_bat,cricinfo,Match drawn
 2642,1555123,2026-11-05,Afghanistan,Zimbabwe,2,514,10,allout,,drawn,no_follow_on,lost_opp_batted,cricinfo,Match drawn
 2642,1555123,2026-11-05,Zimbabwe,Afghanistan,3,523,5,draw,,drawn,no_follow_on,won_bat,cricinfo,Match drawn
+2643,1550711,2026-11-09,Pakistan,Sri Lanka,1,434,9,declared,,drawn,no_follow_on,lost_sent_in,cricinfo,Match drawn
+2643,1550711,2026-11-09,Sri Lanka,Pakistan,2,446,10,allout,,drawn,no_follow_on,won_bowl,cricinfo,Match drawn
+2643,1550711,2026-11-09,Pakistan,Sri Lanka,3,284,8,draw,,drawn,no_follow_on,lost_sent_in,cricinfo,Match drawn
+2644,1555124,2026-11-13,Zimbabwe,Afghanistan,1,339,10,allout,,won,no_follow_on,won_bat,cricinfo,Zimbabwe won by 57 runs
+2644,1555124,2026-11-13,Afghanistan,Zimbabwe,2,217,10,allout,,lost,no_follow_on,lost_opp_batted,cricinfo,Zimbabwe won by 57 runs
+2644,1555124,2026-11-13,Zimbabwe,Afghanistan,3,295,9,declared,,won,no_follow_on,won_bat,cricinfo,Zimbabwe won by 57 runs
+2644,1555124,2026-11-13,Afghanistan,Zimbabwe,4,360,10,allout,,lost,no_follow_on,lost_opp_batted,cricinfo,Zimbabwe won by 57 runs
+2645,1525662,2026-11-15,Bangladesh,South Africa,1,400,10,allout,,lost,no_follow_on,won_bat,cricinfo,South Africa won by 9 wickets
+2645,1525662,2026-11-15,South Africa,Bangladesh,2,557,10,allout,,won,no_follow_on,lost_opp_batted,cricinfo,South Africa won by 9 wickets
+2645,1525662,2026-11-15,Bangladesh,South Africa,3,168,10,allout,,lost,no_follow_on,won_bat,cricinfo,South Africa won by 9 wickets
+2645,1525662,2026-11-15,South Africa,Bangladesh,4,12,1,chase,,won,no_follow_on,lost_opp_batted,cricinfo,South Africa won by 9 wickets
+2646,1550712,2026-11-17,Sri Lanka,Pakistan,1,98,10,allout,,lost,no_follow_on,lost_sent_in,cricinfo,Pakistan won by 8 wickets
+2646,1550712,2026-11-17,Pakistan,Sri Lanka,2,325,10,allout,,won,no_follow_on,won_bowl,cricinfo,Pakistan won by 8 wickets
+2646,1550712,2026-11-17,Sri Lanka,Pakistan,3,316,10,allout,,lost,no_follow_on,lost_sent_in,cricinfo,Pakistan won by 8 wickets
+2646,1550712,2026-11-17,Pakistan,Sri Lanka,4,90,2,chase,,won,no_follow_on,won_bowl,cricinfo,Pakistan won by 8 wickets
