@@ -41,3 +41,30 @@ def test_awarded_and_other_endings():
     assert how_final("other", "England awarded the match (opposition refused to play)") == "awarded"
     assert how_final("other", "Match abandoned") == "other"
     assert how_final("draw", "England awarded the match") == "draw"
+
+
+
+def test_gap_check_finds_holes_and_doubles():
+    from scorigami import build
+    s = build.Store()
+    for mid, n, d in [("a", 1, "2026-01-01"), ("b", 2, "2026-01-08"), ("d", 4, "2026-01-20"), ("e", 4, "2026-01-21")]:
+        s.add_match(mid, test=n, date=d, venue="X")
+        s.put(mid, 1, {"bat": "England", "opp": "India", "inn": 1, "runs": 100, "wkts": 10, "how": "allout", "why": None}, "csv")
+    g = build.find_gaps(s)
+    assert [(x["kind"], x["test"]) for x in g] == [("missing", 3), ("duplicate", 4)]
+    assert g[0]["after"]["test"] == 2 and g[0]["before"]["test"] == 4
+
+
+def test_gap_issues_are_idempotent():
+    from scorigami.gap_issues import plan, title
+    gaps = [{"kind": "missing", "test": 3}, {"kind": "missing", "test": 7}]
+    issues = [{"number": 1, "title": "Missing Test #3", "state": "open"},              # already open: leave it
+              {"number": 2, "title": "Missing Test #7", "state": "closed", "state_reason": "not_planned"},  # silenced
+              {"number": 3, "title": "Missing Test #5", "state": "open"},              # filled since: close it
+              {"number": 4, "title": "Missing Test #9", "state": "closed", "state_reason": "completed"}]
+    to_open, to_close = plan(gaps, issues)
+    assert to_open == [] and [i["number"] for i in to_close] == [3]
+    # a gap that comes back after being fixed gets a fresh issue
+    to_open, _ = plan([{"kind": "missing", "test": 9}], issues)
+    assert [title(g) for g in to_open] == ["Missing Test #9"]
+    assert plan([], [])[0] == []
