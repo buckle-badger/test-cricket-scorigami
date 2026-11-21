@@ -255,6 +255,10 @@ def load_cricsheet(store: Store, zpath: Path) -> int:
                             toss=team(info["toss"]["winner"]) if info.get("toss", {}).get("winner") else None,
                             toss_dec=info.get("toss", {}).get("decision"),
                             venue=info.get("city") or info.get("venue", ""), result=outcome_text(info))
+            off, m = info.get("match_type_number"), store.matches[mid]
+            if off and m.get("hand") and m["test"] != off:   # a hand-entered Test number gives way to the official one
+                print(f"  Test number for {mid}: {m['test']} by hand, {off} per Cricsheet; using {off}")
+                m["test"] = off
             o = info.get("outcome", {})
             winner, by = (team(o["winner"]) if o.get("winner") else None), o.get("by", {})
             played = [i for i in j.get("innings", []) if not i.get("super_over")]
@@ -312,7 +316,7 @@ def load_cricinfo_new(store: Store, path: Path) -> int:
             continue
         teams = [team(t) for t in m["teams"]]
         res = m.get("status") or ""
-        store.add_match(mid, test=m.get("test"), date=m.get("date"), venue=m.get("town", ""), result=res,
+        store.add_match(mid, hand=True, test=m.get("test"), date=m.get("date"), venue=m.get("town", ""), result=res,
                         toss=team(m["toss"]) if m.get("toss") else None,
                         toss_dec={1: "bat", 2: "field"}.get(m.get("choice")))
         innings = m["inn"]
@@ -605,6 +609,37 @@ def all_notes(store):
     return notes
 
 
+# ---------------------------------------------------------------- gaps in the Test numbering
+def find_gaps(store: Store) -> list[dict]:
+    """Official Test numbers run 1, 2, 3... with no holes, so a hole means a Test is missing (most often
+    Afghanistan's: Cricsheet withholds them) and a number used twice means one of ours is wrong.
+    data/known_gaps.csv can list numbers to ignore, one per line, in case one is ever explained."""
+    known = set()
+    kg = DATA / "known_gaps.csv"
+    if kg.exists():
+        known = {int(x.split(",")[0]) for x in kg.read_text().split() if x.split(",")[0].isdigit()}
+    bats = defaultdict(list)
+    for (mid, inn), r in sorted(store.inn.items(), key=lambda kv: kv[0][1]):
+        if r["bat"] not in bats[mid]:
+            bats[mid].append(r["bat"])
+    by_no = defaultdict(list)
+    for mid, m in store.matches.items():
+        if m["test"] and mid in bats:
+            by_no[int(m["test"])].append(mid)
+    def desc(mid):
+        m = store.matches[mid]
+        return {"test": m["test"], "date": m["date"] or m["year"], "teams": " v ".join(bats[mid]), "venue": m["venue"], "match_id": mid}
+    out, nums = [], sorted(by_no)
+    for a, b in zip(nums, nums[1:]):
+        for n in range(a + 1, b):
+            if n not in known:
+                out.append({"kind": "missing", "test": n, "after": desc(by_no[a][0]), "before": desc(by_no[b][0])})
+    for n in nums:
+        if len(by_no[n]) > 1 and n not in known:
+            out.append({"kind": "duplicate", "test": n, "matches": [desc(x) for x in by_no[n]]})
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-download", action="store_true", help="don't fetch Cricsheet; use data/tests_male_json.zip")
@@ -632,6 +667,11 @@ def main(argv=None):
     if ov.exists():
         seen["manual_overrides"] = load_overrides(store, ov)
     meta = write_outputs(store, seen)
+    gaps = find_gaps(store)
+    (OUT / "gaps.json").write_text(json.dumps(gaps, ensure_ascii=False, indent=1))
+    for g in gaps:
+        print(f"! Test {g['test']} {'is missing' if g['kind'] == 'missing' else 'is used twice'}"
+              + (f" (between {g['after']['date']} and {g['before']['date']})" if g["kind"] == "missing" else ""))
     by_field = Counter(c["field"] for c in store.checks)
     print(f"{meta['tests']} Tests, {meta['innings']} innings, latest {meta['last']}. "
           f"Sources: {meta['src']}. Corrections logged: {dict(by_field) or 'none'}")
