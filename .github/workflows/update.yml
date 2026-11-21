@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  issues: write      # the gap check opens and closes "Missing Test" issues
 
 concurrency:
   group: scorigami
@@ -27,6 +28,11 @@ jobs:
         run: python -m pytest -q tests
       - name: Download Cricsheet and rebuild
         run: python -m scorigami.build
+      - name: Check the Test numbering for gaps
+        run: python -m scorigami.gap_issues
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # built in; nothing to set up
       - name: Commit the new page and CSVs
         run: |
           git config user.name "scorigami-bot"
