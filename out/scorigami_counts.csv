@@ -90,7 +90,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 88,11,4,0,0,4,3,0,0,0,all out
 89,12,4,2,1,3,2,0,0,0,all out
 90,13,7,1,0,2,3,0,0,0,all out
-91,9,6,0,0,1,2,0,0,0,all out
+91,10,7,0,0,1,2,0,0,0,all out
 92,12,5,0,1,2,4,0,0,0,all out
 93,14,9,1,0,4,0,0,0,0,all out
 94,12,7,0,0,2,3,0,0,0,all out
@@ -183,7 +183,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 181,39,30,0,5,3,1,0,0,0,all out
 182,35,25,1,3,2,4,0,0,0,all out
 183,25,21,0,0,2,2,0,0,0,all out
-184,27,21,1,2,1,2,0,0,0,all out
+184,28,22,1,2,1,2,0,0,0,all out
 185,25,20,0,2,2,1,0,0,0,all out
 186,31,21,1,2,2,5,0,0,0,all out
 187,25,19,2,1,1,2,0,0,0,all out
@@ -238,7 +238,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 236,26,19,1,1,3,2,0,0,0,all out
 237,30,26,0,3,1,0,0,0,0,all out
 238,24,20,0,1,0,3,0,0,0,all out
-239,22,19,0,2,1,0,0,0,0,all out
+239,23,19,0,2,1,1,0,0,0,all out
 240,38,34,1,3,0,0,0,0,0,all out
 241,33,21,0,7,0,5,0,0,0,all out
 242,30,22,0,3,1,4,0,0,0,all out
@@ -367,7 +367,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 365,17,13,0,4,0,0,0,0,0,all out
 366,17,14,0,3,0,0,0,0,0,all out
 367,16,12,1,2,0,1,0,0,0,all out
-368,10,6,2,1,0,1,0,0,0,all out
+368,11,7,2,1,0,1,0,0,0,all out
 369,26,20,1,2,1,2,0,0,0,all out
 370,15,11,1,1,0,2,0,0,0,all out
 371,17,13,0,2,0,2,0,0,0,all out
@@ -493,7 +493,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 491,5,4,0,1,0,0,0,0,0,all out
 492,5,3,0,2,0,0,0,0,0,all out
 493,7,4,0,3,0,0,0,0,0,all out
-494,8,6,0,2,0,0,0,0,0,all out
+494,9,6,0,3,0,0,0,0,0,all out
 495,5,4,0,1,0,0,0,0,0,all out
 496,10,5,0,5,0,0,0,0,0,all out
 497,6,2,1,2,0,1,0,0,0,all out
@@ -719,7 +719,7 @@ total,innings,allout,allout_short,declared,chase,draw,other,forfeit,awarded,stat
 717,0,0,0,0,0,0,0,0,0,never
 718,0,0,0,0,0,0,0,0,0,never
 719,0,0,0,0,0,0,0,0,0,never
-720,0,0,0,0,0,0,0,0,0,never
+720,1,0,0,1,0,0,0,0,0,not out only
 721,0,0,0,0,0,0,0,0,0,never
 722,0,0,0,0,0,0,0,0,0,never
 723,0,0,0,0,0,0,0,0,0,never
